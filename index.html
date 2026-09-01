@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01x / kumon_math_ver4.9 -->
+<!-- BUILD_TAG: 2026-09-01y / kumon_math_ver5.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -321,7 +321,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.9 / 2026-09-01x</div>
+  <div class="tiny">まいにち計算 ver5.0 / 2026-09-01y</div>
 </section>
 
 <!-- こども追加 -->
@@ -369,7 +369,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01x</div>
+  <div class="tiny">BUILD 2026-09-01y</div>
 </section>
 
 <!-- れいだい -->
@@ -511,6 +511,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <h3>やりかた</h3>
     <div class="row"><span>1問ごとに ○×と正解を出す</span><div class="tg" id="st-inst"><b></b></div></div>
     <div class="row"><span>音を出す</span><div class="tg" id="st-snd"><b></b></div></div>
+    <div class="row"><span>音を ためす</span><span style="display:flex;gap:8px">
+      <button class="btn l" id="st-s1" style="width:auto;padding:9px 14px;font-size:14px">ピンポーン</button>
+      <button class="btn l" id="st-s2" style="width:auto;padding:9px 14px;font-size:14px">ブー</button></span></div>
     <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
     <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
@@ -547,7 +550,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.9 / BUILD 2026-09-01x</div>
+  <div class="tiny">kumon_math ver5.0 / BUILD 2026-09-01y</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -607,7 +610,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01x";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01y";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1319,20 +1322,53 @@ window.addEventListener("popstate",function(){
  prep(prev);applyScreen(prev);
 });
 var actx=null;
+function ac(){
+ if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();
+ if(actx.state==="suspended")actx.resume();
+ return actx;
+}
+/* 1音を鳴らす。倍音を少し足して、機械的すぎない響きにする */
+function tone(o){
+ var c=ac(),t0=c.currentTime+(o.at||0),dur=o.dur||.3,vol=o.vol||.2;
+ var osc=c.createOscillator(),g=c.createGain();
+ osc.type=o.wave||"sine";
+ osc.frequency.setValueAtTime(o.f,t0);
+ if(o.f2)osc.frequency.exponentialRampToValueAtTime(o.f2,t0+dur);
+ g.gain.setValueAtTime(.0001,t0);
+ g.gain.exponentialRampToValueAtTime(vol,t0+(o.atk||.012));
+ g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+ osc.connect(g);
+ if(o.f>400){ /* やわらかい倍音 */
+  var o2=c.createOscillator(),g2=c.createGain();
+  o2.type="sine";o2.frequency.setValueAtTime(o.f*2,t0);
+  g2.gain.setValueAtTime(.0001,t0);
+  g2.gain.exponentialRampToValueAtTime(vol*.22,t0+(o.atk||.012));
+  g2.gain.exponentialRampToValueAtTime(.0001,t0+dur*.7);
+  o2.connect(g2);g2.connect(c.destination);
+  o2.start(t0);o2.stop(t0+dur+.05);
+ }
+ g.connect(c.destination);
+ osc.start(t0);osc.stop(t0+dur+.05);
+}
 function beep(t){
  if(!S.sound)return;
  try{
-  if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();
-  var sq=t==="ok"?[[880,0,.1]]:t==="ng"?[[196,0,.2]]:t==="clear"?[[660,0,.1],[880,.12,.1],[1175,.24,.2]]:[[520,0,.05]];
-  sq.forEach(function(v){
-   var o=actx.createOscillator(),g=actx.createGain();
-   o.type="sine";o.frequency.value=v[0];
-   g.gain.setValueAtTime(.0001,actx.currentTime+v[1]);
-   g.gain.exponentialRampToValueAtTime(.22,actx.currentTime+v[1]+.01);
-   g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+v[1]+v[2]);
-   o.connect(g);g.connect(actx.destination);
-   o.start(actx.currentTime+v[1]);o.stop(actx.currentTime+v[1]+v[2]+.02);
-  });
+  if(t==="ok"){
+   /* ピンポーン（高い音 → 低い音） */
+   tone({f:1318.5,dur:.34,vol:.22,wave:"sine"});
+   tone({f:987.8,dur:.62,vol:.22,wave:"sine",at:.26});
+  }else if(t==="ng"){
+   /* ブー（低いブザー） */
+   tone({f:160,f2:138,dur:.52,vol:.20,wave:"sawtooth",atk:.02});
+   tone({f:80,dur:.52,vol:.12,wave:"square",atk:.02});
+  }else if(t==="clear"){
+   /* ステップ クリアの ファンファーレ */
+   [[523.3,0],[659.3,.13],[784,.26],[1046.5,.4]].forEach(function(v){
+    tone({f:v[0],at:v[1],dur:v[0]>1000?.7:.24,vol:.2,wave:"triangle"});
+   });
+  }else{
+   tone({f:660,dur:.06,vol:.07,wave:"sine"});
+  }
  }catch(e){}
 }
 document.getElementById("nav").addEventListener("click",function(e){
@@ -2218,6 +2254,8 @@ document.getElementById("st-daily").addEventListener("change",function(e){P().da
 document.getElementById("st-qm").addEventListener("change",function(e){P().qmode=e.target.value;save();});
 document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
+document.getElementById("st-s1").addEventListener("click",function(){var b=S.sound;S.sound=true;beep("ok");S.sound=b;});
+document.getElementById("st-s2").addEventListener("click",function(){var b=S.sound;S.sound=true;beep("ng");S.sound=b;});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
 function bioEnable(cb){
  waRegister(function(ok){
