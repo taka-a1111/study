@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02p / kumon_math_ver6.5 -->
+<!-- BUILD_TAG: 2026-09-02q / kumon_math_ver6.6 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.5 / 2026-09-02p</div>
+  <div class="tiny">まいにち計算 ver6.6 / 2026-09-02q</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02p</div>
+  <div class="tiny">BUILD 2026-09-02q</div>
 </section>
 
 <!-- れいだい -->
@@ -659,6 +659,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
     <div class="row"><span>まちがいは かならず なおす</span><div class="tg" id="st-fix"><b></b></div></div>
     <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
+    <div class="note" style="padding-top:6px;color:var(--aka)">指紋が うまくいかないとき、Androidは 端末の画面ロック（パターン・PIN）でも 解除できてしまいます。お子さんが パターンを 知っている場合は オフにして、下の パスコードを 使ってください。</div>
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
     <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクは1回押すと つけっぱなしになり、もう一度 押すまで 続けて 聞きとります。次の問題に進んでも そのままです。「けす」と言うと 1文字 消せます。<br><br>手書きと 音声では、答えが 合っていれば「こたえる」を 押さなくても つぎへ 進みます。まちがっているときは 止まるので、書きなおして ください。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
   </div>
@@ -668,6 +669,19 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <label class="f"><span>ステップ</span><select id="st-sp"></select></label>
     <button class="btn o" id="st-ap" style="margin-top:14px">ここから やりなおす</button>
     <button class="btn l" id="st-test" style="margin-top:10px">診断テストで 決めなおす</button>
+  </div>
+  <div class="card">
+    <h3>保護者パスコード</h3>
+    <div class="note" id="pin-state"></div>
+    <label class="f"><span>あたらしい パスコード（4〜8けた）</span>
+      <input type="password" id="pin-a" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="数字だけ"></label>
+    <label class="f"><span>もういちど</span>
+      <input type="password" id="pin-b" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="かくにん"></label>
+    <div class="stk" style="margin-top:14px">
+      <button class="btn o" id="pin-set">パスコードを 決める</button>
+      <button class="btn q hide" id="pin-off">パスコードを やめる（かけ算に もどす）</button>
+    </div>
+    <div class="note" style="padding-top:8px">パスコードを 決めると、保護者メニューは このパスコードでしか ひらけなくなります（かけ算は 出ません）。同期していれば もう1台の 端末でも 同じ パスコードに なります。</div>
   </div>
   <div class="card">
     <h3>はじめから やりなおす</h3>
@@ -737,7 +751,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.5 / BUILD 2026-09-02p</div>
+  <div class="tiny">kumon_math ver6.6 / BUILD 2026-09-02q</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -808,7 +822,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02p";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02q";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1424,7 +1438,7 @@ function makeSheet(st,n){
    3. 状態（学習者プロフィール）
    ============================================================ */
 var ICONS=["🐰","🐻","🐱","🐶","🦊","🐼","🦁","🐸","🐧","🦄"];
-var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,kids:[]};
+var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,pin:null,kids:[]};
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
@@ -1651,9 +1665,21 @@ function waVerify(cb){
 }
 
 /* 保護者ゲート */
-var gateCb=null,gateAns=0,gateTry=0,gateIn="";
+var gateCb=null,gateAns=0,gateTry=0,gateIn="",gateMode="calc";
+/* パスコードは そのまま 保存せず、ハッシュにして 保存する */
+function sha256hex(t){
+ return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){
+  var a=new Uint8Array(b),h="";
+  for(var i=0;i<a.length;i++)h+=("0"+a[i].toString(16)).slice(-2);
+  return h;
+ });
+}
+function pinHash(pin,salt){return sha256hex(salt+"|"+pin);}
+function pinOn(){return !!(S.pin&&S.pin.h&&S.pin.s);}
 function gateDraw(){
- document.getElementById("gate-d").innerHTML=gateIn===""?'<span class="c"></span>':gateIn;
+ var el=document.getElementById("gate-d");
+ if(gateIn===""){el.innerHTML='<span class="c"></span>';return;}
+ el.textContent=(gateMode==="pin")?new Array(gateIn.length+1).join("●"):gateIn;
 }
 function gateShowNum(){
  document.getElementById("gate-bio").classList.add("hide");
@@ -1661,9 +1687,15 @@ function gateShowNum(){
 }
 function openGate(cb){
  gateCb=cb;gateTry=0;gateIn="";
- var a=ri(12,29),b=ri(3,9);
- gateAns=a*b;
- document.getElementById("gate-q").textContent=a+" × "+b+" =";
+ if(pinOn()){
+  gateMode="pin";
+  document.getElementById("gate-q").textContent="パスコード";
+ }else{
+  gateMode="calc";
+  var a=ri(12,29),b=ri(3,9);
+  gateAns=a*b;
+  document.getElementById("gate-q").textContent=a+" × "+b+" =";
+ }
  gateDraw();
  document.getElementById("gate").classList.remove("hide");
  if(waOn()){
@@ -1687,6 +1719,16 @@ document.getElementById("gate-pad").addEventListener("click",function(e){
  if(k==="del"){gateIn=gateIn.slice(0,-1);gateDraw();return;}
  if(k==="ok"){
   if(gateIn===""){return;}
+  if(gateMode==="pin"){
+   var tryIn=gateIn;
+   pinHash(tryIn,S.pin.s).then(function(h){
+    if(h===S.pin.h){closeGate();if(gateCb)gateCb();return;}
+    gateTry++;gateIn="";gateDraw();
+    if(gateTry>=5){closeGate();renderHome();show("s-home");}
+    else alert("ちがいます。のこり "+(5-gateTry)+"かい");
+   });
+   return;
+  }
   if(Number(gateIn)===gateAns){
    closeGate();
    if(gateCb)gateCb();
@@ -1700,7 +1742,7 @@ document.getElementById("gate-pad").addEventListener("click",function(e){
   else alert("ちがいます。のこり "+(3-gateTry)+"かい");
   return;
  }
- if(gateIn.length>=5)return;
+ if(gateIn.length>=(gateMode==="pin"?8:5))return;
  gateIn+=k;gateDraw();
 });
 document.getElementById("gate-ng").addEventListener("click",function(){
@@ -3215,6 +3257,7 @@ function renderSet(){
  document.getElementById("rs-kid").innerHTML=S.kids.map(function(x,i){
   return '<option value="'+i+'">'+x.icon+' '+esc(x.name)+'</option>';}).join("");
  document.getElementById("rs-kid").value=String(S.cur);
+ renderPin();
  document.getElementById("st-fix").classList.toggle("on",S.mustFix===true);
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
@@ -3286,6 +3329,30 @@ document.getElementById("pr-send").addEventListener("click",function(){
  if(kk.praise.length>20)kk.praise=kk.praise.slice(-20);
  save();
  alert("おくりました。お子さんの 学習画面に 出ます。");
+});
+function renderPin(){
+ document.getElementById("pin-state").textContent=pinOn()
+  ? "いま パスコードで ロックしています。"
+  : "いまは かけ算で ロックしています。";
+ document.getElementById("pin-off").classList.toggle("hide",!pinOn());
+}
+document.getElementById("pin-set").addEventListener("click",function(){
+ var a=document.getElementById("pin-a").value.trim(),b=document.getElementById("pin-b").value.trim();
+ if(!/^\d{4,8}$/.test(a)){alert("4〜8けたの 数字で 決めてください。");return;}
+ if(a!==b){alert("2回の 入力が ちがいます。");return;}
+ var salt="";
+ var r=crypto.getRandomValues(new Uint8Array(8));
+ for(var i=0;i<r.length;i++)salt+=("0"+r[i].toString(16)).slice(-2);
+ pinHash(a,salt).then(function(h){
+  S.pin={h:h,s:salt};save();
+  document.getElementById("pin-a").value="";document.getElementById("pin-b").value="";
+  renderPin();
+  alert("パスコードを 決めました。つぎから これで ひらきます。");
+ });
+});
+document.getElementById("pin-off").addEventListener("click",function(){
+ if(!confirm("パスコードを やめて、かけ算の ロックに もどします。よろしいですか。"))return;
+ S.pin=null;save();renderPin();
 });
 function resetKid(i,wipe){
  var k=S.kids[i];if(!k)return;
