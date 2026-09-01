@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02b / kumon_math_ver5.3 -->
+<!-- BUILD_TAG: 2026-09-02c / kumon_math_ver5.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -341,7 +341,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.3 / 2026-09-02b</div>
+  <div class="tiny">まいにち計算 ver5.4 / 2026-09-02c</div>
 </section>
 
 <!-- こども追加 -->
@@ -389,7 +389,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02b</div>
+  <div class="tiny">BUILD 2026-09-02c</div>
 </section>
 
 <!-- れいだい -->
@@ -606,7 +606,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.3 / BUILD 2026-09-02b</div>
+  <div class="tiny">kumon_math ver5.4 / BUILD 2026-09-02c</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -666,7 +666,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02b";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02c";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2343,11 +2343,21 @@ function sbAuth(mode,mail,pass){
 function mergeState(local,remote){
  if(!remote||!remote.kids)return local;
  var out=JSON.parse(JSON.stringify(local));
- var byId={};
- out.kids.forEach(function(k,i){byId[k.id]=i;});
+ var byId={},byName={};
+ var nm=function(k){return String(k.name||"").replace(/\s/g,"");};
+ out.kids.forEach(function(k,i){byId[k.id]=i;if(nm(k))byName[nm(k)]=i;});
  remote.kids.forEach(function(rk){
-  if(!(rk.id in byId)){out.kids.push(rk);return;}
-  var lk=out.kids[byId[rk.id]];
+  /* IDが一致しなくても、同じ名前なら同じ子とみなす
+     （同期を入れる前に別々の端末で登録していた場合の重複を防ぐ） */
+  var idx=(rk.id in byId)?byId[rk.id]:(nm(rk)&&byName[nm(rk)]!==undefined?byName[nm(rk)]:-1);
+  if(idx<0){
+   out.kids.push(rk);
+   byId[rk.id]=out.kids.length-1;
+   if(nm(rk))byName[nm(rk)]=out.kids.length-1;
+   return;
+  }
+  var lk=out.kids[idx];
+  lk.id=rk.id;
   var seen={},h=[];
   (lk.history||[]).concat(rk.history||[]).forEach(function(x){
    var key=x.ts+"_"+x.id;
