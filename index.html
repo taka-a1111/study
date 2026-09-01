@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01q / kumon_math_ver4.2 -->
+<!-- BUILD_TAG: 2026-09-01r / kumon_math_ver4.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -284,6 +284,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .gpad button:active{background:var(--ai-s)}
 .gpad .fn{font-family:var(--jp);font-size:14px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
 .gpad .ok{background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:15px;font-weight:700}
+.gbio{text-align:center;padding:6px 0 2px}
+.gbio .fp{font-size:44px;line-height:1;margin:6px 0 10px}
 </style>
 </head>
 <body>
@@ -296,7 +298,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.2 / 2026-09-01q</div>
+  <div class="tiny">まいにち計算 ver4.3 / 2026-09-01r</div>
 </section>
 
 <!-- こども追加 -->
@@ -344,7 +346,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01q</div>
+  <div class="tiny">BUILD 2026-09-01r</div>
 </section>
 
 <!-- れいだい -->
@@ -481,6 +483,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="row"><span>1問ごとに ○×と正解を出す</span><div class="tg" id="st-inst"><b></b></div></div>
     <div class="row"><span>音を出す</span><div class="tg" id="st-snd"><b></b></div></div>
     <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
+    <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
     <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。</div>
   </div>
   <div class="card">
@@ -514,7 +517,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.2 / BUILD 2026-09-01q</div>
+  <div class="tiny">kumon_math ver4.3 / BUILD 2026-09-01r</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -552,6 +555,13 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <div class="mask hide" id="gate"><div class="dlg">
   <h3>保護者の かくにん</h3>
   <div class="note">つぎの かけ算の 答えを 入れてください。</div>
+  <div class="gbio hide" id="gate-bio">
+    <div class="fp">🔒</div>
+    <div class="note" id="gate-bmsg">指紋で かくにん しています…</div>
+    <button class="btn o" id="gate-bgo" style="margin-top:12px">指紋で ひらく</button>
+    <button class="btn q" id="gate-bnum">数字で ひらく</button>
+  </div>
+  <div id="gate-num">
   <div class="q" id="gate-q"></div>
   <div class="gdisp" id="gate-d"><span class="c"></span></div>
   <div class="gpad" id="gate-pad">
@@ -560,13 +570,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button data-g="7">7</button><button data-g="8">8</button><button data-g="9">9</button>
     <button class="fn" data-g="del">けす</button><button data-g="0">0</button><button class="ok" data-g="ok">OK</button>
   </div>
+  </div>
   <button class="btn q" id="gate-ng" style="margin-top:6px">やめる</button>
 </div></div>
 </div>
 
 <script>
 "use strict";
-var BUILD="2026-09-01q";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01r";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1316,10 +1327,59 @@ document.addEventListener("click",function(e){
  prep(t);show(t);
 });
 
+/* ---- 指紋・顔認証（WebAuthn） ---- */
+var WA_KEY="wa_cred";
+function waSupported(){
+ if(!(window.PublicKeyCredential&&navigator.credentials&&location.protocol==="https:"))return Promise.resolve(false);
+ if(!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable)return Promise.resolve(false);
+ return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function(){return false;});
+}
+function waOn(){return !!localStorage.getItem(WA_KEY);}
+function b64u(buf){
+ var b="",a=new Uint8Array(buf);
+ for(var i=0;i<a.length;i++)b+=String.fromCharCode(a[i]);
+ return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function unb64u(str){
+ str=str.replace(/-/g,"+").replace(/_/g,"/");
+ while(str.length%4)str+="=";
+ var bin=atob(str),a=new Uint8Array(bin.length);
+ for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);
+ return a.buffer;
+}
+function waRegister(cb){
+ var ch=crypto.getRandomValues(new Uint8Array(32));
+ var uid=crypto.getRandomValues(new Uint8Array(16));
+ navigator.credentials.create({publicKey:{
+  challenge:ch,
+  rp:{name:"まいにち計算",id:location.hostname},
+  user:{id:uid,name:"parent@maininchi",displayName:"保護者"},
+  pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],
+  authenticatorSelection:{authenticatorAttachment:"platform",userVerification:"required",residentKey:"discouraged"},
+  timeout:60000,attestation:"none"
+ }}).then(function(c){
+  localStorage.setItem(WA_KEY,b64u(c.rawId));cb(true);
+ }).catch(function(){cb(false);});
+}
+function waVerify(cb){
+ var id=localStorage.getItem(WA_KEY);
+ if(!id){cb(false);return;}
+ var ch=crypto.getRandomValues(new Uint8Array(32));
+ navigator.credentials.get({publicKey:{
+  challenge:ch,timeout:60000,rpId:location.hostname,
+  allowCredentials:[{type:"public-key",id:unb64u(id),transports:["internal"]}],
+  userVerification:"required"
+ }}).then(function(){cb(true);}).catch(function(){cb(false);});
+}
+
 /* 保護者ゲート */
 var gateCb=null,gateAns=0,gateTry=0,gateIn="";
 function gateDraw(){
  document.getElementById("gate-d").innerHTML=gateIn===""?'<span class="c"></span>':gateIn;
+}
+function gateShowNum(){
+ document.getElementById("gate-bio").classList.add("hide");
+ document.getElementById("gate-num").classList.remove("hide");
 }
 function openGate(cb){
  gateCb=cb;gateTry=0;gateIn="";
@@ -1328,6 +1388,19 @@ function openGate(cb){
  document.getElementById("gate-q").textContent=a+" × "+b+" =";
  gateDraw();
  document.getElementById("gate").classList.remove("hide");
+ if(waOn()){
+  document.getElementById("gate-num").classList.add("hide");
+  document.getElementById("gate-bio").classList.remove("hide");
+  document.getElementById("gate-bmsg").textContent="指紋で かくにん しています…";
+  document.getElementById("gate-bgo").classList.add("hide");
+  waVerify(function(ok){
+   if(ok){closeGate();if(gateCb)gateCb();return;}
+   document.getElementById("gate-bmsg").textContent="かくにん できませんでした。";
+   document.getElementById("gate-bgo").classList.remove("hide");
+  });
+ }else{
+  gateShowNum();
+ }
 }
 function closeGate(){document.getElementById("gate").classList.add("hide");}
 document.getElementById("gate-pad").addEventListener("click",function(e){
@@ -1347,6 +1420,16 @@ document.getElementById("gate-pad").addEventListener("click",function(e){
 });
 document.getElementById("gate-ng").addEventListener("click",function(){
  closeGate();renderHome();show("s-home");
+});
+document.getElementById("gate-bnum").addEventListener("click",gateShowNum);
+document.getElementById("gate-bgo").addEventListener("click",function(){
+ document.getElementById("gate-bmsg").textContent="指紋で かくにん しています…";
+ document.getElementById("gate-bgo").classList.add("hide");
+ waVerify(function(ok){
+  if(ok){closeGate();if(gateCb)gateCb();return;}
+  document.getElementById("gate-bmsg").textContent="かくにん できませんでした。";
+  document.getElementById("gate-bgo").classList.remove("hide");
+ });
 });
 
 /* ============================================================
@@ -2038,6 +2121,10 @@ function renderSet(){
  document.getElementById("st-voice").classList.toggle("on",!!S.voice);
  document.getElementById("st-who").textContent=k.name;
  document.getElementById("st-ver").textContent=BUILD+(newBuild?"（あたらしい版あり）":"");
+ document.getElementById("st-bio").classList.toggle("on",waOn());
+ waSupported().then(function(ok){
+  document.getElementById("st-biorow").classList.toggle("hide",!ok&&!waOn());
+ });
  var sl=document.getElementById("st-lv");
  sl.innerHTML=LV.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
  sl.value=String(STEPS[k.stepIdx].li);
@@ -2072,6 +2159,18 @@ document.getElementById("st-qm").addEventListener("change",function(e){P().qmode
 document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
+document.getElementById("st-bio").addEventListener("click",function(e){
+ var el=e.currentTarget;
+ if(waOn()){
+  localStorage.removeItem(WA_KEY);el.classList.remove("on");
+  alert("指紋での ロック解除を やめました。つぎからは かけ算に なります。");
+  return;
+ }
+ waRegister(function(ok){
+  el.classList.toggle("on",ok);
+  alert(ok?"とうろく しました。つぎから 指紋で ひらけます。":"とうろく できませんでした。端末に 指紋や 顔が 登録されているか かくにんしてください。");
+ });
+});
 document.getElementById("st-inst").addEventListener("click",function(){imOpen(false);});
 document.getElementById("st-upd").addEventListener("click",function(){
  if(newBuild){applyUpdate();return;}
