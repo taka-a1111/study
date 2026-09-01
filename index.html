@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02q / kumon_math_ver6.6 -->
+<!-- BUILD_TAG: 2026-09-02r / kumon_math_ver6.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.6 / 2026-09-02q</div>
+  <div class="tiny">まいにち計算 ver6.7 / 2026-09-02r</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02q</div>
+  <div class="tiny">BUILD 2026-09-02r</div>
 </section>
 
 <!-- れいだい -->
@@ -658,8 +658,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn l" id="st-s2" style="width:auto;padding:9px 14px;font-size:14px">ブー</button></span></div>
     <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
     <div class="row"><span>まちがいは かならず なおす</span><div class="tg" id="st-fix"><b></b></div></div>
-    <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
-    <div class="note" style="padding-top:6px;color:var(--aka)">指紋が うまくいかないとき、Androidは 端末の画面ロック（パターン・PIN）でも 解除できてしまいます。お子さんが パターンを 知っている場合は オフにして、下の パスコードを 使ってください。</div>
+
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
     <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクは1回押すと つけっぱなしになり、もう一度 押すまで 続けて 聞きとります。次の問題に進んでも そのままです。「けす」と言うと 1文字 消せます。<br><br>手書きと 音声では、答えが 合っていれば「こたえる」を 押さなくても つぎへ 進みます。まちがっているときは 止まるので、書きなおして ください。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
   </div>
@@ -671,17 +670,36 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="btn l" id="st-test" style="margin-top:10px">診断テストで 決めなおす</button>
   </div>
   <div class="card">
-    <h3>保護者パスコード</h3>
-    <div class="note" id="pin-state"></div>
-    <label class="f"><span>あたらしい パスコード（4〜8けた）</span>
-      <input type="password" id="pin-a" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="数字だけ"></label>
-    <label class="f"><span>もういちど</span>
-      <input type="password" id="pin-b" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="かくにん"></label>
-    <div class="stk" style="margin-top:14px">
-      <button class="btn o" id="pin-set">パスコードを 決める</button>
-      <button class="btn q hide" id="pin-off">パスコードを やめる（かけ算に もどす）</button>
+    <h3>保護者ロック</h3>
+    <label class="f"><span>保護者メニューの ひらき方</span><select id="lk-mode">
+      <option value="calc">計算の 答えを 入れる</option>
+      <option value="pin">パスコード</option>
+      <option value="bio">指紋・顔</option>
+    </select></label>
+
+    <div id="lk-calc">
+      <label class="f"><span>計算の むずかしさ</span><select id="lk-lv">
+        <option value="1">2けた × 1けた（れい 23 × 7）</option>
+        <option value="2">2けた × 2けた（れい 47 × 23）</option>
+        <option value="3">3けた × 2けた（れい 268 × 34）</option>
+      </select></label>
+      <div class="note" style="padding-top:8px">お子さんが かけ算を 覚えてきたら、むずかしさを 上げてください。</div>
     </div>
-    <div class="note" style="padding-top:8px">パスコードを 決めると、保護者メニューは このパスコードでしか ひらけなくなります（かけ算は 出ません）。同期していれば もう1台の 端末でも 同じ パスコードに なります。</div>
+
+    <div id="lk-pin" class="hide">
+      <div class="note" id="pin-state"></div>
+      <label class="f"><span>あたらしい パスコード（4〜8けた）</span>
+        <input type="password" id="pin-a" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="数字だけ"></label>
+      <label class="f"><span>もういちど</span>
+        <input type="password" id="pin-b" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="かくにん"></label>
+      <button class="btn o" id="pin-set" style="margin-top:14px">パスコードを 決める</button>
+      <button class="btn q hide" id="pin-off">パスコードを けす</button>
+    </div>
+
+    <div id="lk-bio" class="hide">
+      <div class="row" id="st-biorow"><span>この端末に 指紋を とうろくする</span><div class="tg" id="st-bio"><b></b></div></div>
+      <div class="note" style="padding-top:6px;color:var(--aka)">Androidは 指紋が 読めないとき 端末の画面ロック（パターン・PIN）でも 解除できます。お子さんが パターンを 知っている場合は 選ばないでください。</div>
+    </div>
   </div>
   <div class="card">
     <h3>はじめから やりなおす</h3>
@@ -751,7 +769,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.6 / BUILD 2026-09-02q</div>
+  <div class="tiny">kumon_math ver6.7 / BUILD 2026-09-02r</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -804,7 +822,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="fp">🔒</div>
     <div class="note" id="gate-bmsg">指紋で かくにん しています…</div>
     <button class="btn o" id="gate-bgo" style="margin-top:12px">指紋で ひらく</button>
-    <button class="btn l" id="gate-bnum" style="margin-top:8px">かけ算で ひらく</button>
+    <button class="btn l" id="gate-bnum" style="margin-top:8px">べつの ほうほうで ひらく</button>
   </div>
   <div id="gate-num">
   <div class="q" id="gate-q"></div>
@@ -822,7 +840,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02q";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02r";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1438,7 +1456,7 @@ function makeSheet(st,n){
    3. 状態（学習者プロフィール）
    ============================================================ */
 var ICONS=["🐰","🐻","🐱","🐶","🦊","🐼","🦁","🐸","🐧","🦄"];
-var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,pin:null,kids:[]};
+var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,pin:null,lock:"calc",lockLv:1,kids:[]};
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
@@ -1685,20 +1703,27 @@ function gateShowNum(){
  document.getElementById("gate-bio").classList.add("hide");
  document.getElementById("gate-num").classList.remove("hide");
 }
+function makeCalc(){
+ var lv=S.lockLv||1,a,b;
+ if(lv===3){a=ri(102,999);b=ri(11,49);}
+ else if(lv===2){a=ri(12,99);b=ri(11,29);}
+ else{a=ri(12,29);b=ri(3,9);}
+ gateAns=a*b;
+ document.getElementById("gate-q").textContent=a+" × "+b+" =";
+}
 function openGate(cb){
  gateCb=cb;gateTry=0;gateIn="";
- if(pinOn()){
+ var mode=S.lock||"calc";
+ if(mode==="pin"&&pinOn()){
   gateMode="pin";
   document.getElementById("gate-q").textContent="パスコード";
  }else{
   gateMode="calc";
-  var a=ri(12,29),b=ri(3,9);
-  gateAns=a*b;
-  document.getElementById("gate-q").textContent=a+" × "+b+" =";
+  makeCalc();
  }
  gateDraw();
  document.getElementById("gate").classList.remove("hide");
- if(waOn()){
+ if(mode==="bio"&&waOn()){
   document.getElementById("gate-num").classList.add("hide");
   document.getElementById("gate-bio").classList.remove("hide");
   document.getElementById("gate-bmsg").textContent="指紋で かくにん しています…";
@@ -3257,12 +3282,12 @@ function renderSet(){
  document.getElementById("rs-kid").innerHTML=S.kids.map(function(x,i){
   return '<option value="'+i+'">'+x.icon+' '+esc(x.name)+'</option>';}).join("");
  document.getElementById("rs-kid").value=String(S.cur);
- renderPin();
+ renderLock();
  document.getElementById("st-fix").classList.toggle("on",S.mustFix===true);
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
   document.getElementById("st-biorow").classList.toggle("hide",!ok&&!waOn());
-  document.getElementById("st-biocard").classList.toggle("hide",!(ok&&!waOn()));
+  document.getElementById("st-biocard").classList.toggle("hide",!(ok&&!waOn()&&S.lock==="bio"));
  });
  var sl=document.getElementById("st-lv");
  sl.innerHTML=LV.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
@@ -3314,10 +3339,11 @@ document.getElementById("st-bio").addEventListener("click",function(e){
  var el=e.currentTarget;
  if(waOn()){
   localStorage.removeItem(WA_KEY);el.classList.remove("on");
-  alert("指紋での ロック解除を やめました。つぎからは かけ算に なります。");
+  S.lock="calc";save();renderSet();
+  alert("指紋での ロック解除を やめました。つぎからは 計算に なります。");
   return;
  }
- bioEnable(function(ok){el.classList.toggle("on",ok);renderSet();});
+ bioEnable(function(ok){el.classList.toggle("on",ok);if(ok){S.lock="bio";save();}renderSet();});
 });
 document.getElementById("pr-send").addEventListener("click",function(){
  var i=Number(document.getElementById("pr-kid").value);
@@ -3329,6 +3355,28 @@ document.getElementById("pr-send").addEventListener("click",function(){
  if(kk.praise.length>20)kk.praise=kk.praise.slice(-20);
  save();
  alert("おくりました。お子さんの 学習画面に 出ます。");
+});
+function renderLock(){
+ var m=S.lock||"calc";
+ document.getElementById("lk-mode").value=m;
+ document.getElementById("lk-lv").value=String(S.lockLv||1);
+ document.getElementById("lk-calc").classList.toggle("hide",m!=="calc");
+ document.getElementById("lk-pin").classList.toggle("hide",m!=="pin");
+ document.getElementById("lk-bio").classList.toggle("hide",m!=="bio");
+ renderPin();
+}
+document.getElementById("lk-mode").addEventListener("change",function(e){
+ var m=e.target.value;
+ if(m==="pin"&&!pinOn())alert("パスコードを 決めてください。決めるまでは 計算で ひらきます。");
+ if(m==="bio"&&!waOn())alert("この端末に 指紋を とうろくしてください。とうろく するまでは 計算で ひらきます。");
+ if(m==="calc"){
+  /* 計算に もどすときは 指紋の とうろくを 消す */
+  try{localStorage.removeItem(WA_KEY);}catch(err){}
+ }
+ S.lock=m;save();renderLock();
+});
+document.getElementById("lk-lv").addEventListener("change",function(e){
+ S.lockLv=Number(e.target.value);save();
 });
 function renderPin(){
  document.getElementById("pin-state").textContent=pinOn()
