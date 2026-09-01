@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02z / kumon_math_ver7.5 -->
+<!-- BUILD_TAG: 2026-09-03a / kumon_math_ver7.6 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -417,8 +417,10 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .hintlist li{background:var(--yam-s);border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:14px}
 .hintlist li::before{content:"🔎 ";}
 .scene{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.8;margin-top:10px}
-.opts button{display:block;width:100%;text-align:left;background:var(--surf);border:1.5px solid var(--line);
-  border-radius:12px;padding:14px;font-size:15px;line-height:1.6;margin-top:8px}
+.opts button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surf);border:1.5px solid var(--line);
+  border-radius:12px;padding:10px;font-size:14.5px;line-height:1.55;margin-top:8px}
+.opts button svg{border:1px solid var(--line)}
+.sart{margin:2px 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .opts button:active{background:var(--ai-s)}
 .game-q{font-family:var(--num);font-size:40px;font-weight:700;text-align:center;margin:10px 0}
 .bubbles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
@@ -504,7 +506,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.5 / 2026-09-02z</div>
+  <div class="tiny">まいにち計算 ver7.6 / 2026-09-03a</div>
 </section>
 
 <!-- こども追加 -->
@@ -565,7 +567,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02z</div>
+  <div class="tiny">BUILD 2026-09-03a</div>
 </section>
 
 <!-- れいだい -->
@@ -926,7 +928,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.5 / BUILD 2026-09-02z</div>
+  <div class="tiny">kumon_math ver7.6 / BUILD 2026-09-03a</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1029,7 +1031,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02z";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03a";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2264,6 +2266,117 @@ function charSVG(id,cls){
  return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+
    aura+cbody(sp,pal[0],pal[1],pal[2])+ceyes(ey,pal[1])+cacc(ac,pal[0],pal[1],pal[2])+spark+'</svg>';
 }
+
+/* ===== ぼうけんの 絵（部品を 組み合わせて 場面を つくる） ===== */
+var ART={
+ bg:function(t){
+  var sky={forest:["#bfe3ff","#e8f6ff"],mountain:["#a9c8e8","#e6f0fa"],beach:["#8fd0ff","#e3f4ff"],
+           sky:["#7fbcff","#e8f4ff"],desert:["#141a3a","#3a2f6a"],castle:["#2b2f6b","#6b5aa8"]}[t];
+  var g='<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+sky[0]+'"/><stop offset="1" stop-color="'+sky[1]+'"/></linearGradient></defs>'+
+        '<rect width="300" height="160" fill="url(#sk)"/>';
+  if(t==="forest")g+='<path d="M0,120 C60,105 120,130 180,115 C240,100 270,120 300,112 L300,160 L0,160 Z" fill="#7cc26b"/>';
+  if(t==="mountain")g+='<path d="M0,150 L60,60 L110,120 L160,40 L220,110 L260,70 L300,140 L300,160 L0,160 Z" fill="#9aa8b8"/>'+
+    '<path d="M60,60 L48,80 L72,80 Z M160,40 L146,64 L174,64 Z M260,70 L250,88 L270,88 Z" fill="#fff"/><rect y="140" width="300" height="20" fill="#7d8c9c"/>';
+  if(t==="beach")g+='<path d="M0,95 C50,88 100,102 150,95 C200,88 250,102 300,95 L300,125 L0,125 Z" fill="#3e9de0"/>'+
+    '<path d="M0,110 C50,104 100,116 150,110 C200,104 250,116 300,110 L300,125 L0,125 Z" fill="#6fbdf0" opacity=".8"/><rect y="125" width="300" height="35" fill="#f2dfb0"/>';
+  if(t==="sky")g+='<ellipse cx="150" cy="150" rx="170" ry="34" fill="#fff"/><ellipse cx="60" cy="140" rx="70" ry="22" fill="#fff"/><ellipse cx="240" cy="142" rx="80" ry="24" fill="#fff"/>';
+  if(t==="desert")g+='<path d="M0,120 C60,96 120,130 180,108 C230,92 270,120 300,110 L300,160 L0,160 Z" fill="#c9a35a"/><path d="M0,140 C80,124 160,150 300,132 L300,160 L0,160 Z" fill="#b28a44"/>';
+  if(t==="castle")g+='<rect y="130" width="300" height="30" fill="#4a4470"/>';
+  return g;
+ },
+ tree:function(x,c){c=c||"#3f9a4a";return '<rect x="'+(x-4)+'" y="92" width="8" height="30" fill="#8a5a2b"/><circle cx="'+x+'" cy="82" r="20" fill="'+c+'"/><circle cx="'+(x-10)+'" cy="92" r="14" fill="'+c+'"/><circle cx="'+(x+10)+'" cy="92" r="14" fill="'+c+'"/>';},
+ rock:function(x){return '<path d="M'+(x-22)+',122 C'+(x-18)+',100 '+(x+18)+',96 '+(x+24)+',120 Z" fill="#8f98a4"/>';},
+ glow:function(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="10" fill="#ffe27a" opacity=".9"/><circle cx="'+x+'" cy="'+y+'" r="16" fill="#ffe27a" opacity=".35"/>';},
+ scroll:function(x,y){return '<rect x="'+(x-16)+'" y="'+(y-10)+'" width="32" height="20" rx="3" fill="#f3e2b8" stroke="#b28a44" stroke-width="2"/><path d="M'+(x-10)+','+(y-4)+' L'+(x+10)+','+(y+2)+' M'+(x-8)+','+(y+4)+' L'+(x+4)+','+(y+6)+'" stroke="#b28a44" stroke-width="1.5"/>';},
+ kid:function(x,y){return '<circle cx="'+x+'" cy="'+(y-22)+'" r="10" fill="#ffd9b3"/><path d="M'+(x-11)+','+(y-26)+' C'+(x-8)+','+(y-40)+' '+(x+8)+','+(y-40)+' '+(x+11)+','+(y-26)+' Z" fill="#e2564a"/><rect x="'+(x-8)+'" y="'+(y-12)+'" width="16" height="18" rx="4" fill="#2f79d6"/><rect x="'+(x-7)+'" y="'+(y+6)+'" width="6" height="8" fill="#5a3a1a"/><rect x="'+(x+1)+'" y="'+(y+6)+'" width="6" height="8" fill="#5a3a1a"/><circle cx="'+(x-3)+'" cy="'+(y-23)+'" r="1.5" fill="#222"/><circle cx="'+(x+3)+'" cy="'+(y-23)+'" r="1.5" fill="#222"/>';},
+ tanuki:function(x,y){return '<ellipse cx="'+x+'" cy="'+(y-6)+'" rx="12" ry="10" fill="#8a6a4a"/><circle cx="'+x+'" cy="'+(y-18)+'" r="8" fill="#8a6a4a"/><path d="M'+(x-8)+','+(y-22)+' L'+(x-6)+','+(y-30)+' L'+(x-2)+','+(y-23)+' Z M'+(x+8)+','+(y-22)+' L'+(x+6)+','+(y-30)+' L'+(x+2)+','+(y-23)+' Z" fill="#8a6a4a"/><ellipse cx="'+(x-3)+'" cy="'+(y-17)+'" rx="3" ry="2.2" fill="#3a2a1a"/><ellipse cx="'+(x+3)+'" cy="'+(y-17)+'" rx="3" ry="2.2" fill="#3a2a1a"/><circle cx="'+(x-3)+'" cy="'+(y-17)+'" r="1" fill="#fff"/><circle cx="'+(x+3)+'" cy="'+(y-17)+'" r="1" fill="#fff"/>';},
+ sign:function(x,n){var s='<rect x="'+(x-2)+'" y="90" width="4" height="34" fill="#8a5a2b"/>';for(var i=0;i<n;i++)s+='<rect x="'+(x-18)+'" y="'+(72+i*12)+'" width="36" height="9" rx="2" fill="#e9d59a" stroke="#8a5a2b" stroke-width="1.5"/>';return s;},
+ box:function(x,y){return '<rect x="'+(x-16)+'" y="'+(y-10)+'" width="32" height="20" rx="3" fill="#b8762a" stroke="#6b3f12" stroke-width="2"/><rect x="'+(x-16)+'" y="'+(y-14)+'" width="32" height="8" rx="3" fill="#d08a34" stroke="#6b3f12" stroke-width="2"/><rect x="'+(x-3)+'" y="'+(y-8)+'" width="6" height="6" fill="#ffe27a"/>';},
+ board:function(x){return '<rect x="'+(x-2)+'" y="92" width="4" height="30" fill="#8a5a2b"/><rect x="'+(x-22)+'" y="74" width="44" height="20" rx="3" fill="#e9d59a" stroke="#8a5a2b" stroke-width="2"/><path d="M'+(x-14)+',82 L'+(x+14)+',82 M'+(x-14)+',88 L'+(x+6)+',88" stroke="#8a5a2b" stroke-width="1.5"/>';},
+ lake:function(x){return '<ellipse cx="'+x+'" cy="128" rx="46" ry="12" fill="#bfe9ff" stroke="#8fd0ff" stroke-width="2"/><path d="M'+(x-20)+',126 L'+(x-8)+',122 L'+(x+4)+',128" stroke="#fff" stroke-width="2" fill="none"/>';},
+ key:function(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="6" fill="none" stroke="#e0a92a" stroke-width="3"/><path d="M'+(x+5)+','+y+' L'+(x+20)+','+y+' M'+(x+14)+','+y+' L'+(x+14)+','+(y+5)+' M'+(x+18)+','+y+' L'+(x+18)+','+(y+5)+'" stroke="#e0a92a" stroke-width="3"/>';},
+ cave:function(x,ic){var s='<path d="M'+(x-26)+',124 C'+(x-26)+',90 '+(x+26)+',90 '+(x+26)+',124 Z" fill="#2a2a3a"/>';if(ic)s+='<path d="M'+(x-14)+',98 L'+(x-11)+',110 L'+(x-8)+',98 M'+(x-2)+',96 L'+(x+1)+',112 L'+(x+4)+',96 M'+(x+10)+',98 L'+(x+13)+',108 L'+(x+16)+',98" fill="#cfefff" stroke="#9fd4ff" stroke-width="1"/>';if(ic===2)s+='<path d="M'+(x-20)+',110 C'+(x-10)+',100 '+(x+10)+',100 '+(x+20)+',110" stroke="#7cc26b" stroke-width="5" fill="none"/>';if(ic===3)s+='<path d="M'+(x-10)+',105 C'+(x-4)+',95 '+(x+4)+',115 '+(x+10)+',105" stroke="#f0862a" stroke-width="3" fill="none"/>';return s;},
+ lighthouse:function(x,on){return '<path d="M'+(x-10)+',125 L'+(x-6)+',60 L'+(x+6)+',60 L'+(x+10)+',125 Z" fill="#fff" stroke="#c0453c" stroke-width="2"/><rect x="'+(x-8)+'" y="80" width="16" height="10" fill="#c0453c"/><rect x="'+(x-8)+'" y="100" width="16" height="10" fill="#c0453c"/><rect x="'+(x-7)+'" y="50" width="14" height="12" fill="'+(on?"#ffe27a":"#556")+'"/>'+(on?'<path d="M'+(x+7)+',56 L'+(x+60)+',36 L'+(x+60)+',76 Z" fill="#ffe27a" opacity=".5"/>':'');},
+ boat:function(x){return '<path d="M'+(x-30)+',108 L'+(x+30)+',108 L'+(x+22)+',122 L'+(x-22)+',122 Z" fill="#8a5a2b"/><rect x="'+(x-2)+'" y="70" width="4" height="38" fill="#5a3a1a"/><path d="M'+(x+2)+',72 L'+(x+26)+',100 L'+(x+2)+',100 Z" fill="#fff"/>';},
+ man:function(x,y){return '<circle cx="'+x+'" cy="'+(y-20)+'" r="8" fill="#ffd9b3"/><path d="M'+(x-10)+','+(y-24)+' L'+(x+10)+','+(y-24)+' L'+(x)+','+(y-34)+' Z" fill="#2f5aa0"/><rect x="'+(x-7)+'" y="'+(y-12)+'" width="14" height="16" rx="3" fill="#2f5aa0"/><path d="M'+(x-4)+','+(y-16)+' Q'+x+','+(y-13)+' '+(x+4)+','+(y-16)+'" stroke="#333" stroke-width="1.2" fill="none"/>';},
+ shell:function(x,y,c,r){return '<path d="M'+(x-r)+','+y+' C'+(x-r)+','+(y-r*1.2)+' '+(x+r)+','+(y-r*1.2)+' '+(x+r)+','+y+' Z" fill="'+c+'" stroke="#7a6a5a" stroke-width="1.5"/><path d="M'+x+','+y+' L'+x+','+(y-r)+' M'+x+','+y+' L'+(x-r*.6)+','+(y-r*.7)+' M'+x+','+y+' L'+(x+r*.6)+','+(y-r*.7)+'" stroke="#7a6a5a" stroke-width="1"/>';},
+ gull:function(x,y){return '<path d="M'+(x-10)+','+y+' Q'+(x-5)+','+(y-6)+' '+x+','+y+' Q'+(x+5)+','+(y-6)+' '+(x+10)+','+y+'" stroke="#fff" stroke-width="2.5" fill="none"/>';},
+ cloud:function(x,y,w){return '<ellipse cx="'+x+'" cy="'+y+'" rx="'+w+'" ry="'+(w*.45)+'" fill="#fff"/><circle cx="'+(x-w*.4)+'" cy="'+(y-w*.2)+'" r="'+(w*.4)+'" fill="#fff"/><circle cx="'+(x+w*.3)+'" cy="'+(y-w*.25)+'" r="'+(w*.45)+'" fill="#fff"/>';},
+ door:function(x,st){var c={hot:"#e2564a",cool:"#5aa9e6",none:"#c9d0c8"}[st]||"#8a5a2b";return '<rect x="'+(x-16)+'" y="70" width="32" height="56" rx="16" fill="'+c+'" stroke="#5a3a1a" stroke-width="2"/><circle cx="'+(x+8)+'" cy="102" r="3" fill="#ffe27a"/>'+(st==="cool"?'<path d="M'+(x-30)+',90 q6,-4 12,0 q6,4 12,0" stroke="#5aa9e6" stroke-width="2" fill="none"/>':'')+(st==="hot"?'<path d="M'+(x+22)+',96 q3,-8 0,-14" stroke="#e2564a" stroke-width="2" fill="none"/>':'');},
+ camel:function(x,y){return '<ellipse cx="'+x+'" cy="'+(y-10)+'" rx="22" ry="12" fill="#d3a55a"/><circle cx="'+(x-6)+'" cy="'+(y-26)+'" r="8" fill="#d3a55a"/><circle cx="'+(x+8)+'" cy="'+(y-26)+'" r="8" fill="#d3a55a"/><rect x="'+(x+18)+'" y="'+(y-26)+'" width="7" height="18" rx="3" fill="#d3a55a"/><circle cx="'+(x+26)+'" cy="'+(y-28)+'" r="6" fill="#d3a55a"/><rect x="'+(x-16)+'" y="'+(y-2)+'" width="5" height="14" fill="#b8874a"/><rect x="'+(x+10)+'" y="'+(y-2)+'" width="5" height="14" fill="#b8874a"/>';},
+ star:function(x,y,r,c){var d="";for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rr=(i%2===0)?r:r*.45;d+=(i?"L":"M")+(x+rr*Math.cos(a)).toFixed(1)+","+(y+rr*Math.sin(a)).toFixed(1);}return '<path d="'+d+'Z" fill="'+(c||"#fff")+'"/>';},
+ cactus:function(x,y){return '<rect x="'+(x-5)+'" y="'+(y-30)+'" width="10" height="30" rx="5" fill="#3f9a4a"/><rect x="'+(x-16)+'" y="'+(y-22)+'" width="6" height="14" rx="3" fill="#3f9a4a"/><rect x="'+(x-16)+'" y="'+(y-14)+'" width="12" height="5" fill="#3f9a4a"/><rect x="'+(x+10)+'" y="'+(y-26)+'" width="6" height="14" rx="3" fill="#3f9a4a"/><rect x="'+(x+4)+'" y="'+(y-16)+'" width="12" height="5" fill="#3f9a4a"/>';},
+ hill:function(x,w){return '<path d="M'+(x-w)+',130 C'+(x-w/2)+',96 '+(x+w/2)+',96 '+(x+w)+',130 Z" fill="#c9a35a"/>';},
+ castle:function(x){return '<rect x="'+(x-50)+'" y="70" width="100" height="60" fill="#8c86b8"/><rect x="'+(x-60)+'" y="50" width="20" height="80" fill="#a59fd0"/><rect x="'+(x+40)+'" y="50" width="20" height="80" fill="#a59fd0"/><path d="M'+(x-60)+',50 L'+(x-50)+',34 L'+(x-40)+',50 Z M'+(x+40)+',50 L'+(x+50)+',34 L'+(x+60)+',50 Z" fill="#e2564a"/><rect x="'+(x-14)+'" y="96" width="28" height="34" rx="14" fill="#3a2a5a"/>';},
+ win:function(x,y){return '<rect x="'+(x-6)+'" y="'+(y-8)+'" width="12" height="16" rx="6" fill="#ffe27a"/>';},
+ guard:function(x,y){return '<circle cx="'+x+'" cy="'+(y-22)+'" r="8" fill="#ffd9b3"/><rect x="'+(x-9)+'" y="'+(y-32)+'" width="18" height="8" rx="3" fill="#8c86b8"/><rect x="'+(x-8)+'" y="'+(y-14)+'" width="16" height="20" rx="3" fill="#6b5aa8"/><rect x="'+(x+10)+'" y="'+(y-40)+'" width="3" height="46" fill="#c9c9c9"/>';},
+ flower:function(x,y,c){return '<circle cx="'+x+'" cy="'+y+'" r="5" fill="'+c+'"/><circle cx="'+(x-5)+'" cy="'+y+'" r="3.5" fill="'+c+'"/><circle cx="'+(x+5)+'" cy="'+y+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y-5)+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y+5)+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+y+'" r="2" fill="#ffe27a"/>';},
+ dark:function(){return '<rect width="300" height="160" fill="#101426" opacity=".6"/>';},
+ wind:function(){return '<path d="M20,40 q20,-8 40,0 q20,8 40,0 M60,60 q20,-8 40,0 q20,8 40,0" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>';}
+};
+function scene(bg,parts){
+ return '<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;border-radius:12px">'+ART.bg(bg)+parts.join("")+'</svg>';
+}
+var A=ART;
+/* 各章：場面の絵 5つ ＋ 選択肢の絵 3つ */
+var STORY_ART=[
+ {bg:"forest",sc:[
+   [A.tree(50),A.tree(250,"#2f8a3a"),A.kid(140,124),A.scroll(190,116)],
+   [A.tree(40),A.tree(100,"#2f8a3a"),A.tree(260),A.kid(170,124),A.gull(120,50),A.gull(200,40)],
+   [A.tree(40),A.rock(200),A.glow(230,104),A.kid(120,124)],
+   [A.tree(260),A.kid(120,124),A.tanuki(170,124)],
+   [A.tree(30),A.tree(270,"#2f8a3a"),A.sign(150,3),A.kid(90,124),A.tanuki(220,124)]],
+  opt:[
+   [A.tree(150,"#3f9a4a"),A.flower(80,110,"#5aa9e6"),A.flower(220,112,"#5aa9e6"),A.flower(120,120,"#5aa9e6")],
+   [A.tree(90,"#e2564a"),A.lake(200),A.star(150,30,8),A.star(180,22,7),A.star(210,34,8)],
+   [A.dark(),A.tree(150,"#1e3a24"),A.star(230,30,7)]],
+  end:[A.tree(40),A.box(150,116),A.glow(150,102),A.kid(90,124),A.tanuki(210,124)]},
+ {bg:"mountain",sc:[
+   [A.board(80),A.kid(160,140),A.tanuki(210,140)],
+   [A.wind(),A.kid(150,140),A.tanuki(200,140)],
+   [A.lake(150),A.key(150,124),A.kid(70,140)],
+   [A.lake(200),A.kid(80,140),A.tanuki(150,144)],
+   [A.cave(60,1),A.cave(150,2),A.cave(240,3),A.kid(150,150)]],
+  opt:[[A.cave(150,3)],[A.cave(150,1)],[A.cave(150,2)]],
+  end:[A.dark(),A.key(150,90),A.glow(150,90),A.kid(90,140),A.tanuki(210,140)]},
+ {bg:"beach",sc:[
+   [A.lighthouse(240,false),A.kid(80,150),A.man(140,150)],
+   [A.boat(70),A.man(70,116),A.kid(200,150)],
+   [A.shell(90,150,"#f7c6d0",7),A.shell(150,152,"#fff",9),A.shell(220,150,"#7a6a5a",8),A.kid(40,150)],
+   [A.gull(100,40),A.gull(150,30),A.gull(200,44),A.kid(150,150)],
+   [A.shell(70,150,"#f7c6d0",7),A.shell(150,152,"#333",9),A.shell(230,150,"#fff",12),A.kid(150,120)]],
+  opt:[[A.shell(150,120,"#f7c6d0",12)],[A.shell(150,120,"#333",16)],[A.shell(150,120,"#fff",22),A.gull(120,60),A.gull(180,66)]],
+  end:[A.lighthouse(150,true),A.kid(80,150),A.man(220,150)]},
+ {bg:"sky",sc:[
+   [A.boat(150),A.cloud(60,60,26),A.kid(150,108),A.man(120,108)],
+   [A.cloud(80,70,30),A.cloud(220,50,24),A.kid(150,140),A.tanuki(200,140)],
+   [A.door(70,"plain"),A.door(150,"plain"),A.door(230,"plain"),A.kid(150,152)],
+   [A.door(70,"hot"),A.door(150,"cool"),A.door(230,"none"),A.tanuki(190,146)],
+   [A.wind(),A.door(70,"hot"),A.door(150,"cool"),A.door(230,"none"),A.kid(110,152)]],
+  opt:[[A.door(150,"hot")],[A.door(150,"cool")],[A.door(150,"none")]],
+  end:[A.dark(),A.door(150,"cool"),A.star(60,40,8),A.star(240,30,10),A.star(200,70,6),A.kid(90,152)]},
+ {bg:"desert",sc:[
+   [A.star(40,30,6),A.star(120,20,8),A.star(200,40,5),A.star(260,24,9),A.kid(150,124)],
+   [A.star(60,30,6),A.star(240,26,7),A.camel(150,124),A.kid(80,124)],
+   [A.star(150,26,12,"#ff8a7a"),A.star(60,40,6),A.star(240,44,6),A.hill(150,70),A.kid(150,120)],
+   [A.star(50,24,6),A.star(110,36,5),A.star(170,20,7),A.star(230,40,6),A.tanuki(150,124)],
+   [A.hill(60,40),A.hill(150,40),A.hill(240,40),A.cactus(60,112),A.cactus(50,116),A.cactus(70,118),A.cactus(150,112),A.star(150,26,12,"#ff8a7a"),A.star(60,30,7,"#8fd0ff"),A.kid(150,150)]],
+  opt:[[A.hill(150,60),A.cactus(120,110),A.cactus(150,106),A.cactus(180,112),A.star(150,26,11,"#8fd0ff")],
+       [A.hill(150,60),A.cactus(150,108),A.star(150,26,13,"#ff8a7a")],
+       [A.hill(150,60),A.dark()]],
+  end:[A.hill(150,60),A.scroll(150,100),A.glow(150,100),A.kid(80,124),A.tanuki(220,124)]},
+ {bg:"castle",sc:[
+   [A.castle(150),A.kid(150,150)],
+   [A.castle(150),A.guard(190,150),A.kid(110,150)],
+   [A.castle(150),A.tanuki(80,150),A.camel(230,150),A.man(150,150)],
+   [A.castle(150),A.win(120,84),A.win(180,84),A.kid(150,150)],
+   [A.castle(150),A.guard(190,150),A.kid(110,150),A.tanuki(70,150)]],
+  opt:[[A.castle(150),A.dark()],[A.castle(150),A.win(120,84),A.win(180,84),A.star(150,30,10,"#ffe27a")],[A.castle(150),A.dark(),A.star(240,30,6)]],
+  end:[A.castle(150),A.win(120,84),A.win(180,84),A.star(150,26,12,"#ffe27a"),A.kid(110,150),A.tanuki(70,150),A.guard(190,150)]}
+];
+function storyArt(ch,sc){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.sc[sc]);}
+function storyOptArt(ch,i){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.opt[i]).replace('style="width:100%;height:auto;display:block;border-radius:12px"','style="width:110px;height:auto;display:block;border-radius:10px;flex:0 0 auto"');}
+function storyEndArt(ch){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.end);}
 
 /* ===== ぼうけん（なぞとき）のデータ ===== */
 var STORY=[
@@ -3780,7 +3893,8 @@ function renderMode(k){
   document.getElementById("mc-open").onclick=function(){renderBoard();show("s-board");};
  }else{
   var st=k.story,ch=STORY[st.ch%STORY.length];
-  c.innerHTML='<div class="t">ぼうけん　だい '+(st.ch%STORY.length+1)+' しょう'+(st.loop?"（"+(st.loop+1)+"しゅうめ）":"")+'</div>'+
+  c.innerHTML='<div class="sart">'+storyArt(st.ch%STORY.length,Math.max(0,Math.min(st.sc,5)-1))+'</div>'+
+   '<div class="t">ぼうけん　だい '+(st.ch%STORY.length+1)+' しょう'+(st.loop?"（"+(st.loop+1)+"しゅうめ）":"")+'</div>'+
    '<div class="v">'+ch.t+'</div>'+
    '<div class="d">'+(st.sc>=5?"なぞときの じかん！ ヒントを よんで こたえよう。":"プリントを おえると つづきが よめます。ヒント "+st.hints.length+"こ")+'</div>'+
    '<button class="btn l" id="mc-open" style="margin-top:12px">'+(st.sc>=5?"なぞを とく":"おはなしを よむ")+'</button>';
@@ -3825,9 +3939,10 @@ function renderStory(){
  var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
  document.getElementById("st-h").textContent="ぼうけん　だい "+(st.ch%STORY.length+1)+" しょう";
  document.getElementById("st-ch").textContent=ch.t;
- var sc="";
+ var sc="",chI2=st.ch%STORY.length;
+ if(st.sc>0)sc+='<div class="sart">'+storyArt(chI2,Math.min(st.sc,5)-1)+'</div>';
  for(var i=0;i<Math.min(st.sc,5);i++)sc+='<div class="scene">'+ch.sc[i][0]+'</div>';
- if(!sc)sc='<div class="note">プリントを 1まい おえると、おはなしが はじまります。</div>';
+ if(!sc)sc='<div class="sart">'+storyArt(chI2,0)+'</div><div class="note">プリントを 1まい おえると、おはなしが はじまります。</div>';
  document.getElementById("st-scenes").innerHTML=sc;
  document.getElementById("st-hints").innerHTML=st.hints.length?st.hints.map(function(h){return "<li>"+h+"</li>";}).join(""):'<li style="background:var(--soft)">まだ ありません</li>';
  document.getElementById("st-go").textContent=st.sc>=5?"なぞを とく":"プリントを といて つづきを よむ";
@@ -3844,7 +3959,7 @@ function evShow(t,body,opts,onPick,okLabel){
  if(opts&&opts.length){
   ok.classList.add("hide");
   opts.forEach(function(x,i){
-   var b=document.createElement("button");b.textContent=x;
+   var b=document.createElement("button");b.innerHTML=x;
    b.onclick=function(){onPick(i);evDone();};
    o.appendChild(b);
   });
@@ -3895,25 +4010,27 @@ function modeAfterPrint(k){
   var scene=ch.sc[st.sc];st.sc++;
   if(scene[1]&&st.hints.indexOf(scene[1])<0)st.hints.push(scene[1]);
   save();
+  var scIdx=st.sc-1,chIdx=st.ch%STORY.length;
   pendingEv=function(){
-   evShow("だい "+(st.ch%STORY.length+1)+" しょう　"+ch.t,
-    '<div class="scene">'+scene[0]+'</div>'+(scene[1]?'<ul class="hintlist"><li>'+scene[1]+'</li></ul>':''),
+   evShow("だい "+(chIdx+1)+" しょう　"+ch.t,
+    '<div class="sart">'+storyArt(chIdx,scIdx)+'</div><div class="scene">'+scene[0]+'</div>'+(scene[1]?'<ul class="hintlist"><li>'+scene[1]+'</li></ul>':''),
     null,function(){if(st.sc>=5)storyRiddle();},st.sc>=5?"なぞを とく":"つぎへ");
   };
  }
 }
 function storyRiddle(){
  var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
+ var chI=st.ch%STORY.length;
  evShow("なぞとき："+ch.q,
   '<ul class="hintlist">'+st.hints.map(function(h){return "<li>"+h+"</li>";}).join("")+'</ul>',
-  ch.opt,function(i){
+  ch.opt.map(function(o,i){return storyOptArt(chI,i)+'<span>'+o+'</span>';}),function(i){
    evHide();
    if(i===ch.ans){
     k.encNext=2;
     st.ch++;st.sc=0;st.hints=[];
     if(st.ch%STORY.length===0)st.loop++;
     save();beep("clear");
-    evShow("せいかい！",'<div class="scene">'+ch.end+'</div><div class="note" style="margin-top:8px">つぎの プリントで、レアな キャラが かならず あらわれる！</div>',null,null);
+    evShow("せいかい！",'<div class="sart">'+storyEndArt(chI)+'</div><div class="scene">'+ch.end+'</div><div class="note" style="margin-top:8px">つぎの プリントで、レアな キャラが かならず あらわれる！</div>',null,null);
    }else{
     beep("ng");
     evShow("うーん…","<div class='note'>ちがうみたい。ヒントを もういちど よんで かんがえよう。</div>",null,function(){storyRiddle();},"もういちど");
