@@ -1,23 +1,18 @@
-/* BUILD_TAG: 2026-09-01b */
-var CACHE = "kumonmath-2026-09-01b";
+/* BUILD_TAG: 2026-09-01c */
+var CACHE = "kumonmath-2026-09-01c";
 var ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }).then(function(){ return self.skipWaiting(); }));
 });
 self.addEventListener("activate", function(e){
-  e.waitUntil(caches.keys().then(function(keys){
-    return Promise.all(keys.map(function(k){ return k === CACHE ? null : caches.delete(k); }));
-  }).then(function(){ return self.clients.claim(); }));
+  e.waitUntil(caches.keys().then(function(k){ return Promise.all(k.map(function(x){ return x === CACHE ? null : caches.delete(x); })); })
+    .then(function(){ return self.clients.claim(); }));
 });
 self.addEventListener("fetch", function(e){
   if(e.request.method !== "GET") return;
-  e.respondWith(
-    fetch(e.request).then(function(res){
-      var copy = res.clone();
-      caches.open(CACHE).then(function(c){ c.put(e.request, copy); });
-      return res;
-    }).catch(function(){
-      return caches.match(e.request).then(function(hit){ return hit || caches.match("./index.html"); });
-    })
-  );
+  e.respondWith(fetch(e.request).then(function(res){
+    var c = res.clone(); caches.open(CACHE).then(function(x){ x.put(e.request, c); }); return res;
+  }).catch(function(){
+    return caches.match(e.request).then(function(h){ return h || caches.match("./index.html"); });
+  }));
 });
