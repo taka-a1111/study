@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03a / kumon_math_ver7.6 -->
+<!-- BUILD_TAG: 2026-09-03b / kumon_math_ver7.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -506,7 +506,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.6 / 2026-09-03a</div>
+  <div class="tiny">まいにち計算 ver7.7 / 2026-09-03b</div>
 </section>
 
 <!-- こども追加 -->
@@ -567,7 +567,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03a</div>
+  <div class="tiny">BUILD 2026-09-03b</div>
 </section>
 
 <!-- れいだい -->
@@ -928,7 +928,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.6 / BUILD 2026-09-03a</div>
+  <div class="tiny">kumon_math ver7.7 / BUILD 2026-09-03b</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -944,6 +944,13 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="th"><div class="dlg">
+  <h3>スタンプを かえる</h3>
+  <div class="note">きょうの スタンプの 見た目を えらべます。いつでも かえられます。</div>
+  <div id="th-list" style="margin-top:12px"></div>
+  <button class="btn q" id="th-close" style="margin-top:10px">とじる</button>
+</div></div>
 
 <div class="mask hide" id="ev"><div class="dlg">
   <h3 id="ev-t"></h3>
@@ -1031,7 +1038,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03a";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03b";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1722,6 +1729,8 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var thm=document.getElementById("th");
+ if(thm&&!thm.classList.contains("hide")){thm.classList.add("hide");try{history.pushState({sc:"th"},"");}catch(e){}return;}
  var evm=document.getElementById("ev");
  if(evm&&!evm.classList.contains("hide")){
   try{history.pushState({sc:"ev"},"");}catch(e){}
@@ -2503,6 +2512,47 @@ function bigOrbSVG(isNew){
  /* 大玉は ふつうの玉と 同じ 見た目で、少し 大きく 7つ星 */
  return orbSVG(7,true,isNew).replace('class="orb','class="orb big');
 }
+/* ===== スタンプの テーマ（いつでも 切り替え） ===== */
+var STAMP_THEMES=[
+ {id:"orb",name:"ほしだま"},{id:"gem",name:"ほうせき"},{id:"fruit",name:"くだもの"},
+ {id:"flower",name:"おはな"},{id:"coin",name:"コイン"},{id:"chara",name:"じぶんの キャラ"}
+];
+var GEMC=["#e2564a","#f0862a","#e8bf2a","#3fae5f","#28b3a6","#2f79d6","#8b52c8","#e0699b"];
+var FRUIT=[["#e2564a","りんご"],["#f0862a","みかん"],["#e8bf2a","レモン"],["#7ac04a","メロン"],["#4a6fd6","ブルーベリー"],["#8b52c8","ぶどう"],["#f4a7b9","もも"],["#c8533a","さくらんぼ"]];
+function stampSVG(idx,filled,isNew,big){
+ var k=P(),th=(k&&k.theme)||"orb";
+ var cls='class="orb'+(big?" big":"")+(isNew?" new":"")+'"';
+ var n=Math.min(idx+1,7);
+ if(th==="orb")return big?bigOrbSVG(isNew):orbSVG(n,filled,isNew);
+ var c,inner="";
+ if(th==="gem"){
+  c=filled?GEMC[idx%GEMC.length]:"#dfe3dc";
+  inner='<path d="M0,-15 L13,-4 L0,15 L-13,-4 Z" fill="'+c+'" stroke="'+(filled?"#fff":"#c9d0c8")+'" stroke-width="1.6"/>'+
+   '<path d="M0,-15 L13,-4 L0,-4 Z" fill="#fff" opacity=".35"/><path d="M-13,-4 L0,-4 L0,15 Z" fill="#000" opacity=".12"/>';
+ }else if(th==="fruit"){
+  var f=FRUIT[idx%FRUIT.length];c=filled?f[0]:"#dfe3dc";
+  inner='<circle cx="0" cy="2" r="13" fill="'+c+'"/><ellipse cx="-4" cy="-3" rx="4" ry="2.6" fill="#fff" opacity=".4"/>'+
+   '<path d="M0,-11 C1,-16 5,-18 9,-17 C7,-13 4,-11 0,-11 Z" fill="'+(filled?"#3f9a4a":"#c9d0c8")+'"/><rect x="-1" y="-15" width="2" height="6" fill="'+(filled?"#8a5a2b":"#c9d0c8")+'"/>';
+ }else if(th==="flower"){
+  c=filled?GEMC[(idx+3)%GEMC.length]:"#dfe3dc";
+  var pet="";for(var a=0;a<6;a++){var ang=a*Math.PI/3;pet+='<ellipse cx="'+(9*Math.cos(ang)).toFixed(1)+'" cy="'+(9*Math.sin(ang)).toFixed(1)+'" rx="6" ry="4.2" transform="rotate('+(a*60)+' '+(9*Math.cos(ang)).toFixed(1)+' '+(9*Math.sin(ang)).toFixed(1)+')" fill="'+c+'"/>';}
+  inner=pet+'<circle cx="0" cy="0" r="5" fill="'+(filled?"#ffe27a":"#eef0ea")+'"/>';
+ }else if(th==="coin"){
+  c=filled?"#ffc84a":"#dfe3dc";
+  inner='<circle cx="0" cy="0" r="14" fill="'+c+'" stroke="'+(filled?"#b9760c":"#c9d0c8")+'" stroke-width="2"/>'+
+   '<circle cx="0" cy="0" r="10" fill="none" stroke="'+(filled?"#e2911b":"#d5dad2")+'" stroke-width="1.5"/>'+
+   '<text x="0" y="4.5" text-anchor="middle" font-size="12" font-weight="700" fill="'+(filled?"#8a5a10":"#b8bfb8")+'" font-family="Arial">'+(idx+1)+'</text>';
+ }else if(th==="chara"){
+  var ids=[];for(var x in (k.chars||{}))ids.push(Number(x));
+  ids.sort(function(a,b){return a-b;});
+  if(!ids.length)return orbSVG(n,filled,isNew);
+  var cid=ids[idx%ids.length];
+  var svg=charSVG(cid,"");
+  if(!filled)svg=svg.replace(/fill="#[0-9a-fA-F]{3,6}"/g,'fill="#dfe3dc"').replace(/stroke="#[0-9a-fA-F]{3,6}"/g,'stroke="#c9d0c8"');
+  return svg.replace('<svg class=""','<svg '+cls+' style="'+(big?"width:44px;height:44px":"width:36px;height:36px")+'"');
+ }
+ return '<svg '+cls+' viewBox="-17 -17 34 34" aria-hidden="true">'+inner+'</svg>';
+}
 var lastOrbCount=-1;
 var CELE=[
 {n:"りゅうが あらわれた！",g:"<svg class=\"art\" viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\"> <defs> <linearGradient id=\"dgb\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"> <stop offset=\"0%\" stop-color=\"#1f7a63\"/><stop offset=\"55%\" stop-color=\"#37b48c\"/> <stop offset=\"100%\" stop-color=\"#7fe3c0\"/> </linearGradient> <linearGradient id=\"dgl\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"> <stop offset=\"0%\" stop-color=\"#8ff0cc\" stop-opacity=\"0\"/> <stop offset=\"100%\" stop-color=\"#d8fff2\" stop-opacity=\".85\"/> </linearGradient> </defs> <g class=\"head\"> <path d=\"M18,236 C4,224 2,208 8,196 C10,212 16,224 26,230 Z\" fill=\"#e9d59a\"/> <path d=\"M20,244 C6,244 0,232 2,220 C10,230 18,236 28,238 Z\" fill=\"#e9d59a\" opacity=\".85\"/> </g> <g class=\"head\"> <path d=\"M51.4,210.2 L45.1,193.4 L62.3,198.5 Z\" fill=\"#1f7a63\"/> <path d=\"M98.0,168.9 L100.7,151.2 L113.2,163.9 Z\" fill=\"#1f7a63\"/> <path d=\"M177.0,178.9 L192.5,170.1 L190.3,187.8 Z\" fill=\"#1f7a63\"/> <path d=\"M216.5,207.0 L227.7,193.0 L232.2,210.3 Z\" fill=\"#1f7a63\"/> <path d=\"M279.1,181.9 L269.2,167.0 L287.1,168.1 Z\" fill=\"#1f7a63\"/> <path d=\"M302.0,132.5 L291.8,117.7 L309.7,118.4 Z\" fill=\"#1f7a63\"/> </g> <path class=\"body\" d=\"M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104\" fill=\"none\" stroke=\"url(#dgb)\" stroke-width=\"26\" stroke-linecap=\"round\"/> <path class=\"body\" d=\"M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104\" fill=\"none\" stroke=\"url(#dgl)\" stroke-width=\"8\" stroke-linecap=\"round\"/> <g class=\"head\"> <path d=\"M326,122 C310,120 298,126 292,138 C304,130 316,128 330,130 Z\" fill=\"#2a9d7d\"/> <path d=\"M330,118 C322,94 338,74 362,74 C386,74 398,90 394,108 C391,122 374,132 356,130 C344,129 333,126 330,118 Z\" fill=\"#37b48c\" stroke=\"#1f7a63\" stroke-width=\"3\"/> <path d=\"M392,100 C404,94 416,98 418,106 C412,112 400,112 392,108 Z\" fill=\"#7fe3c0\" stroke=\"#1f7a63\" stroke-width=\"2\"/> <path d=\"M394,112 C404,114 410,120 410,128 C402,126 396,120 392,114 Z\" fill=\"#2a9d7d\"/> <path d=\"M350,76 C344,60 336,50 324,44 C338,44 352,54 358,72 Z\" fill=\"#e9d59a\"/> <path d=\"M370,74 C368,58 366,48 358,40 C370,42 380,54 382,72 Z\" fill=\"#e9d59a\"/> <path d=\"M334,92 C320,88 310,90 302,96 C314,94 324,94 334,98 Z\" fill=\"#e9d59a\"/> <circle cx=\"372\" cy=\"96\" r=\"7\" fill=\"#fff\"/><circle cx=\"374\" cy=\"97\" r=\"3.6\" fill=\"#12324f\"/> <g class=\"whis\"> <path d=\"M394,110 C406,118 416,130 420,146\" fill=\"none\" stroke=\"#e9d59a\" stroke-width=\"3\" stroke-linecap=\"round\"/> <path d=\"M386,120 C396,132 400,144 400,158\" fill=\"none\" stroke=\"#e9d59a\" stroke-width=\"3\" stroke-linecap=\"round\"/> </g> <path d=\"M338,126 C336,138 340,148 348,152 C342,142 340,134 342,126 Z\" fill=\"#e9d59a\"/> </g> </svg>"},
@@ -2574,23 +2624,24 @@ function renderHome(){
  document.getElementById("h-sub").textContent="つづけて "+streak()+"日";
  document.getElementById("go-start").textContent=n>=dn?"もう1まい やる":(k.printNo+"まいめを はじめる");
  var st2="",isNewIdx=(lastOrbCount>=0&&n>lastOrbCount)?n:-1;
- for(var j=0;j<dn;j++)st2+=orbSVG(Math.min(j+1,7),j<n,(j+1===isNewIdx));
+ for(var j=0;j<dn;j++)st2+=stampSVG(j,j<n,(j+1===isNewIdx),false);
  var extra=Math.max(0,n-dn),bigN=Math.floor(extra/dn),restN=extra%dn;
  if(extra>0){
   st2+='<span class="sep"></span>';
   var showBig=Math.min(bigN,4);
   for(var bi=0;bi<showBig;bi++)
-   st2+=bigOrbSVG(bi===showBig-1&&isNewIdx>0&&extra%dn===0);
+   st2+=stampSVG(6,true,(bi===showBig-1&&isNewIdx>0&&extra%dn===0),true);
   if(bigN>showBig)st2+='<span class="plus">×'+bigN+'</span>';
   for(var ri2=0;ri2<restN;ri2++)
-   st2+=orbSVG(Math.min(ri2+1,7),true,(ri2+1===restN&&isNewIdx>0));
+   st2+=stampSVG(ri2,true,(ri2+1===restN&&isNewIdx>0),false);
  }
  var lbl;
  if(n<dn)lbl="あと "+(dn-n)+"つ";
  else if(extra===0)lbl="ぜんぶ そろった！";
  else lbl="おかわり "+extra+"まい"+(bigN?"（大玉 "+bigN+"）":"");
- st2+='<b class="'+(n>=dn?"done":"")+'">'+lbl+'</b>';
+ st2+='<b class="'+(n>=dn?"done":"")+'">'+lbl+'　<button id="th-open" style="color:var(--ai);font-size:12px;font-weight:700">▾ かえる</button></b>';
  document.getElementById("h-stamps").innerHTML=st2;
+ document.getElementById("th-open").onclick=function(e){e.stopPropagation();themeOpen();};
  lastOrbCount=n;
  var pr=null;
  (k.praise||[]).forEach(function(x){if(x.ts>(k.praiseSeen||0))pr=x;});
@@ -2945,17 +2996,16 @@ function showResult(){
   var ex2=Math.max(0,got-dn2),big2=Math.floor(ex2/dn2),rest2=ex2%dn2;
   var madeBig=(ex2>0&&ex2%dn2===0);
   var rowH="";
-  for(var gi=0;gi<dn2;gi++)rowH+=orbSVG(Math.min(gi+1,7),gi<got,false).replace('class="orb"','');
+  for(var gi=0;gi<dn2;gi++)rowH+=stampSVG(gi,gi<got,false,false).replace('class="orb"','');
   if(ex2>0){
    rowH+='<span class="sep"></span>';
    var sb=Math.min(big2,4);
-   for(var b2=0;b2<sb;b2++)rowH+=bigOrbSVG(false).replace('class="orb big"','class="orb big"');
+   for(var b2=0;b2<sb;b2++)rowH+=stampSVG(6,true,false,true);
    if(big2>sb)rowH+='<span class="plus">×'+big2+'</span>';
-   for(var r2=0;r2<rest2;r2++)rowH+=orbSVG(Math.min(r2+1,7),true,false).replace('class="orb"','');
+   for(var r2=0;r2<rest2;r2++)rowH+=stampSVG(r2,true,false,false).replace('class="orb"','');
   }
-  var head=madeBig
-   ? bigOrbSVG(false).replace('class="orb big"','style="width:88px;height:88px"')
-   : orbSVG(Math.min(got>dn2?rest2||dn2:got,7),true,false).replace('class="orb"','');
+  var head=(madeBig?stampSVG(6,true,false,true):stampSVG(Math.max(0,(got>dn2?(rest2||dn2):got)-1),true,false,false))
+   .replace(/class="orb[^"]*"/,'').replace(/style="[^"]*"/,'').replace('<svg','<svg style="width:88px;height:88px"');
   ob.innerHTML='<div class="gainbox"><div class="big">'+head+'<span class="ring"></span></div>'+
    '<div class="txt">'+(madeBig?"大玉を てにいれた！":(got>dn2?"おかわりの たま！":"たまを 1つ てにいれた！"))+'</div>'+
    '<div class="row">'+rowH+'</div></div>';
@@ -3623,6 +3673,7 @@ function mergeState(local,remote){
   }
   lk.pcount=Math.max(lk.pcount||0,rk.pcount||0);
   lk.mode=src.mode||lk.mode;
+  lk.theme=src.theme||lk.theme;
   if(rk.board&&(!lk.board||rk.board.world>lk.board.world||(rk.board.world===lk.board.world&&rk.board.pos>lk.board.pos)))lk.board=rk.board;
   if(rk.story&&(!lk.story||rk.story.ch>lk.story.ch||(rk.story.ch===lk.story.ch&&rk.story.sc>lk.story.sc)))lk.story=rk.story;
   lk.gacha=0;
@@ -3873,6 +3924,28 @@ function voiceToggle(padId){
  voiceStart();
 }
 function startVoice(padId){voiceToggle(padId);}
+
+/* ---- スタンプのテーマ選択 ---- */
+function themeOpen(){
+ var k=P(),cur=k.theme||"orb",h="";
+ STAMP_THEMES.forEach(function(t){
+  var prevTheme=k.theme;k.theme=t.id;
+  var pv="";for(var i=0;i<4;i++)pv+=stampSVG(i,i<3,false,false).replace(/class="orb[^"]*"/,'style="width:30px;height:30px"');
+  k.theme=prevTheme;
+  h+='<button class="kidrow'+(cur===t.id?" on":"")+'" data-th="'+t.id+'" style="margin-bottom:8px;padding:12px 14px">'+
+   '<span style="display:flex;gap:5px;flex:0 0 auto">'+pv+'</span><span><b>'+t.name+'</b>'+
+   (t.id==="chara"?'<span>ずかんの キャラが スタンプに なる</span>':'')+'</span></button>';
+ });
+ document.getElementById("th-list").innerHTML=h;
+ document.getElementById("th").classList.remove("hide");
+}
+document.getElementById("th-list").addEventListener("click",function(e){
+ var b=e.target.closest("[data-th]");if(!b)return;
+ var k=P();k.theme=b.getAttribute("data-th");save();
+ document.getElementById("th").classList.add("hide");
+ renderHome();beep("tap");
+});
+document.getElementById("th-close").addEventListener("click",function(){document.getElementById("th").classList.add("hide");});
 
 /* ---- 学習モード（ホーム） ---- */
 function renderMode(k){
