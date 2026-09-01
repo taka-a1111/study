@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02r / kumon_math_ver6.7 -->
+<!-- BUILD_TAG: 2026-09-02s / kumon_math_ver6.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -420,8 +420,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="hd"><h2>だれが やりますか</h2></div>
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
+  <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.7 / 2026-09-02r</div>
+  <div class="tiny">まいにち計算 ver6.8 / 2026-09-02s</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +476,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02r</div>
+  <div class="tiny">BUILD 2026-09-02s</div>
 </section>
 
 <!-- れいだい -->
@@ -769,7 +770,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.7 / BUILD 2026-09-02r</div>
+  <div class="tiny">kumon_math ver6.8 / BUILD 2026-09-02s</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -784,6 +785,17 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="lg"><div class="dlg">
+  <h3>べつの スマホと 同じにする</h3>
+  <div class="note">先に つかっている スマホと 同じ メール・パスワードで ログインすると、学習者と きろくが この端末に 入ります。</div>
+  <label class="f"><span>メールアドレス</span><input type="text" id="lg-mail" inputmode="email" autocomplete="username" placeholder="you@example.com"></label>
+  <label class="f"><span>パスワード</span><input type="password" id="lg-pass" autocomplete="current-password" placeholder="パスワード"></label>
+  <div class="stk" style="margin-top:14px">
+    <button class="btn" id="lg-go">ログイン</button>
+    <button class="btn q" id="lg-close">とじる</button>
+  </div>
+</div></div>
 
 <div class="cele hide" id="cele">
   <div class="sky" id="cele-sky"></div>
@@ -840,7 +852,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02r";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02s";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1525,6 +1537,12 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var lgm=document.getElementById("lg");
+ if(lgm&&!lgm.classList.contains("hide")){
+  lgm.classList.add("hide");
+  try{history.pushState({sc:"lg"},"");}catch(e){}
+  return;
+ }
  var ce=document.getElementById("cele");
  if(ce&&!ce.classList.contains("hide")){
   ce.classList.add("hide");
@@ -1788,6 +1806,8 @@ document.getElementById("gate-bgo").addEventListener("click",function(){
    5. 学習者
    ============================================================ */
 function renderKids(){
+ var ks=document.getElementById("kid-sync");
+ if(ks)ks.textContent=auth?"保護者メニュー":"べつの スマホと 同じにする（保護者）";
  document.getElementById("kidlist").innerHTML=S.kids.map(function(k,i){
   var st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
   return '<button class="kidrow'+(i===S.cur?" on":"")+'" data-k="'+i+'"><span class="av">'+k.icon+'</span>'+
@@ -2962,16 +2982,44 @@ function renderSyncUI(){
  }
 }
 function markSynced(){try{localStorage.setItem("kumon_synced",String(Date.now()));}catch(e){}}
+function doLogin(mail,pass,btn,label,after){
+ if(!mail||!pass){alert("メールと パスワードを 入れてください。");return;}
+ btn.textContent="ログイン中…";
+ sbAuth("login",mail,pass).then(function(r){
+  btn.textContent=label;
+  if(!r.ok){alert(r.msg);return;}
+  syncNow(function(){
+   markSynced();renderSyncUI();
+   if(after)after();
+  });
+ });
+}
+document.getElementById("kid-sync").addEventListener("click",function(){
+ if(!S.kids.length){
+  document.getElementById("lg").classList.remove("hide");
+  return;
+ }
+ openGate(function(){renderSet();show("s-set");});
+});
+document.getElementById("lg-close").addEventListener("click",function(){
+ document.getElementById("lg").classList.add("hide");
+});
+document.getElementById("lg-go").addEventListener("click",function(){
+ var m=document.getElementById("lg-mail").value.trim(),p=document.getElementById("lg-pass").value;
+ doLogin(m,p,this,"ログイン",function(){
+  document.getElementById("lg").classList.add("hide");
+  if(S.kids.length){
+   S.cur=0;save();renderHome();show("s-home");
+   alert("同期しました。べつの スマホと 同じ 進度に なっています。");
+  }else{
+   renderKids();
+   alert("ログインしました。まだ 学習者が いないので、ついかしてください。");
+  }
+ });
+});
 document.getElementById("sy-login").addEventListener("click",function(){
  var m=document.getElementById("sy-mail").value.trim(),p=document.getElementById("sy-pass").value;
- if(!m||!p){alert("メールと パスワードを 入れてください。");return;}
- this.textContent="ログイン中…";
- var btn=this;
- sbAuth("login",m,p).then(function(r){
-  btn.textContent="ログイン";
-  if(!r.ok){alert(r.msg);return;}
-  syncNow(function(){markSynced();renderSyncUI();renderHome();alert("ログインしました。記録を 同期しました。");});
- });
+ doLogin(m,p,this,"ログイン",function(){renderHome();alert("ログインしました。記録を 同期しました。");});
 });
 document.getElementById("sy-signup").addEventListener("click",function(){
  var m=document.getElementById("sy-mail").value.trim(),p=document.getElementById("sy-pass").value;
