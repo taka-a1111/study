@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02j / kumon_math_ver6.1 -->
+<!-- BUILD_TAG: 2026-09-02k / kumon_math_ver6.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -121,8 +121,23 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 /* スタンプ・ごほうび */
 .stamps{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
 .stamps .orb{width:34px;height:34px;flex:0 0 auto;transition:transform .25s cubic-bezier(.2,1.4,.5,1)}
-.stamps .orb.new{animation:orbpop .5s cubic-bezier(.2,1.5,.4,1)}
-@keyframes orbpop{0%{transform:scale(.3) rotate(-25deg)}70%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1)}}
+.stamps .orb.new{animation:orbpop .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes orbpop{0%{transform:scale(.2) rotate(-40deg);opacity:0}
+ 60%{transform:scale(1.25) rotate(8deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+.gainbox{display:flex;flex-direction:column;align-items:center;gap:8px}
+.gainbox .big{position:relative;width:88px;height:88px}
+.gainbox .big svg{width:88px;height:88px;animation:gain .9s cubic-bezier(.2,1.5,.4,1)}
+@keyframes gain{0%{transform:scale(.2) rotate(-60deg);opacity:0}
+ 55%{transform:scale(1.3) rotate(10deg);opacity:1}75%{transform:scale(.94) rotate(-3deg)}100%{transform:scale(1)}}
+.gainbox .ring{position:absolute;inset:0;border-radius:50%;border:3px solid var(--yam);
+  opacity:0;animation:gring .9s ease-out .1s}
+@keyframes gring{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(1.9)}}
+.gainbox .txt{font-size:15px;font-weight:700;color:var(--yam);opacity:0;animation:fadeup .5s ease-out .5s forwards}
+.gainbox .row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.gainbox .row svg{width:24px;height:24px}
+@media (prefers-reduced-motion:reduce){
+ .gainbox .big svg,.gainbox .ring,.gainbox .txt{animation:none;opacity:1}
+ .stamps .orb.new{animation:none}}
 .stamps b{font-size:12.5px;color:var(--sumi);font-weight:400;margin-left:2px}
 .stamps b.done{color:var(--yam);font-weight:700}
 @media (prefers-reduced-motion:reduce){.stamps .orb.new{animation:none}}
@@ -406,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.1 / 2026-09-02j</div>
+  <div class="tiny">まいにち計算 ver6.2 / 2026-09-02k</div>
 </section>
 
 <!-- こども追加 -->
@@ -460,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02j</div>
+  <div class="tiny">BUILD 2026-09-02k</div>
 </section>
 
 <!-- れいだい -->
@@ -531,6 +546,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <section class="sc full" id="s-res">
   <div class="hd"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
   <div class="bg" id="rs-bg"><h2></h2><p></p></div>
+  <div class="hide" id="rs-orb" style="text-align:center;margin-top:14px"></div>
   <div class="hide" id="rs-best" style="text-align:center"></div>
   <div class="sts">
     <div class="st"><b id="rs-sc"></b><span>てん</span></div>
@@ -644,7 +660,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="row"><span>まちがいは かならず なおす</span><div class="tg" id="st-fix"><b></b></div></div>
     <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
-    <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
+    <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクは1回押すと つけっぱなしになり、もう一度 押すまで 続けて 聞きとります。次の問題に進んでも そのままです。「けす」と言うと 1文字 消せます。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
   </div>
   <div class="card">
     <h3>いまの教材（<span id="st-who"></span>）</h3>
@@ -721,7 +737,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.1 / BUILD 2026-09-02j</div>
+  <div class="tiny">kumon_math ver6.2 / BUILD 2026-09-02k</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -792,7 +808,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02j";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02k";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1935,6 +1951,7 @@ function draw(){
  }
  document.getElementById("sh-pg").innerHTML=run.fixing?"":pg;
  buildPad("pad",onKey,q.keys);
+ if(voiceOn&&voiceTarget==="pad")voiceMark(true);
  bindSlots("qs",function(n){run.box=n;draw();});
  readyBtn();
  cvClear();
@@ -1990,7 +2007,7 @@ function onKey(k){
  var q=cq();
  if(k==="del"){run.inp[run.box]=run.inp[run.box].slice(0,-1);draw();return;}
  if(k==="go"){submit();return;}
- if(k==="mic"){startVoice("pad",function(v){run.inp[run.box]=v;draw();});return;}
+ if(k==="mic"){voiceToggle("pad");return;}
  if(k==="neg"){run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];draw();return;}
  if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
  if(run.inp[run.box].replace("-","").length>=6)return;
@@ -2052,7 +2069,7 @@ function feedback(right,q,next){
  },right?650:1900);
 }
 document.getElementById("sh-q").addEventListener("click",function(){
- clearInterval(run.timer);
+ clearInterval(run.timer);voiceStop();
  if(confirm("この プリントを やめますか。きろくは のこりません。")){renderHome();show("s-home");}
  else{run.t0=Date.now()-run.sec*1000;run.timer=setInterval(tick,1000);}
 });
@@ -2060,6 +2077,7 @@ document.getElementById("sh-q").addEventListener("click",function(){
 /* まるつけ */
 function endSheet(){
  clearInterval(run.timer);
+ voiceStop();
  run.sec=(Date.now()-run.t0)/1000;
  var wr=[];
  run.ans.forEach(function(a){if(!a.right)wr.push(a.i);});
@@ -2152,6 +2170,17 @@ function showResult(){
  var n=todayN();
  ex+=n>=k.daily?"　きょうの "+k.daily+"まいは おわりです。":"　きょうは あと "+(k.daily-n)+"まい。";
  document.getElementById("rs-nt").textContent=ex;
+ var ob=document.getElementById("rs-orb");
+ if(adv){
+  var got=todayN(),dn2=k.daily||5;
+  var rowH="";
+  for(var gi=0;gi<dn2;gi++)rowH+=orbSVG(Math.min(gi+1,7),gi<got,false).replace('class="orb"','');
+  ob.innerHTML='<div class="gainbox"><div class="big">'+
+   orbSVG(Math.min(got,7),true,false).replace('class="orb"','')+'<span class="ring"></span></div>'+
+   '<div class="txt">たまを 1つ てにいれた！</div>'+
+   '<div class="row">'+rowH+'</div></div>';
+  ob.classList.remove("hide");
+ }else ob.classList.add("hide");
  var bd2=document.getElementById("rs-best");
  if(isBest&&bestGain>=1){
   bd2.classList.remove("hide");
@@ -2823,112 +2852,110 @@ document.getElementById("sy-out2").addEventListener("click",function(){
    8. 音声入力
    ============================================================ */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
-var rec=null,recBtn=null;
+var rec=null,recBtn=null,voiceOn=false,voiceTarget="pad",voiceIdle=null;
 var KN={"〇":0,"零":0,"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9};
 function kanji2num(s){
  if(/^[0-9]+$/.test(s))return Number(s);
  var t=0,cur=0,ok=false;
  for(var i=0;i<s.length;i++){
   var c=s[i];
-  if(c in KN){cur=cur*10+KN[c];ok=true;}
-  else if(c==="十"){cur=(cur||1)*10;ok=true;}
-  else if(c==="百"){cur=(cur||1)*100;ok=true;}
+  if(c in KN){cur=KN[c];ok=true;}
+  else if(c==="十"){t+=(cur||1)*10;cur=0;ok=true;}
+  else if(c==="百"){t+=(cur||1)*100;cur=0;ok=true;}
   else if(c==="千"){t+=(cur||1)*1000;cur=0;ok=true;}
   else return null;
  }
  return ok?t+cur:null;
 }
+/* 答えに関係のない言葉をふるい落とす */
+var FILLER=/(えーと|えっと|あのー|あの|うーん|うんと|そうだな|えっ|んー|はい|うん|じゃあ|では|つぎ|こたえ|答え|は|が|だ|です|ですね|かな|かも|よ|ね|と|の|、|。|！|？|\?|!)/g;
+/* ひらがなの数（じゅうご など）も 数字に なおす */
+var KANA=[["ひゃく","百"],["じゅう","十"],["せん","千"],["きゅう","九"],["なな","七"],["しち","七"],
+ ["よん","四"],["ろく","六"],["はち","八"],["さん","三"],["いち","一"],["ぜろ","〇"],["れい","〇"],
+ ["まる","〇"],["ご","五"],["に","二"],["し","四"],["く","九"]];
+function kanaToKanji(t){
+ for(var i=0;i<KANA.length;i++)t=t.split(KANA[i][0]).join(KANA[i][1]);
+ return t;
+}
 function parseSpeech(txt){
+ if(!txt)return null;
  txt=txt.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);}).replace(/\s/g,"");
+ if(/^(けす|消す|まちがえた|やりなおし)$/.test(txt))return "DEL";
  var neg=/マイナス|まいなす|-/.test(txt);
- var m=txt.match(/\d+(\.\d+)?/);
- var v=null;
+ var work=txt.replace(/マイナス|まいなす|-/g,"");
+ var v=null,m=work.match(/\d+(\.\d+)?/);
  if(m)v=m[0];
  else{
-  var km=txt.match(/[〇零一二三四五六七八九十百千]+/);
+  work=kanaToKanji(work);
+  var km=work.match(/[〇零一二三四五六七八九十百千]+/);
   if(km){var n=kanji2num(km[0]);if(n!==null)v=String(n);}
  }
  if(v===null)return null;
+ /* 数字のまわりに よけいな 言葉が 多いときは 無視する（雑音・会話の混入を防ぐ） */
+ var rest=work.replace(/\d+(\.\d+)?/g,"").replace(/[〇零一二三四五六七八九十百千]/g,"").replace(FILLER,"");
+ if(rest.length>1)return null;
  return (neg?"-":"")+v;
 }
-function startVoice(padId,cb){
- if(!SR){alert("この ブラウザでは 音声入力が つかえません。");return;}
- if(rec){try{rec.stop();}catch(e){}rec=null;return;}
- recBtn=document.getElementById("mic-"+padId);
- rec=new SR();
- rec.lang="ja-JP";
- /* 途中経過も受け取り、数字だと分かった時点ですぐ確定する（待ち時間を短くするため） */
- rec.interimResults=true;
- rec.maxAlternatives=1;
- rec.continuous=false;
- var done=false;
- if(recBtn)recBtn.classList.add("rec");
- rec.onresult=function(e){
-  if(done)return;
-  for(var i=e.resultIndex;i<e.results.length;i++){
-   for(var j=0;j<e.results[i].length;j++){
-    var v=parseSpeech(e.results[i][j].transcript);
-    if(v!==null){
-     done=true;
-     cb(v);
-     try{rec.stop();}catch(err){}
-     try{rec.abort();}catch(err){}
-     return;
-    }
-   }
-  }
- };
- rec.onerror=function(){};
- rec.onend=function(){
-  if(recBtn)recBtn.classList.remove("rec");
-  rec=null;
-  if(!done)setTimeout(function(){},0);
- };
- try{rec.start();}catch(e){rec=null;if(recBtn)recBtn.classList.remove("rec");}
+function voiceApply(v){
+ var isTest=voiceTarget==="t-pad";
+ var h=isTest?onTKey:onKey;
+ if(v==="DEL"){h("del");return;}
+ for(var i=0;i<v.length;i++){
+  var c=v[i];
+  if(c==="-")h("neg");
+  else if(c===".")h("dot");
+  else h(c);
+ }
+ if(S.sound){try{tone({f:1000,dur:.05,vol:.06,wave:"sine"});}catch(e){}}
 }
-
-/* ---- しゅうりょうしょう ---- */
-var certNow=null;
-function certOpen(c){
- certNow=c;
- var cv=document.getElementById("certcv"),x=cv.getContext("2d");
- var W=cv.width,H=cv.height;
- x.fillStyle="#fffdf7";x.fillRect(0,0,W,H);
- x.strokeStyle="#c8a24a";x.lineWidth=10;x.strokeRect(22,22,W-44,H-44);
- x.strokeStyle="#e3d5ab";x.lineWidth=3;x.strokeRect(40,40,W-80,H-80);
- var jp='"Hiragino Kaku Gothic ProN","Yu Gothic Medium","Noto Sans JP",sans-serif';
- x.textAlign="center";x.fillStyle="#1f3a63";
- x.font='bold 46px '+jp;
- x.fillText("しゅうりょうしょう",W/2,132);
- x.fillStyle="#5a6672";x.font='22px '+jp;
- x.fillText("まいにち計算",W/2,176);
- x.fillStyle="#151b22";x.font='bold 56px '+jp;
- x.fillText(c.name||"",W/2,268);
- x.font='24px '+jp;x.fillStyle="#5a6672";
- x.fillText("さん",W/2+(String(c.name||"").length*30),268);
- x.fillStyle="#151b22";x.font='26px '+jp;
- x.fillText("あなたは "+c.lv+"教材",W/2,340);
- x.font='bold 34px '+jp;x.fillStyle="#1f4b8e";
- x.fillText("「"+(c.title||"")+"」",W/2,392);
- x.fillStyle="#151b22";x.font='26px '+jp;
- x.fillText("を さいごまで やりとげました",W/2,444);
- x.font='20px '+jp;x.fillStyle="#5a6672";
- var d=String(c.d||"").split("-");
- x.fillText((d[0]||"")+"年"+Number(d[1]||0)+"月"+Number(d[2]||0)+"日",W/2,520);
- x.beginPath();x.arc(W/2,588,30,0,Math.PI*2);x.strokeStyle="#c0453c";x.lineWidth=4;x.stroke();
- x.fillStyle="#c0453c";x.font='bold 22px '+jp;x.fillText("合格",W/2,596);
- show("s-cert");
+function voiceMark(on){
+ var b=document.getElementById("mic-"+voiceTarget);
+ if(b)b.classList.toggle("rec",on);
 }
-document.getElementById("cert-save").addEventListener("click",function(){
- var cv=document.getElementById("certcv");
+function voiceStart(){
+ if(!SR||rec)return;
  try{
-  var a=document.createElement("a");
-  a.href=cv.toDataURL("image/png");
-  a.download="syuryosho_"+(certNow?certNow.lv:"")+"_"+dk()+".png";
-  a.click();
- }catch(e){alert("ほぞん できませんでした。");}
-});
-document.getElementById("cert-close").addEventListener("click",function(){renderHome();show("s-home");});
+  rec=new SR();
+  rec.lang="ja-JP";rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
+  var used={};
+  rec.onresult=function(e){
+   for(var i=e.resultIndex;i<e.results.length;i++){
+    var r=e.results[i];
+    var v=parseSpeech(r[0].transcript);
+    if(v===null)continue;
+    var key=i+"_"+v;
+    if(used[key])continue;
+    /* 途中経過で入れたものが 確定でも来るため、同じ結果は 1回だけ使う */
+    used[key]=1;
+    voiceApply(v);
+   }
+  };
+  rec.onerror=function(){};
+  rec.onend=function(){
+   rec=null;
+   if(voiceOn){
+    clearTimeout(voiceIdle);
+    voiceIdle=setTimeout(function(){if(voiceOn)voiceStart();},250);
+   }else voiceMark(false);
+  };
+  rec.start();
+  voiceMark(true);
+ }catch(e){rec=null;voiceMark(false);}
+}
+function voiceStop(){
+ voiceOn=false;
+ clearTimeout(voiceIdle);
+ if(rec){try{rec.stop();}catch(e){}try{rec.abort();}catch(e){}}
+ rec=null;voiceMark(false);
+}
+function voiceToggle(padId){
+ if(!SR){alert("この ブラウザでは 音声入力が つかえません。");return;}
+ if(voiceOn&&voiceTarget===padId){voiceStop();return;}
+ voiceStop();
+ voiceTarget=padId;voiceOn=true;
+ voiceStart();
+}
+function startVoice(padId){voiceToggle(padId);}
 
 /* ============================================================
    9. 教材マップ
@@ -3265,12 +3292,13 @@ function drawT(){
  document.getElementById("tqp").innerHTML=q.prompt;
  document.getElementById("tqs").innerHTML=slotHTML(q,test.inp,test.box,null);
  buildPad("t-pad",onTK,q.keys);
+ if(voiceOn&&voiceTarget==="t-pad")voiceMark(true);
  bindSlots("tqs",function(n){test.box=n;drawT();});
 }
 function onTK(k){
  var q=test.qs[test.n];
  if(k==="del"){test.inp[test.box]=test.inp[test.box].slice(0,-1);drawT();return;}
- if(k==="mic"){startVoice("t-pad",function(v){test.inp[test.box]=v;drawT();});return;}
+ if(k==="mic"){voiceToggle("t-pad");return;}
  if(k==="neg"){test.inp[test.box]=test.inp[test.box].charAt(0)==="-"?test.inp[test.box].slice(1):"-"+test.inp[test.box];drawT();return;}
  if(k==="dot"){if(test.inp[test.box].indexOf(".")<0&&test.inp[test.box]!=="")test.inp[test.box]+=".";drawT();return;}
  if(k==="go"){
