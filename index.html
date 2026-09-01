@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02y / kumon_math_ver7.4 -->
+<!-- BUILD_TAG: 2026-09-02z / kumon_math_ver7.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -210,11 +210,14 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .qp sub{font-size:.55em;vertical-align:sub}
 .qp .fc{font-size:.6em}
 .qp .jp{font-family:var(--jp);font-size:19px;font-weight:400;color:var(--sumi);display:block;margin-bottom:10px}
+.qp:has(.dg){text-align:left}
 .vc{display:inline-block;text-align:right;min-width:150px;font-size:36px}
 .vc .op{float:left;padding:0}
 .vc .rl{display:block;height:3px;background:var(--ink);margin-top:8px;border-radius:2px}
-.dg{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:240px;margin:0 auto}
-.dg i{width:25px;height:25px;border-radius:50%;background:var(--ai)}
+.dg{display:grid;grid-template-columns:repeat(5,24px) 14px repeat(5,24px);gap:8px 6px;
+  justify-content:start;margin:6px 0 0 6px}
+.dg i{width:24px;height:24px;border-radius:50%;background:var(--ai)}
+.dg s{display:block;width:14px}
 .fc{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;font-size:.7em;margin:0 4px}
 .fc .n{border-bottom:2.5px solid var(--ink);padding:0 8px 2px}
 .fc .d{padding:2px 8px 0}
@@ -304,8 +307,9 @@ body.pen .pp{background-image:
 .mrow .fm{flex:1;font-family:var(--num);font-size:19px;line-height:1.3}
 .mrow .fm .op{color:var(--sumi);padding:0 3px}
 .mrow .fm .jp{display:inline;font-size:11.5px;margin:0 6px 0 0}
-.mrow .fm .dg{display:inline-flex;max-width:130px;gap:3px;vertical-align:middle}
+.mrow .fm .dg{display:inline-grid;grid-template-columns:repeat(5,9px) 5px repeat(5,9px);gap:3px 2px;vertical-align:middle;margin:0}
 .mrow .fm .dg i{width:9px;height:9px}
+.mrow .fm .dg s{width:5px}
 .mrow .fm .bl{min-width:26px;border-width:2px}
 .mrow .fm .vc{font-size:15px;min-width:auto;display:inline-block}
 .mrow .fm .vc .rl{display:block;height:2px;margin-top:2px}
@@ -500,7 +504,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.4 / 2026-09-02y</div>
+  <div class="tiny">まいにち計算 ver7.5 / 2026-09-02z</div>
 </section>
 
 <!-- こども追加 -->
@@ -561,7 +565,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02y</div>
+  <div class="tiny">BUILD 2026-09-02z</div>
 </section>
 
 <!-- れいだい -->
@@ -922,7 +926,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.4 / BUILD 2026-09-02y</div>
+  <div class="tiny">kumon_math ver7.5 / BUILD 2026-09-02z</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1025,7 +1029,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02y";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02z";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1294,7 +1298,8 @@ function tryQ(g){
  switch(g.t){
  case "mix": return tryQ(g.list[Math.floor(Math.random()*g.list.length)]);
  case "count":
-   n=rnd(g.n);var dt="";for(var i=0;i<n;i++)dt+="<i></i>";
+   n=rnd(g.n);var dt="";
+   for(var i=0;i<n;i++){if(i%10===5)dt+="<s></s>";dt+="<i></i>";}
    return Q('<span class="jp">いくつ ありますか</span><span class="dg">'+dt+'</span>',S1(n));
  case "seq":
    var st=g.step===1?1:rnd(g.step);
