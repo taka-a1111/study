@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02k / kumon_math_ver6.2 -->
+<!-- BUILD_TAG: 2026-09-02m / kumon_math_ver6.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.2 / 2026-09-02k</div>
+  <div class="tiny">まいにち計算 ver6.3 / 2026-09-02m</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02k</div>
+  <div class="tiny">BUILD 2026-09-02m</div>
 </section>
 
 <!-- れいだい -->
@@ -660,7 +660,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="row"><span>まちがいは かならず なおす</span><div class="tg" id="st-fix"><b></b></div></div>
     <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
-    <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクは1回押すと つけっぱなしになり、もう一度 押すまで 続けて 聞きとります。次の問題に進んでも そのままです。「けす」と言うと 1文字 消せます。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
+    <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクは1回押すと つけっぱなしになり、もう一度 押すまで 続けて 聞きとります。次の問題に進んでも そのままです。「けす」と言うと 1文字 消せます。<br><br>手書きと 音声では、答えが 合っていれば「こたえる」を 押さなくても つぎへ 進みます。まちがっているときは 止まるので、書きなおして ください。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
   </div>
   <div class="card">
     <h3>いまの教材（<span id="st-who"></span>）</h3>
@@ -737,7 +737,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.2 / BUILD 2026-09-02k</div>
+  <div class="tiny">kumon_math ver6.3 / BUILD 2026-09-02m</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -808,7 +808,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02k";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02m";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2015,6 +2015,34 @@ function onKey(k){
  if(q.slots.length>1&&run.box===0&&run.inp[1]===""&&run.inp[0].replace("-","").length>=String(Math.abs(q.slots[0].ans)).length)run.box=1;
  draw();
 }
+/* 手書き・音声で 入れた答えが 合っていたら、こたえるを 押さずに 進む */
+var autoBusy=false;
+function maybeAutoSubmit(isTest){
+ if(autoBusy)return;
+ if(isTest){
+  if(!test||document.getElementById("t-run").classList.contains("hide"))return;
+  var tq=test.qs[test.n],ta=true,tr=true;
+  tq.slots.forEach(function(sl,i){
+   if(test.inp[i]===""||test.inp[i]==="-")ta=false;
+   if(!same(test.inp[i],sl.ans))tr=false;
+  });
+  if(ta&&tr){
+   autoBusy=true;
+   setTimeout(function(){autoBusy=false;onTK("go");},260);
+  }
+  return;
+ }
+ if(!run||lock||!document.getElementById("s-sheet").classList.contains("on"))return;
+ var q=cq(),all=true,right=true;
+ q.slots.forEach(function(sl,i){
+  if(run.inp[i]===""||run.inp[i]==="-")all=false;
+  if(!same(run.inp[i],sl.ans))right=false;
+ });
+ if(all&&right){
+  autoBusy=true;
+  setTimeout(function(){autoBusy=false;submit();},260);
+ }
+}
 function same(inp,ans){
  if(inp===""||inp==="-")return false;
  var v=Number(inp);
@@ -2399,6 +2427,7 @@ function hwRecognize(){
   else if(c===".")onKey("dot");
   else onKey(c);
  }
+ maybeAutoSubmit(false);
 }
 function hwToggle(on){
  hwOn=on;
@@ -2907,6 +2936,7 @@ function voiceApply(v){
   else h(c);
  }
  if(S.sound){try{tone({f:1000,dur:.05,vol:.06,wave:"sine"});}catch(e){}}
+ maybeAutoSubmit(isTest);
 }
 function voiceMark(on){
  var b=document.getElementById("mic-"+voiceTarget);
