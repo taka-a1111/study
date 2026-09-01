@@ -1,7 +1,12 @@
-# まいにち計算 ver3.1
+# まいにち計算 ver3.2
 
 公文式の学習法をもとにした算数・数学の自学自習PWA。スマホ前提。
-BUILD_TAG: 2026-09-01d
+BUILD_TAG: 2026-09-01e
+
+## ver3.2 の修正
+
+- 保護者ゲートをアプリ内テンキーに変更。OSのキーボードが出ないので、画面が押し上げられて入力欄が隠れる問題を解消した。
+- 自動アップデートを実装。version.json のビルド番号を起動時とアプリ復帰時に確認し、新しければキャッシュを消して自動で読み込み直す。Service Worker もネットワーク優先＋skipWaiting／clients.claim に整理した。
 
 ## ver3.1 の修正
 
@@ -79,7 +84,7 @@ BUILD_TAG: 2026-09-01d
 
 ## ファイル
 
-index.html / manifest.webmanifest / sw.js / icon-192.png / icon-512.png / icon-maskable-512.png / README.md
+index.html / version.json / manifest.webmanifest / sw.js / icon-192.png / icon-512.png / icon-maskable-512.png / README.md
 
 ## 今後
 
