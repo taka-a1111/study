@@ -1,7 +1,6 @@
-/* BUILD_TAG: 2026-09-01a */
-var CACHE = "kumonmath-2026-09-01a";
+/* BUILD_TAG: 2026-09-01b */
+var CACHE = "kumonmath-2026-09-01b";
 var ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
-
 self.addEventListener("install", function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }).then(function(){ return self.skipWaiting(); }));
 });
