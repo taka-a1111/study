@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01b / kumon_math_ver2.0 -->
+<!-- BUILD_TAG: 2026-09-01c / kumon_math_ver3.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#1f4b8e">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#2557c7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="まいにち計算">
 <link rel="manifest" href="manifest.webmanifest">
@@ -12,1485 +12,1586 @@
 <title>まいにち計算</title>
 <style>
 :root{
-  --ink:#141d27; --sumi:#56636f; --usu:#97a2ad;
-  --washi:#eceee9; --paper:#fff; --keisen:#dbe0d8; --usui:#f4f6f2;
-  --ai:#1f4b8e; --ai-usu:#e7edf7;
-  --midori:#0e8560; --midori-usu:#e4f2ec;
-  --yamabuki:#c8801a; --yamabuki-usu:#fbf1e2;
-  --akane:#bb3a33;
-  --jp:"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","Yu Gothic Medium","游ゴシック体",YuGothic,"Noto Sans JP","Noto Sans CJK JP",Meiryo,"メイリオ",sans-serif;
+  --ink:#151b22; --sumi:#5a6672; --usu:#9aa4ae;
+  --bg:#f2f4f1; --surf:#fff; --line:#e2e6e0; --soft:#f7f9f6;
+  --ai:#2557c7; --ai-s:#e8eefb;
+  --mid:#17916b; --mid-s:#e5f4ee;
+  --yam:#d0871c; --yam-s:#fbf2e4;
+  --aka:#c8433c; --aka-s:#fbeceb;
+  --jp:"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","Yu Gothic Medium","游ゴシック体",YuGothic,"Noto Sans JP","Noto Sans CJK JP",Meiryo,sans-serif;
   --num:"Avenir Next","Segoe UI","Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Yu Gothic Medium","Noto Sans JP",sans-serif;
-  --navh:64px;
+  --nav:62px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;overscroll-behavior:none}
-body{font-family:var(--jp);background:var(--washi);color:var(--ink);font-size:16px;line-height:1.7;
-  -webkit-font-smoothing:antialiased}
-button{font-family:inherit;font-size:inherit;color:inherit;border:none;background:none;cursor:pointer;padding:0}
+body{font-family:var(--jp);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:none;background:none;padding:0;cursor:pointer}
 :focus-visible{outline:3px solid var(--ai);outline-offset:2px}
-.num{font-family:var(--num);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-
-#app{max-width:520px;margin:0 auto;min-height:100dvh;position:relative}
-.screen{display:none;flex-direction:column;min-height:100dvh;
-  padding:0 18px calc(var(--navh) + 24px + env(safe-area-inset-bottom))}
-.screen.on{display:flex}
-.screen.nonav{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
-.spacer{flex:1}
-
-/* ヘッダー */
-.hd{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top)) 0 12px;min-height:64px}
-.hd h2{margin:0;font-size:18px;font-weight:700}
-.back{width:44px;height:44px;margin-left:-10px;display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--sumi);border-radius:50%}
-.back:active{background:#dfe3dc}
-
-/* 部品 */
-.card{background:var(--paper);border:1px solid var(--keisen);border-radius:14px;padding:18px}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+#app{max-width:520px;margin:0 auto}
+.sc{display:none;flex-direction:column;min-height:100dvh;padding:0 18px calc(var(--nav) + 22px + env(safe-area-inset-bottom))}
+.sc.on{display:flex}
+.sc.full{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+.sp{flex:1}
+.hd{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 0 14px;min-height:62px}
+.hd h2{margin:0;font-size:19px;font-weight:700;letter-spacing:.01em}
+.bk{width:42px;height:42px;margin-left:-9px;display:flex;align-items:center;justify-content:center;font-size:23px;color:var(--sumi);border-radius:50%}
+.bk:active{background:#e3e7e1}
+.card{background:var(--surf);border-radius:16px;padding:18px;border:1px solid var(--line)}
 .card+.card{margin-top:12px}
-.card h3{margin:0 0 8px;font-size:15px;font-weight:700}
+.card h3{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--sumi);letter-spacing:.04em}
 .note{font-size:13.5px;color:var(--sumi);line-height:1.85}
-.btn{display:block;width:100%;padding:18px;border-radius:14px;background:var(--ai);color:#fff;
-  font-size:18px;font-weight:700;text-align:center}
-.btn:active{opacity:.85}
-.btn.lg{padding:22px;font-size:20px}
-.btn.sub{background:var(--paper);color:var(--ai);border:2px solid var(--ai)}
-.btn.line{background:var(--paper);color:var(--ink);border:1px solid var(--keisen);font-weight:400;font-size:16px}
-.btn.quiet{background:none;color:var(--sumi);font-weight:400;font-size:15px;padding:14px}
-.btn.midori{background:var(--midori)}
-.btn.yamabuki{background:var(--yamabuki)}
-.stack>*+*{margin-top:10px}
-.hidden{display:none!important}
-.tiny{font-size:11px;color:var(--usu);text-align:center;padding:16px 0;font-family:var(--num)}
-.chiprow{display:flex;gap:8px;flex-wrap:wrap}
-.chip{background:var(--paper);border:1px solid var(--keisen);border-radius:999px;padding:7px 14px;font-size:13px}
-.chip b{font-family:var(--num);font-size:15px}
-
-/* ボトムナビ */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);
-  border-top:1px solid var(--keisen);backdrop-filter:blur(8px);
-  padding-bottom:env(safe-area-inset-bottom)}
+.btn{display:block;width:100%;padding:18px;border-radius:14px;background:var(--ai);color:#fff;font-size:17px;font-weight:700;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn.lg{padding:21px;font-size:19px}
+.btn.o{background:var(--surf);color:var(--ai);border:1.5px solid var(--ai);box-shadow:none}
+.btn.l{background:var(--surf);color:var(--ink);border:1px solid var(--line);font-weight:500;font-size:15.5px;box-shadow:none}
+.btn.q{background:none;color:var(--sumi);font-weight:400;font-size:15px;padding:14px;box-shadow:none}
+.btn.g{background:var(--mid)}.btn.y{background:var(--yam)}
+.stk>*+*{margin-top:10px}
+.hide{display:none!important}
+.tiny{font-size:11px;color:var(--usu);text-align:center;padding:14px 0;font-family:var(--num)}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .nav-in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.nav button{height:var(--navh);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;font-size:11px;color:var(--usu)}
-.nav button .ic{font-size:19px;line-height:1}
+.nav button{height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;color:var(--usu)}
+.nav button .i{font-size:18px;line-height:1}
 .nav button.on{color:var(--ai);font-weight:700}
-.nav.hide{display:none}
+.nav.off{display:none}
+
+/* プロフィール */
+.who{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 0 2px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--ai-s);flex:0 0 auto}
+.who b{font-size:15px}
+.who .sw{margin-left:auto;font-size:13px;color:var(--ai)}
+.kidrow{display:flex;align-items:center;gap:14px;width:100%;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:10px;text-align:left}
+.kidrow.on{border-color:var(--ai);border-width:2px;background:var(--ai-s)}
+.kidrow .av{width:46px;height:46px;font-size:23px}
+.kidrow b{display:block;font-size:16.5px}
+.kidrow span{font-size:12.5px;color:var(--sumi)}
+.icons{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.icons button{aspect-ratio:1;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-size:24px}
+.icons button.on{border-color:var(--ai);border-width:2px;background:var(--ai-s)}
+input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surf)}
 
 /* ホーム */
-.greet{padding:calc(20px + env(safe-area-inset-top)) 0 4px}
-.greet .d{font-size:12.5px;color:var(--sumi);letter-spacing:.12em}
-.greet h1{margin:2px 0 0;font-size:25px;letter-spacing:.02em}
-.nextcard{background:var(--paper);border:1px solid var(--keisen);border-radius:16px;
-  padding:20px;margin-top:16px;position:relative;overflow:hidden}
-.nextcard:before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--ai)}
-.nextcard .lbl{font-size:12px;color:var(--sumi);letter-spacing:.1em}
-.nextcard .lv{display:flex;align-items:baseline;gap:10px;margin-top:6px}
-.nextcard .lv b{font-family:var(--num);font-size:32px;font-weight:700;line-height:1}
-.nextcard .lv span{font-size:12.5px;color:var(--sumi);background:var(--usui);border-radius:6px;padding:3px 8px}
-.nextcard .nm{font-size:18px;font-weight:700;margin-top:8px}
-.nextcard .de{font-size:13.5px;color:var(--sumi);margin-top:4px;line-height:1.7}
+.hero{margin-top:14px;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:20px}
+.hero .top{display:flex;align-items:center;gap:16px}
+.ring{width:74px;height:74px;position:relative;flex:0 0 auto}
+.ring .m{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.ring .m b{font-family:var(--num);font-size:22px}
+.ring .m i{font-size:9.5px;color:var(--usu);font-style:normal}
+.hero .tx b{display:block;font-size:15px}
+.hero .tx span{font-size:12.5px;color:var(--sumi)}
+.hr{height:1px;background:var(--line);margin:16px 0}
+.lvline{display:flex;align-items:baseline;gap:9px}
+.lvline b{font-family:var(--num);font-size:27px;font-weight:700;line-height:1}
+.lvline i{font-style:normal;font-size:11.5px;color:var(--sumi);background:var(--soft);border-radius:6px;padding:3px 8px}
+.hero .nm{font-size:17px;font-weight:700;margin-top:8px}
+.hero .de{font-size:12.5px;color:var(--sumi);margin-top:3px}
 .dots{display:flex;gap:5px;margin-top:14px}
-.dots i{flex:1;height:8px;border-radius:4px;background:#e3e7de}
-.dots i.done{background:var(--ai)}
-.dots i.now{background:var(--yamabuki)}
-.dotlbl{font-size:11.5px;color:var(--usu);margin-top:6px;font-family:var(--num)}
-.startwrap{margin-top:18px}
+.dots i{flex:1;height:7px;border-radius:4px;background:#e4e8e2}
+.dots i.d{background:var(--ai)}.dots i.n{background:var(--yam)}
+.dl{font-size:11px;color:var(--usu);margin-top:6px;font-family:var(--num)}
 
-/* はじめかた */
-.pick{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--keisen);
-  border-radius:14px;padding:18px;margin-bottom:10px}
-.pick:active{background:var(--ai-usu)}
-.pick b{display:block;font-size:17px}
-.pick span{display:block;font-size:13px;color:var(--sumi);margin-top:4px;line-height:1.7}
-.gradegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.gradegrid button{padding:16px 6px;border-radius:12px;background:var(--paper);border:1px solid var(--keisen);
-  font-size:15px;font-weight:700}
-.gradegrid button:active{background:var(--ai-usu);border-color:var(--ai)}
-
-/* 教材マップ */
-.mapgroup{font-size:12px;color:var(--sumi);letter-spacing:.12em;margin:20px 0 8px}
-.lvrow{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--keisen);
-  border-radius:12px;padding:14px 16px;margin-bottom:8px;width:100%;text-align:left}
-.lvrow .badge{flex:0 0 46px;height:46px;border-radius:12px;background:var(--usui);color:var(--sumi);
-  display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:18px;font-weight:700}
-.lvrow.done .badge{background:var(--midori-usu);color:var(--midori)}
-.lvrow.now{border-color:var(--ai);border-width:2px;background:var(--ai-usu)}
-.lvrow.now .badge{background:var(--ai);color:#fff}
-.lvrow .t b{font-size:15.5px}
-.lvrow .t .g{font-size:11.5px;color:var(--sumi);margin-left:8px}
-.lvrow .t p{margin:3px 0 0;font-size:13px;color:var(--sumi);line-height:1.65}
-.lvrow .t .soon{display:inline-block;margin-top:6px;font-size:11px;color:var(--yamabuki);
-  background:var(--yamabuki-usu);border-radius:5px;padding:2px 7px}
+/* マップ */
+.gp{font-size:11.5px;color:var(--usu);letter-spacing:.14em;margin:20px 0 8px}
+.lvr{display:flex;gap:13px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:8px;width:100%;text-align:left}
+.lvr .bd{flex:0 0 44px;height:44px;border-radius:12px;background:var(--soft);color:var(--sumi);display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:17px;font-weight:700}
+.lvr.dn .bd{background:var(--mid-s);color:var(--mid)}
+.lvr.nw{border-color:var(--ai);border-width:2px;background:var(--ai-s)}
+.lvr.nw .bd{background:var(--ai);color:#fff}
+.lvr b{font-size:15px}
+.lvr .g{font-size:11px;color:var(--usu);margin-left:7px}
+.lvr p{margin:3px 0 0;font-size:12.5px;color:var(--sumi);line-height:1.6}
+.lvr .so{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--yam);background:var(--yam-s);border-radius:5px;padding:2px 7px}
+.strow{display:flex;justify-content:space-between;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.strow:last-child{border:none}
+.strow.now{color:var(--ai);font-weight:700}
+.strow .n{font-family:var(--num);font-size:12px;color:var(--usu);white-space:nowrap}
 
 /* れいだい */
-.exbox{background:var(--midori-usu);border:1px solid #cfe6dc;border-radius:14px;padding:20px;text-align:center}
-.exbox .t{font-size:13px;color:var(--midori);font-weight:700;letter-spacing:.08em}
-.exbox .f{font-family:var(--num);font-size:30px;font-weight:700;margin:12px 0 6px;line-height:1.5;
-  word-break:break-word}
-.exbox .m{font-size:14px;color:var(--sumi);line-height:1.8}
+.ex{background:var(--mid-s);border:1px solid #d2e8de;border-radius:16px;padding:22px;text-align:center}
+.ex .t{font-size:12px;color:var(--mid);font-weight:700;letter-spacing:.1em}
+.ex .f{font-family:var(--num);font-size:32px;font-weight:600;margin:14px 0 8px;line-height:1.5}
+.ex .m{font-size:13.5px;color:var(--sumi)}
 
 /* プリント */
-.sh-top{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:calc(12px + env(safe-area-inset-top)) 0 8px}
-.sh-top .l{font-family:var(--num);font-size:14px;font-weight:700}
-.sh-top .l em{font-style:normal;font-weight:400;color:var(--sumi);margin-left:8px}
-.sh-top .r{display:flex;align-items:center;gap:10px}
-.sh-time{font-family:var(--num);font-size:19px;font-weight:700}
-.icbtn{width:40px;height:40px;border-radius:50%;background:var(--paper);border:1px solid var(--keisen);
-  display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--sumi)}
-.gauge{height:8px;background:#dfe3dc;border-radius:5px;position:relative;overflow:hidden}
-.gauge b{position:absolute;inset:0 auto 0 0;width:0;background:var(--ai);transition:width .9s linear,background .3s}
-.gauge.over b{background:var(--yamabuki)}
-.gauge.late b{background:var(--akane)}
-.gauge i{position:absolute;top:0;bottom:0;width:2px;background:#fff;opacity:.85}
-.gauge-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--usu);margin:5px 0 10px}
-.progline{display:flex;gap:3px;margin-bottom:10px}
-.progline i{flex:1;height:4px;border-radius:2px;background:#dfe3dc}
-.progline i.on{background:var(--midori)}
-
-.paper{background:var(--paper);border:1px solid var(--keisen);border-radius:6px;border-left:6px solid var(--ai);
-  flex:1;min-height:210px;display:flex;flex-direction:column;justify-content:center;padding:18px 16px;
-  background-image:repeating-linear-gradient(to bottom,transparent 0 45px,#f1f3ef 45px 46px)}
-.qprompt{text-align:center;font-family:var(--num);font-size:40px;font-weight:600;line-height:1.35;
-  letter-spacing:.02em;word-break:break-word}
-.qprompt .op{color:var(--sumi);padding:0 6px}
-.qprompt .sm{font-size:26px}
-.qprompt .jp{font-family:var(--jp);font-size:17px;font-weight:400;color:var(--sumi);display:block;margin-bottom:10px}
-.vcol{display:inline-block;text-align:right;min-width:170px;font-size:38px}
-.vcol .op{float:left;padding:0}
-.vcol .rule{height:3px;background:var(--ink);margin:8px 0 0}
-.dotgrid{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:250px;margin:0 auto}
-.dotgrid i{width:26px;height:26px;border-radius:50%;background:var(--ai)}
-.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;
-  font-size:.72em;margin:0 4px}
-.frac .n{border-bottom:2.5px solid var(--ink);padding:0 8px 2px}
-.frac .d{padding:2px 8px 0}
-.blank{display:inline-block;min-width:52px;border-bottom:3px solid var(--ai);color:var(--ai)}
-
-.slots{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
-.slotlbl{font-size:14px;color:var(--sumi)}
-.box{display:inline-flex;align-items:center;justify-content:center;min-width:104px;height:64px;padding:0 12px;
-  border:2px solid var(--keisen);border-radius:10px;background:var(--usui);
-  font-family:var(--num);font-size:34px;font-weight:700}
-.box.sm{min-width:78px;height:58px;font-size:28px}
-.box.act{border-color:var(--ai);background:var(--ai-usu);box-shadow:0 0 0 3px rgba(31,75,142,.13)}
-.box .cur{width:3px;height:32px;background:var(--ai);animation:bl 1s steps(2,start) infinite}
-@keyframes bl{to{visibility:hidden}}
-.slotcap{font-size:11px;color:var(--usu);text-align:center;margin-top:-4px}
-.fracslot{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
-.fracslot .bar{width:70px;height:3px;background:var(--ink)}
-
+.stop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 0 8px}
+.stop .l{font-family:var(--num);font-size:13px;color:var(--sumi)}
+.stop .l b{color:var(--ink);font-size:14px}
+.stop .r{display:flex;align-items:center;gap:8px}
+.tm{font-family:var(--num);font-size:18px;font-weight:700}
+.ib{width:38px;height:38px;border-radius:50%;background:var(--surf);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--sumi)}
+.gg{height:7px;background:#e4e8e2;border-radius:4px;position:relative;overflow:hidden}
+.gg b{position:absolute;inset:0 auto 0 0;width:0;background:var(--ai);transition:width .9s linear,background .3s}
+.gg.ov b{background:var(--yam)}.gg.lt b{background:var(--aka)}
+.gg i{position:absolute;top:0;bottom:0;width:2px;background:#fff;opacity:.9}
+.gl{display:flex;justify-content:space-between;font-size:11px;color:var(--usu);margin:5px 0 9px}
+.pg{display:flex;gap:3px;margin-bottom:10px}
+.pg i{flex:1;height:4px;border-radius:2px;background:#e4e8e2}
+.pg i.o{background:var(--mid)}.pg i.x{background:var(--aka)}
+.pp{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--ai);border-radius:8px;flex:1;min-height:200px;display:flex;flex-direction:column;justify-content:center;padding:18px 14px;position:relative}
+.qp{text-align:center;font-family:var(--num);font-size:38px;font-weight:600;line-height:1.35;word-break:break-word}
+.qp .op{color:var(--sumi);padding:0 5px}
+.qp .sm{font-size:24px}
+.qp .jp{font-family:var(--jp);font-size:16px;font-weight:400;color:var(--sumi);display:block;margin-bottom:10px}
+.vc{display:inline-block;text-align:right;min-width:160px;font-size:36px}
+.vc .op{float:left;padding:0}
+.vc .rl{height:3px;background:var(--ink);margin-top:7px}
+.dg{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:240px;margin:0 auto}
+.dg i{width:25px;height:25px;border-radius:50%;background:var(--ai)}
+.fc{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;font-size:.7em;margin:0 4px}
+.fc .n{border-bottom:2.5px solid var(--ink);padding:0 8px 2px}
+.fc .d{padding:2px 8px 0}
+.bl{display:inline-block;min-width:48px;border-bottom:3px solid var(--ai);color:var(--ai)}
+.sl{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.sll{font-size:13.5px;color:var(--sumi)}
+.bx{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:62px;padding:0 12px;border:2px solid var(--line);border-radius:12px;background:var(--soft);font-family:var(--num);font-size:32px;font-weight:700}
+.bx.s{min-width:74px;height:54px;font-size:26px}
+.bx.a{border-color:var(--ai);background:var(--ai-s)}
+.bx.ok{border-color:var(--mid);background:var(--mid-s);color:var(--mid)}
+.bx.ng{border-color:var(--aka);background:var(--aka-s);color:var(--aka)}
+.bx .c{width:3px;height:30px;background:var(--ai);animation:bk 1s steps(2,start) infinite}
+@keyframes bk{to{visibility:hidden}}
+.cap{font-size:10.5px;color:var(--usu);text-align:center}
+.fs{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.fs .b{width:66px;height:3px;background:var(--ink)}
+.fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.94);border-radius:6px;z-index:5}
+.fb .m{font-size:74px;line-height:1;font-weight:700}
+.fb.ok .m{color:var(--mid)}
+.fb.ng .m{color:var(--aka)}
+.fb .t{font-size:15px;color:var(--sumi)}
+.fb .a{font-family:var(--num);font-size:26px;font-weight:700}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.pad button{height:60px;border-radius:12px;background:var(--paper);border:1px solid var(--keisen);
-  font-family:var(--num);font-size:26px;font-weight:600}
-.pad button:active{background:var(--ai-usu)}
-.pad .fn{font-family:var(--jp);font-size:15px;font-weight:700;background:#e2e6df;border-color:#d5dad2}
-.pad .go{grid-column:span 3;background:var(--ai);color:#fff;border-color:var(--ai);
-  font-family:var(--jp);font-size:18px;font-weight:700;height:58px}
-.pad .go.ready{background:var(--midori);border-color:var(--midori)}
-.pad .void{visibility:hidden}
+.pad button{height:56px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:25px;font-weight:600}
+.pad button:active{background:var(--ai-s)}
+.pad .fn{font-family:var(--jp);font-size:14px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
+.pad .mic{font-size:20px}
+.pad .mic.rec{background:var(--aka);color:#fff;border-color:var(--aka)}
+.pad .go{grid-column:span 2;background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:17px;font-weight:700;white-space:nowrap;padding:0}
+.pad .go.rd{background:var(--mid);border-color:var(--mid)}
+.pad .vd{visibility:hidden}
 
 /* まるつけ */
-.marks{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
-.mk{aspect-ratio:1;border-radius:10px;background:var(--paper);border:1px solid var(--keisen);
-  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;
-  opacity:0;transform:scale(.7)}
-.mk.show{opacity:1;transform:scale(1);transition:all .17s cubic-bezier(.2,1.3,.5,1)}
-.mk.o{color:var(--midori)}
-.mk.x{color:var(--akane);border-color:#f0d7d5;background:#fdf5f4}
-@media (prefers-reduced-motion:reduce){.mk{transition:none!important;opacity:1;transform:none}}
+.mrow{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--line)}
+.mrow:last-child{border:none}
+.mrow .no{font-family:var(--num);font-size:11px;color:var(--usu);width:18px;flex:0 0 auto}
+.mrow .fm{flex:1;font-family:var(--num);font-size:17px;line-height:1.3}
+.mrow .fm .op{color:var(--sumi);padding:0 3px}
+.mrow .fm .jp{display:inline;font-size:11.5px;margin:0 6px 0 0}
+.mrow .fm .dg{display:inline-flex;max-width:130px;gap:3px;vertical-align:middle}
+.mrow .fm .dg i{width:9px;height:9px}
+.mrow .fm .bl{min-width:26px;border-width:2px}
+.mrow .fm .vc{font-size:15px;min-width:auto;display:inline-block}
+.mrow .fm .vc .rl{margin-top:2px}
+.mrow .fm .fc{font-size:.65em}
+.mrow .yr{font-family:var(--num);font-size:16px;font-weight:700;white-space:nowrap}
+.mrow.x .yr{color:var(--aka);text-decoration:line-through;font-weight:400;font-size:14px}
+.mrow .co{font-family:var(--num);font-size:17px;font-weight:700;color:var(--mid);white-space:nowrap}
+.mrow .mk{font-size:20px;font-weight:700;width:22px;text-align:center;flex:0 0 auto}
+.mrow.o .mk{color:var(--mid)}.mrow.x .mk{color:var(--aka)}
 
 /* けっか */
-.badge{border-radius:16px;padding:24px 18px;text-align:center;color:#fff}
-.badge.pass{background:var(--midori)}
-.badge.slow{background:var(--yamabuki)}
-.badge.again{background:var(--ai)}
-.badge h2{margin:0;font-size:23px}
-.badge p{margin:8px 0 0;font-size:14px;opacity:.96;line-height:1.7}
-.stats{display:flex;gap:8px;margin:14px 0}
-.stat{flex:1;background:var(--paper);border:1px solid var(--keisen);border-radius:12px;padding:13px 6px;text-align:center}
-.stat b{display:block;font-family:var(--num);font-size:26px;line-height:1.25}
-.stat span{font-size:11.5px;color:var(--sumi)}
+.bg{border-radius:18px;padding:26px 18px;text-align:center;color:#fff}
+.bg.p{background:var(--mid)}.bg.s{background:var(--yam)}.bg.a{background:var(--ai)}
+.bg h2{margin:0;font-size:22px}
+.bg p{margin:8px 0 0;font-size:13.5px;opacity:.96;line-height:1.7}
+.sts{display:flex;gap:8px;margin:14px 0}
+.st{flex:1;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:13px 6px;text-align:center}
+.st b{display:block;font-family:var(--num);font-size:24px;line-height:1.25}
+.st span{font-size:11px;color:var(--sumi)}
 
-/* きろく・せってい */
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;
-  border-bottom:1px solid var(--keisen);font-size:14.5px}
-.row:last-child{border-bottom:none}
-.row .r{font-family:var(--num);color:var(--sumi);font-size:13.5px;white-space:nowrap}
-.bar{height:9px;background:#e3e7de;border-radius:5px;overflow:hidden;margin-top:6px}
+/* 共通行 */
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.row:last-child{border:none}
+.row .r{font-family:var(--num);color:var(--sumi);font-size:13px;white-space:nowrap}
+.bar{height:8px;background:#e4e8e2;border-radius:4px;overflow:hidden;margin-top:6px}
 .bar b{display:block;height:100%;background:var(--ai)}
-select{font-family:inherit;font-size:16px;padding:13px;border-radius:10px;border:1px solid var(--keisen);
-  background:var(--paper);width:100%}
-label.fld{display:block;margin-top:14px}
-label.fld span{font-size:13px;color:var(--sumi);display:block;margin-bottom:6px}
-.toggle{width:54px;height:32px;border-radius:17px;background:#ccd3c9;position:relative;flex:0 0 auto}
-.toggle b{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .15s}
-.toggle.on{background:var(--midori)}
-.toggle.on b{left:25px}
-.danger{color:var(--akane)}
+select{font:inherit;font-size:16px;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--surf);width:100%}
+label.f{display:block;margin-top:14px}
+label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
+.tg{width:52px;height:31px;border-radius:16px;background:#ccd2c9;position:relative;flex:0 0 auto}
+.tg b{position:absolute;top:3px;left:3px;width:25px;height:25px;border-radius:50%;background:#fff;transition:left .15s}
+.tg.on{background:var(--mid)}.tg.on b{left:24px}
+.dgr{color:var(--aka)}
+
+/* モーダル */
+.mask{position:fixed;inset:0;background:rgba(20,26,32,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px}
+.mask.hide{display:none}
+.dlg{background:var(--surf);border-radius:18px;padding:22px;width:100%;max-width:360px}
+.dlg h3{margin:0 0 8px;font-size:17px}
+.dlg .q{font-family:var(--num);font-size:32px;font-weight:700;text-align:center;margin:14px 0}
+.dlg input{text-align:center;font-family:var(--num);font-size:26px;font-weight:700}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ===== はじめかた ===== -->
-<section class="screen nonav on" id="s-welcome">
-  <div class="greet"><div class="d">まいにち計算</div><h1>どこから はじめますか</h1></div>
-  <p class="note" style="margin:10px 0 18px">公文式は、いま解ける ところより すこし やさしい ところから 始めます。えらび方は 3つ あります。</p>
-  <button class="pick" data-w="grade"><b>学年から えらぶ</b><span>いちばん かんたん。学年に あわせて おすすめの 教材を 出します</span></button>
-  <button class="pick" data-w="test"><b>診断テストで きめる</b><span>12問を 解いて、ちょうどの ところを 自動で 決めます（3分ほど）</span></button>
-  <button class="pick" data-w="map"><b>教材マップから えらぶ</b><span>6A から O まで 20教材の 内容を 見て 自分で えらびます</span></button>
-  <div class="spacer"></div>
-  <button class="btn quiet" data-w="first">いちばん はじめ（6A）から 始める</button>
-  <div class="tiny">ver2.0 / BUILD 2026-09-01b</div>
+<!-- こども選択 -->
+<section class="sc full on" id="s-kids">
+  <div class="hd"><h2>だれが やりますか</h2></div>
+  <div id="kidlist"></div>
+  <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
+  <div class="sp"></div>
+  <div class="tiny">まいにち計算 ver3.0 / 2026-09-01c</div>
 </section>
 
-<!-- ===== 学年選択 ===== -->
-<section class="screen nonav" id="s-grade">
-  <div class="hd"><button class="back" data-back="s-welcome">←</button><h2>学年を えらぶ</h2></div>
-  <p class="note" style="margin-bottom:14px">お子さんの 学年を えらんでください。学年相当より すこし 手前の 教材を おすすめします。</p>
-  <div class="gradegrid" id="gradegrid"></div>
-  <div class="card" id="gradeout" style="margin-top:16px" hidden></div>
-  <div class="spacer"></div>
-</section>
-
-<!-- ===== 教材マップ ===== -->
-<section class="screen" id="s-map">
-  <div class="hd"><button class="back" data-back="">←</button><h2>教材マップ</h2></div>
-  <p class="note">公文式の算数・数学は 6A から O まで。学年ではなく 教材で 進みます。学年目安は おおよそのものです。</p>
-  <div id="maplist"></div>
-  <div class="tiny">J〜O は内容の表示のみ（学習は今後追加）</div>
-</section>
-
-<!-- ===== 教材の詳細 ===== -->
-<section class="screen nonav" id="s-lv">
-  <div class="hd"><button class="back" data-back="s-map">←</button><h2 id="lv-h">教材</h2></div>
+<!-- こども追加 -->
+<section class="sc full" id="s-add">
+  <div class="hd"><button class="bk" data-bk="s-kids">←</button><h2>あたらしい 学習者</h2></div>
   <div class="card">
-    <h3 id="lv-title"></h3>
-    <div class="note" id="lv-aim"></div>
+    <h3>なまえ</h3>
+    <input type="text" id="ad-name" placeholder="なまえ" maxlength="8">
+    <h3 style="margin-top:18px">アイコン</h3>
+    <div class="icons" id="ad-icons"></div>
   </div>
-  <div class="card"><h3>ステップ</h3><div id="lv-steps"></div></div>
-  <div class="spacer"></div>
-  <div class="stack" style="margin-top:16px">
-    <button class="btn" id="lv-start">この教材の さいしょから 始める</button>
+  <div class="card">
+    <h3>はじめる ところ</h3>
+    <div class="note">学年を えらぶと、学年相当より すこし 手前の 教材から 始まります。あとで 診断テストや 教材マップから 変えられます。</div>
+    <label class="f"><span>学年</span><select id="ad-grade"></select></label>
   </div>
+  <div class="sp"></div>
+  <div class="stk"><button class="btn" id="ad-save">とうろくする</button>
+  <button class="btn q" id="ad-del">この学習者を さくじょ</button></div>
   <div class="tiny">&nbsp;</div>
 </section>
 
-<!-- ===== ホーム ===== -->
-<section class="screen" id="s-home">
-  <div class="greet"><div class="d num" id="home-date"></div><h1 id="home-title">きょうの 学習</h1></div>
-  <div class="chiprow" style="margin-top:12px">
-    <span class="chip">きょう <b id="c-today">0</b> / <b id="c-daily">5</b> まい</span>
-    <span class="chip">つづけて <b id="c-streak">0</b> 日</span>
+<!-- ホーム -->
+<section class="sc" id="s-home">
+  <div class="who"><span class="av" id="h-av">🐰</span><b id="h-name"></b><button class="sw" id="h-switch">きりかえ</button></div>
+  <div class="hero">
+    <div class="top">
+      <div class="ring"><svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="32" fill="none" stroke="#e4e8e2" stroke-width="7"/><circle id="h-ring" cx="37" cy="37" r="32" fill="none" stroke="#2557c7" stroke-width="7" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201" transform="rotate(-90 37 37)"/></svg><div class="m"><b id="h-num">0</b><i id="h-den">/5まい</i></div></div>
+      <div class="tx"><b id="h-msg">きょうの 学習</b><span id="h-sub"></span></div>
+    </div>
+    <div class="hr"></div>
+    <div class="lvline"><b id="h-lv"></b><i id="h-grade"></i></div>
+    <div class="nm" id="h-step"></div>
+    <div class="de" id="h-title"></div>
+    <div class="dots" id="h-dots"></div>
+    <div class="dl" id="h-dl"></div>
   </div>
-  <div class="nextcard">
-    <div class="lbl">つぎの プリント</div>
-    <div class="lv"><b id="home-id">3A</b><span id="home-grade"></span></div>
-    <div class="nm" id="home-name"></div>
-    <div class="de" id="home-desc"></div>
-    <div class="dots" id="home-dots"></div>
-    <div class="dotlbl" id="home-dotlbl"></div>
-  </div>
-  <div class="startwrap"><button class="btn lg" id="btn-start">はじめる</button></div>
-  <div class="spacer"></div>
-  <div class="tiny">BUILD 2026-09-01b</div>
+  <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
+  <div class="sp"></div>
+  <div class="tiny">BUILD 2026-09-01c</div>
 </section>
 
-<!-- ===== れいだい ===== -->
-<section class="screen nonav" id="s-ex">
-  <div class="hd"><button class="back" data-back="s-home">←</button><h2>あたらしい ステップ</h2></div>
+<!-- れいだい -->
+<section class="sc full" id="s-ex">
+  <div class="hd"><button class="bk" data-bk="s-home">←</button><h2>あたらしい ステップ</h2></div>
   <div class="card" style="margin-bottom:12px">
-    <div class="lv" style="display:flex;align-items:baseline;gap:10px">
-      <b class="num" id="ex-id" style="font-size:26px;font-weight:700"></b>
-      <span id="ex-name" style="font-size:16px;font-weight:700"></span>
-    </div>
+    <div class="lvline"><b class="num" id="ex-id" style="font-size:22px"></b><i id="ex-no"></i></div>
+    <div class="nm" style="font-size:17px;font-weight:700;margin-top:8px" id="ex-name"></div>
   </div>
-  <div class="exbox">
-    <div class="t">れいだい</div>
-    <div class="f num" id="ex-formula"></div>
-    <div class="m" id="ex-msg"></div>
-  </div>
-  <div class="spacer"></div>
+  <div class="ex"><div class="t">れいだい</div><div class="f" id="ex-f"></div><div class="m" id="ex-m"></div></div>
+  <div class="sp"></div>
   <button class="btn" id="ex-go">やってみる</button>
   <div class="tiny">&nbsp;</div>
 </section>
 
-<!-- ===== プリント ===== -->
-<section class="screen nonav" id="s-sheet">
-  <div class="sh-top">
-    <div class="l"><span id="sh-id"></span><em id="sh-print"></em></div>
-    <div class="r"><span class="sh-time num" id="sh-time">0:00</span>
-      <button class="icbtn" id="sh-hint">例</button>
-      <button class="icbtn" id="sh-quit">×</button></div>
+<!-- プリント -->
+<section class="sc full" id="s-sheet">
+  <div class="stop">
+    <div class="l"><b id="sh-id"></b><span id="sh-p"></span></div>
+    <div class="r"><span class="tm num" id="sh-t">0:00</span>
+      <button class="ib" id="sh-ex">例</button><button class="ib" id="sh-q">×</button></div>
   </div>
-  <div class="gauge" id="sh-gauge"><b></b><i id="tk-min"></i><i id="tk-max"></i></div>
-  <div class="gauge-lbl"><span id="sh-name"></span><span id="sh-std"></span></div>
-  <div class="progline" id="sh-prog"></div>
-  <div class="paper">
-    <div class="qprompt" id="q-prompt"></div>
-    <div class="slots" id="q-slots"></div>
-  </div>
-  <div class="pad" id="sh-pad"></div>
-  <div style="height:14px"></div>
+  <div class="gg" id="sh-g"><b></b><i id="tk1"></i><i id="tk2"></i></div>
+  <div class="gl"><span id="sh-n"></span><span id="sh-s"></span></div>
+  <div class="pg" id="sh-pg"></div>
+  <div class="pp" id="sh-pp"><div class="qp" id="qp"></div><div class="sl" id="qs"></div></div>
+  <div class="pad" id="pad"></div>
+  <div style="height:12px"></div>
 </section>
 
-<!-- ===== まるつけ ===== -->
-<section class="screen nonav" id="s-mark">
-  <div class="hd"><h2>まるつけ</h2><div class="spacer"></div><span class="num" id="mk-time"></span></div>
-  <div class="marks" id="mk-grid"></div>
-  <div class="card note" id="mk-note"></div>
-  <div class="spacer"></div>
-  <button class="btn" id="mk-next">つぎへ</button>
+<!-- まるつけ -->
+<section class="sc full" id="s-mark">
+  <div class="hd"><h2>まるつけ</h2><div class="sp"></div><span class="num" id="mk-t"></span></div>
+  <div class="card" style="padding:6px 14px" id="mk-list"></div>
+  <div class="card note" id="mk-note" style="margin-top:12px"></div>
+  <div class="sp"></div>
+  <button class="btn" id="mk-go"></button>
   <div class="tiny">&nbsp;</div>
 </section>
 
-<!-- ===== けっか ===== -->
-<section class="screen nonav" id="s-result">
-  <div class="hd"><h2>けっか</h2><div class="spacer"></div><span class="num" id="rs-id"></span></div>
-  <div class="badge" id="rs-badge"><h2></h2><p></p></div>
-  <div class="stats">
-    <div class="stat"><b id="rs-score"></b><span>てん</span></div>
-    <div class="stat"><b id="rs-time"></b><span>じかん</span></div>
-    <div class="stat"><b id="rs-std"></b><span>ひょうじゅん</span></div>
+<!-- けっか -->
+<section class="sc full" id="s-res">
+  <div class="hd"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
+  <div class="bg" id="rs-bg"><h2></h2><p></p></div>
+  <div class="sts">
+    <div class="st"><b id="rs-sc"></b><span>てん</span></div>
+    <div class="st"><b id="rs-tm"></b><span>じかん</span></div>
+    <div class="st"><b id="rs-st"></b><span>めやす</span></div>
   </div>
-  <div class="card note" id="rs-note"></div>
-  <div class="spacer"></div>
-  <div class="stack">
-    <button class="btn" id="rs-next"></button>
-    <button class="btn quiet" id="rs-home">きょうは ここまで</button>
-  </div>
+  <div class="card note" id="rs-nt"></div>
+  <div class="sp"></div>
+  <div class="stk"><button class="btn" id="rs-nx"></button><button class="btn q" id="rs-hm">きょうは ここまで</button></div>
   <div class="tiny">&nbsp;</div>
 </section>
 
-<!-- ===== 診断テスト ===== -->
-<section class="screen nonav" id="s-test">
-  <div class="hd"><button class="back" data-back="s-welcome">←</button><h2>診断テスト</h2></div>
-  <div id="t-intro">
+<!-- マップ -->
+<section class="sc" id="s-map">
+  <div class="hd"><h2>教材マップ</h2></div>
+  <p class="note">6A から O まで 20教材。学年ではなく 教材で 進みます。タップすると ステップの 中身が 見られます。</p>
+  <div id="maplist"></div>
+  <div class="tiny">J〜O は内容の表示のみ</div>
+</section>
+
+<!-- 教材詳細 -->
+<section class="sc full" id="s-lv">
+  <div class="hd"><button class="bk" data-bk="s-map">←</button><h2 id="lv-h"></h2></div>
+  <div class="card"><h3 id="lv-t"></h3><div class="note" id="lv-a"></div></div>
+  <div class="card"><h3>ステップ（各5まい）</h3><div id="lv-s"></div></div>
+  <div class="sp"></div>
+  <button class="btn o" id="lv-go" style="margin-top:14px"></button>
+  <div class="tiny">&nbsp;</div>
+</section>
+
+<!-- 診断テスト -->
+<section class="sc full" id="s-test">
+  <div class="hd"><button class="bk" data-bk="s-home">←</button><h2>診断テスト</h2></div>
+  <div id="t-in">
     <div class="card note">
       いまの ちからに ちょうどの ところを 見つける テストです。<br><br>
       ・ぜんぶで 12問、1問 30秒<br>
-      ・むずかしい ところで 止まって かまいません<br>
-      ・わからなければ「わからない」を おしてください<br><br>
-      まちがえた ところで テストは 終わり、その 2ステップ 手前から 始めます。
+      ・まちがえた ところで 終わります<br>
+      ・その 2ステップ 手前から 始めます<br><br>
+      日々の 学習の 前に 1回 やれば じゅうぶんです。あとで いつでも やり直せます。
     </div>
-    <div class="spacer"></div>
-    <button class="btn" id="t-begin" style="margin-top:16px">テストを はじめる</button>
+    <div class="sp"></div>
+    <button class="btn" id="t-go" style="margin-top:16px">テストを はじめる</button>
   </div>
-  <div id="t-run" class="hidden" style="flex:1;display:flex;flex-direction:column">
-    <div class="gauge-lbl"><span id="t-count"></span><span class="num" id="t-tick"></span></div>
-    <div class="progline" id="t-prog"></div>
-    <div class="paper">
-      <div class="qprompt" id="tq-prompt"></div>
-      <div class="slots" id="tq-slots"></div>
-    </div>
+  <div id="t-run" class="hide" style="flex:1;display:flex;flex-direction:column">
+    <div class="gl"><span id="t-c"></span><span class="num" id="t-k"></span></div>
+    <div class="pg" id="t-pg"></div>
+    <div class="pp" id="t-pp"><div class="qp" id="tqp"></div><div class="sl" id="tqs"></div></div>
     <div class="pad" id="t-pad"></div>
-    <button class="btn quiet" id="t-skipq">わからない</button>
+    <button class="btn q" id="t-sk">わからない</button>
   </div>
 </section>
 
-<!-- ===== きろく ===== -->
-<section class="screen" id="s-record">
-  <div class="hd"><h2>きろく</h2></div>
-  <div class="stats">
-    <div class="stat"><b id="rc-total"></b><span>まい（ぜんぶ）</span></div>
-    <div class="stat"><b id="rc-streak"></b><span>日（つづけて）</span></div>
-    <div class="stat"><b id="rc-week"></b><span>まい（7日）</span></div>
+<!-- きろく -->
+<section class="sc" id="s-rec">
+  <div class="hd"><h2>きろく</h2><div class="sp"></div><span class="note" id="rc-who"></span></div>
+  <div class="sts">
+    <div class="st"><b id="rc-t"></b><span>まい</span></div>
+    <div class="st"><b id="rc-s"></b><span>つづけて日</span></div>
+    <div class="st"><b id="rc-w"></b><span>7日で</span></div>
   </div>
-  <div class="card"><h3>じかんの うつりかわり</h3>
-    <div id="rc-chart" style="margin-top:6px"></div>
-    <div class="note" style="margin-top:6px">青が かかった じかん、みどりの点線が 標準完成時間（はやい がわ）です。</div>
-  </div>
-  <div class="card"><h3>すすみぐあい</h3><div id="rc-levels" style="margin-top:6px"></div></div>
-  <div class="card"><h3>りれき</h3><div id="rc-list"></div></div>
+  <div class="card"><h3>じかんの うつりかわり</h3><div id="rc-ch"></div>
+    <div class="note" style="margin-top:6px">青が かかった じかん、緑の点線が 標準完成時間です。下がるほど 力がついています。</div></div>
+  <div class="card"><h3>すすみぐあい</h3><div id="rc-lv"></div></div>
+  <div class="card"><h3>りれき</h3><div id="rc-li"></div></div>
   <div class="tiny">&nbsp;</div>
 </section>
 
-<!-- ===== せってい ===== -->
-<section class="screen" id="s-set">
-  <div class="hd"><h2>せってい</h2></div>
+<!-- 保護者 -->
+<section class="sc" id="s-set">
+  <div class="hd"><h2>保護者メニュー</h2></div>
   <div class="card">
     <h3>学習量</h3>
-    <label class="fld"><span>1日のまい数</span>
-      <select id="st-daily"><option value="3">3まい</option><option value="5">5まい</option><option value="10">10まい</option></select></label>
-    <label class="fld"><span>1枚の問題数</span>
-      <select id="st-qmode"><option value="std">標準</option><option value="half">半分（みじかめ）</option></select></label>
+    <label class="f"><span>1日のまい数</span><select id="st-daily"><option value="3">3まい</option><option value="5">5まい</option><option value="10">10まい</option></select></label>
+    <label class="f"><span>1枚の問題数</span><select id="st-qm"><option value="std">標準</option><option value="half">半分</option></select></label>
   </div>
   <div class="card">
     <h3>やりかた</h3>
-    <div class="row"><b style="font-weight:400">音を出す</b><div class="toggle" id="st-sound"><b></b></div></div>
-    <div class="row"><b style="font-weight:400">1問ごとに ○×を出す</b><div class="toggle" id="st-instant"><b></b></div></div>
-    <div class="note" style="padding-top:8px">公文式は「全部解いてから まるつけ → 訂正して100点」が基本です。</div>
+    <div class="row"><span>1問ごとに ○×と正解を出す</span><div class="tg" id="st-inst"><b></b></div></div>
+    <div class="row"><span>音を出す</span><div class="tg" id="st-snd"><b></b></div></div>
+    <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
+    <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。</div>
   </div>
   <div class="card">
-    <h3>いまの教材</h3>
-    <label class="fld"><span>教材</span><select id="st-level"></select></label>
-    <label class="fld"><span>ステップ</span><select id="st-step"></select></label>
-    <button class="btn sub" id="st-apply" style="margin-top:14px">ここから やりなおす</button>
-    <div class="note" style="padding-top:8px">迷ったら、いま解けるところの 2ステップ 手前に戻してください。</div>
+    <h3>いまの教材（<span id="st-who"></span>）</h3>
+    <label class="f"><span>教材</span><select id="st-lv"></select></label>
+    <label class="f"><span>ステップ</span><select id="st-sp"></select></label>
+    <button class="btn o" id="st-ap" style="margin-top:14px">ここから やりなおす</button>
+    <button class="btn l" id="st-test" style="margin-top:10px">診断テストで 決めなおす</button>
+  </div>
+  <div class="card">
+    <h3>学習者</h3>
+    <div id="st-kids"></div>
+    <button class="btn l" id="st-addkid" style="margin-top:10px">＋ 学習者を ついか</button>
   </div>
   <div class="card">
     <h3>データ</h3>
-    <div class="stack">
-      <button class="btn line" id="st-export">きろくを書き出す（JSON）</button>
-      <button class="btn line" id="st-import">きろくを読みこむ</button>
-      <input type="file" id="st-file" accept="application/json" hidden>
-      <button class="btn quiet danger" id="st-reset">ぜんぶ消す</button>
+    <div class="stk">
+      <button class="btn l" id="st-ex">きろくを書き出す（JSON）</button>
+      <button class="btn l" id="st-im">きろくを読みこむ</button>
+      <input type="file" id="st-fl" accept="application/json" hidden>
+      <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver2.0 / BUILD 2026-09-01b</div>
+  <div class="tiny">kumon_math ver3.0 / BUILD 2026-09-01c</div>
 </section>
 
-<nav class="nav hide" id="nav"><div class="nav-in">
-  <button data-nav="s-home"><span class="ic">●</span>ホーム</button>
-  <button data-nav="s-map"><span class="ic">▤</span>マップ</button>
-  <button data-nav="s-record"><span class="ic">▲</span>きろく</button>
-  <button data-nav="s-set"><span class="ic">⚙</span>せってい</button>
+<nav class="nav off" id="nav"><div class="nav-in">
+  <button data-nv="s-home"><span class="i">▤</span>がくしゅう</button>
+  <button data-nv="s-map"><span class="i">☰</span>マップ</button>
+  <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
+  <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="gate"><div class="dlg">
+  <h3>保護者の かくにん</h3>
+  <div class="note">つぎの かけ算の 答えを 入れてください。</div>
+  <div class="q" id="gate-q"></div>
+  <input type="text" inputmode="numeric" id="gate-a" placeholder="答え">
+  <div class="stk" style="margin-top:14px">
+    <button class="btn" id="gate-ok">かくにん</button>
+    <button class="btn q" id="gate-ng">やめる</button>
+  </div>
+</div></div>
 </div>
 
 <script>
 "use strict";
-var BUILD_TAG="2026-09-01b";
-console.log("BUILD_TAG: "+BUILD_TAG);
-var KEY="kumonmath_v2", PPS=5;
+var BUILD="2026-09-01c";console.log("BUILD_TAG: "+BUILD);
+var KEY="kumonmath_v3",PPS=5;
 
-/* ================================================================
-   教材データ（公文式 算数・数学 6A〜O）
-   学年目安・内容は公文公式サイトおよび公開情報にもとづく目安
-   ================================================================ */
-var LEVELS=[
-{lv:"6A",grade:"年少ごろ",title:"かずを かぞえる",
- aim:"10までの数に親しみ、数の並びを覚えます。数字を読む力をつけて5A教材へ進みます。",steps:[
- {id:"6A-1",name:"10までを かぞえる",q:12,std:[70,140],gen:{t:"count",n:[1,5]},ex:["● ● ●","まるは いくつ？ かぞえて すうじを おします。"]},
- {id:"6A-2",name:"10までを かぞえる（おおい）",q:12,std:[80,150],gen:{t:"count",n:[4,10]},ex:["● ● ● ● ● ● ●","おおきい かずも おなじ。ゆびで さして かぞえます。"]},
- {id:"6A-3",name:"かずの ならび（10まで）",q:14,std:[80,150],gen:{t:"seq",max:10,step:1},ex:["3　4　□　6","あいている ところに 入る かずを 入れます。"]},
- {id:"6A-4",name:"つぎの かず（10まで）",q:14,std:[80,150],gen:{t:"next",max:10},ex:["7の つぎの かず","7の つぎだから 8。"]}
+/* ============================================================
+   1. カリキュラム（公文式の教材構成を参考に再構成）
+   各行 [教材番号, ステップ名, 生成ルール, 上書き]
+   ============================================================ */
+var A9=function(a,b){return {t:"add",a:a,b:b};};
+var S9=function(a,b,o){var g={t:"sub",a:a,b:b};if(o)for(var k in o)g[k]=o[k];return g;};
+var LV=[
+{lv:"6A",grade:"年少",title:"かずを かぞえる",aim:"10までの数に親しみ、数の並びを覚えます。数字を読む力をつけて5A教材へ進みます。",q:12,std:[75,145],sec:[
+ ["1-10","5までを かぞえる",{t:"count",n:[1,5]}],
+ ["11-20","10までを かぞえる",{t:"count",n:[4,10]}],
+ ["21-30","かずの ならび（5まで）",{t:"seq",max:6,step:1}],
+ ["31-40","かずの ならび（10まで）",{t:"seq",max:10,step:1}],
+ ["41-50","つぎの かず（10まで）",{t:"next",max:10}],
+ ["51-60","10までの まとめ",{t:"mix",list:[{t:"count",n:[3,10]},{t:"seq",max:10,step:1},{t:"next",max:10}]}]
 ]},
-{lv:"5A",grade:"年少〜年中",title:"50までの かず",
- aim:"1〜50の数の読みと数の並びの理解を深めます。数表の読みは100を目標にします。",steps:[
- {id:"5A-1",name:"かずの ならび（30まで）",q:14,std:[85,160],gen:{t:"seq",max:30,step:1},ex:["18　19　□　21","10より 大きい かずも ならびは おなじです。"]},
- {id:"5A-2",name:"かずの ならび（50まで）",q:14,std:[90,165],gen:{t:"seq",max:50,step:1},ex:["46　47　□　49",""]},
- {id:"5A-3",name:"つぎの かず（50まで）",q:14,std:[85,160],gen:{t:"next",max:50},ex:["39の つぎの かず","一のくらいが 9のときは くり上がって 40。"]},
- {id:"5A-4",name:"2とび・5とび",q:12,std:[95,175],gen:{t:"seq",max:50,step:[2,5]},ex:["10　15　□　25","5ずつ ふえています。"]}
+{lv:"5A",grade:"年少〜年中",title:"50までの かず",aim:"1〜50の数の読みと数の並びの理解を深めます。数表の読みは100を目標にします。",q:14,std:[85,160],sec:[
+ ["1-10","かずの ならび（20まで）",{t:"seq",max:20,step:1}],
+ ["11-20","かずの ならび（30まで）",{t:"seq",max:30,step:1}],
+ ["21-30","かずの ならび（40まで）",{t:"seq",max:40,step:1}],
+ ["31-40","かずの ならび（50まで）",{t:"seq",max:50,step:1}],
+ ["41-50","つぎの かず（50まで）",{t:"next",max:50}],
+ ["51-60","2とび",{t:"seq",max:50,step:[2,2]}],
+ ["61-70","5とび",{t:"seq",max:50,step:[5,5]}],
+ ["71-80","50までの まとめ",{t:"mix",list:[{t:"seq",max:50,step:1},{t:"next",max:50},{t:"seq",max:50,step:[2,5]}]}]
 ]},
-{lv:"4A",grade:"年中ごろ",title:"120までの かず",
- aim:"数の並びや120までの数の理解を高め、たし算へ進む力をつけます。",steps:[
- {id:"4A-1",name:"かずの ならび（100まで）",q:14,std:[90,170],gen:{t:"seq",max:100,step:1},ex:["78　79　□　81",""]},
- {id:"4A-2",name:"かずの ならび（120まで）",q:14,std:[95,175],gen:{t:"seq",max:120,step:1},ex:["108　109　□　111","100を こえても ならびは おなじです。"]},
- {id:"4A-3",name:"10とび",q:12,std:[90,170],gen:{t:"seq",max:120,step:[10,10]},ex:["30　40　□　60","10ずつ ふえています。"]},
- {id:"4A-4",name:"つぎの かず（120まで）",q:14,std:[90,170],gen:{t:"next",max:120},ex:["99の つぎの かず","99の つぎは 100。"]}
+{lv:"4A",grade:"年中",title:"120までの かず",aim:"数の並びや120までの数の理解を高め、たし算へ進む力をつけます。",q:14,std:[90,170],sec:[
+ ["1-10","かずの ならび（70まで）",{t:"seq",max:70,step:1}],
+ ["11-20","かずの ならび（100まで）",{t:"seq",max:100,step:1}],
+ ["21-30","かずの ならび（120まで）",{t:"seq",max:120,step:1}],
+ ["31-40","つぎの かず（120まで）",{t:"next",max:120}],
+ ["41-50","10とび",{t:"seq",max:120,step:[10,10]}],
+ ["51-60","120までの まとめ",{t:"mix",list:[{t:"seq",max:120,step:1},{t:"next",max:120},{t:"seq",max:120,step:[10,10]}]}]
 ]},
-{lv:"3A",grade:"年長〜小1",title:"たしざんの はじまり",
- aim:"4A教材までの数の力をもとに、+1から+3までのたし算で2A教材へ進む力をつけます。",steps:[
- {id:"3A-1",name:"たす 1",q:20,std:[100,180],gen:{t:"add",a:[1,10],b:[1,1]},ex:["4 ＋ 1 = 5","「たす1」は つぎの かず。"]},
- {id:"3A-2",name:"たす 1（20まで）",q:20,std:[100,180],gen:{t:"add",a:[1,20],b:[1,1]},ex:["17 ＋ 1 = 18",""]},
- {id:"3A-3",name:"たす 2",q:20,std:[100,180],gen:{t:"add",a:[1,10],b:[2,2]},ex:["6 ＋ 2 = 8","2つ さきの かず。"]},
- {id:"3A-4",name:"たす 2（20まで）",q:20,std:[100,185],gen:{t:"add",a:[1,20],b:[2,2]},ex:["15 ＋ 2 = 17",""]},
- {id:"3A-5",name:"たす 3",q:20,std:[105,190],gen:{t:"add",a:[1,20],b:[3,3]},ex:["12 ＋ 3 = 15",""]},
- {id:"3A-6",name:"たす 1〜3",q:20,std:[105,190],gen:{t:"add",a:[1,20],b:[1,3]},ex:["9 ＋ 3 = 12","1・2・3が まざります。"]}
+{lv:"3A",grade:"年長〜小1",title:"たしざんの はじまり",aim:"4A教材までの数の力をもとに、+1から+3までのたし算で2A教材へ進む力をつけます。",q:20,std:[100,185],sec:[
+ ["1-10","たす 1（10まで）",A9([1,10],[1,1])],
+ ["11-20","たす 1（20まで）",A9([1,20],[1,1])],
+ ["21-30","たす 2（10まで）",A9([1,10],[2,2])],
+ ["31-40","たす 2（20まで）",A9([1,20],[2,2])],
+ ["41-50","たす 3（10まで）",A9([1,10],[3,3])],
+ ["51-60","たす 3（20まで）",A9([1,20],[3,3])],
+ ["61-70","たす 1〜3 まぜて",A9([1,20],[1,3])],
+ ["71-80","3Aの まとめ",A9([1,20],[1,3])]
 ]},
-{lv:"2A",grade:"年長〜小1",title:"たす 4〜10",
- aim:"3A教材の力をもとに+4から+10までを学び、暗算力を養ってA教材へ進む力をつけます。",steps:[
- {id:"2A-1",name:"たす 4",q:20,std:[105,190],gen:{t:"add",a:[1,20],b:[4,4]},ex:["7 ＋ 4 = 11",""]},
- {id:"2A-2",name:"たす 5",q:20,std:[105,190],gen:{t:"add",a:[1,20],b:[5,5]},ex:["8 ＋ 5 = 13",""]},
- {id:"2A-3",name:"たす 6",q:20,std:[110,195],gen:{t:"add",a:[1,20],b:[6,6]},ex:["9 ＋ 6 = 15",""]},
- {id:"2A-4",name:"たす 7",q:20,std:[110,195],gen:{t:"add",a:[1,20],b:[7,7]},ex:["6 ＋ 7 = 13",""]},
- {id:"2A-5",name:"たす 8",q:20,std:[110,195],gen:{t:"add",a:[1,20],b:[8,8]},ex:["5 ＋ 8 = 13",""]},
- {id:"2A-6",name:"たす 9",q:20,std:[110,200],gen:{t:"add",a:[1,20],b:[9,9]},ex:["7 ＋ 9 = 16",""]},
- {id:"2A-7",name:"たす 10",q:20,std:[105,190],gen:{t:"add",a:[1,20],b:[10,10]},ex:["13 ＋ 10 = 23","十のくらいが 1 ふえます。"]},
- {id:"2A-8",name:"たす 1〜10",q:20,std:[115,205],gen:{t:"add",a:[1,20],b:[1,10]},ex:["8 ＋ 6 = 14",""]}
+{lv:"2A",grade:"年長〜小1",title:"たす 4〜10",aim:"3A教材の力をもとに+4から+10までを学び、暗算力を養ってA教材へ進む力をつけます。",q:20,std:[105,195],sec:[
+ ["1-10","たす 4",A9([1,20],[4,4])],
+ ["11-20","たす 5",A9([1,20],[5,5])],
+ ["21-30","たす 6",A9([1,20],[6,6])],
+ ["31-40","たす 7",A9([1,20],[7,7])],
+ ["41-50","たす 8",A9([1,20],[8,8])],
+ ["51-60","たす 9",A9([1,20],[9,9])],
+ ["61-70","たす 10",A9([1,20],[10,10])],
+ ["71-80","たす 4〜7 まぜて",A9([1,20],[4,7])],
+ ["81-90","たす 8〜10 まぜて",A9([1,20],[8,10])],
+ ["91-100","2Aの まとめ",A9([1,20],[1,10])]
 ]},
-{lv:"A",grade:"小1",title:"たし算・ひき算（あんざん）",
- aim:"2A教材までのたし算をもとに、たし算・ひき算の暗算力を高め、B教材の筆算へ進む力をつけます。",steps:[
- {id:"A-1",name:"くり上がりの たし算",q:20,std:[115,205],gen:{t:"add",a:[2,9],b:[2,9],carry:true},ex:["8 ＋ 7 = 15","10を つくって かんがえます。"]},
- {id:"A-2",name:"2けた ＋ 1けた",q:20,std:[125,220],gen:{t:"add",a:[10,49],b:[2,9]},ex:["36 ＋ 7 = 43",""]},
- {id:"A-3",name:"ひく 1〜3",q:20,std:[105,190],gen:{t:"sub",a:[4,20],b:[1,3]},ex:["16 − 3 = 13","ひき算の はじまりです。"]},
- {id:"A-4",name:"ひく 4〜6",q:20,std:[110,195],gen:{t:"sub",a:[6,20],b:[4,6]},ex:["14 − 5 = 9",""]},
- {id:"A-5",name:"ひく 7〜9",q:20,std:[115,200],gen:{t:"sub",a:[9,20],b:[7,9]},ex:["17 − 8 = 9",""]},
- {id:"A-6",name:"くり下がりの ひき算",q:20,std:[120,215],gen:{t:"sub",a:[11,18],b:[2,9],borrow:true},ex:["13 − 7 = 6","10から ひいて かんがえます。"]},
- {id:"A-7",name:"たし算・ひき算 まぜて",q:20,std:[125,225],gen:{t:"mix",list:[{t:"add",a:[2,9],b:[2,9],carry:true},{t:"add",a:[10,49],b:[2,9]},{t:"sub",a:[11,18],b:[2,9],borrow:true},{t:"sub",a:[20,49],b:[2,9]}]},ex:["＋ と − を よく見て","記号を まちがえないように。"]}
+{lv:"A",grade:"小1",title:"たし算・ひき算（あんざん）",aim:"2A教材までのたし算をもとに、たし算・ひき算の暗算力を高め、B教材の筆算へ進む力をつけます。",q:20,std:[115,205],sec:[
+ ["1-10","たし算の ふくしゅう",A9([1,20],[1,10])],
+ ["11-20","くり上がりの たし算",{t:"add",a:[2,9],b:[2,9],carry:true}],
+ ["21-30","2けた ＋ 1けた",A9([10,49],[2,9])],
+ ["31-40","たし算の まとめ",{t:"mix",list:[{t:"add",a:[2,9],b:[2,9],carry:true},A9([10,49],[2,9])]}],
+ ["41-50","ひく 1",S9([2,20],[1,1])],
+ ["51-60","ひく 2・3",S9([4,20],[2,3])],
+ ["61-70","ひく 4〜6",S9([6,20],[4,6])],
+ ["71-80","ひく 7〜9",S9([9,20],[7,9])],
+ ["81-90","くり下がりの ひき算 1",S9([11,15],[2,9],{borrow:true})],
+ ["91-100","くり下がりの ひき算 2",S9([11,18],[2,9],{borrow:true})],
+ ["101-110","2けた − 1けた",S9([20,49],[2,9])],
+ ["111-120","Aの まとめ",{t:"mix",list:[{t:"add",a:[2,9],b:[2,9],carry:true},A9([10,49],[2,9]),S9([11,18],[2,9],{borrow:true}),S9([20,49],[2,9])]}]
 ]},
-{lv:"B",grade:"小2",title:"たし算・ひき算の ひっ算",
- aim:"A教材の暗算力をもとに、2〜4けたのたし算・ひき算の筆算を身につけ、C教材へ進む力をつけます。",steps:[
- {id:"B-1",name:"2けた＋2けた（くり上がりなし）",q:10,std:[130,250],gen:{t:"addc",a:[11,44],b:[11,44],carry:false},ex:["23 ＋ 21 = 44","一のくらい どうし、十のくらい どうしを たします。"]},
- {id:"B-2",name:"2けた＋2けた（くり上がり）",q:10,std:[140,265],gen:{t:"addc",a:[15,89],b:[15,89],carry:true},ex:["48 ＋ 29 = 77","一のくらいが 10を こえたら くり上がり。"]},
- {id:"B-3",name:"3けた＋3けた",q:10,std:[160,300],gen:{t:"addc",a:[105,899],b:[105,899]},ex:["478 ＋ 265 = 743",""]},
- {id:"B-4",name:"2けた−2けた（くり下がりなし）",q:10,std:[130,250],gen:{t:"subc",a:[22,99],b:[11,60],borrow:false},ex:["68 − 53 = 15",""]},
- {id:"B-5",name:"2けた−2けた（くり下がり）",q:10,std:[145,275],gen:{t:"subc",a:[22,99],b:[11,60],borrow:true},ex:["63 − 56 = 7","ひけないときは 十のくらいから 借ります。"]},
- {id:"B-6",name:"3けた−3けた",q:10,std:[165,310],gen:{t:"subc",a:[210,999],b:[105,600]},ex:["705 − 223 = 482",""]},
- {id:"B-7",name:"ひっ算 まぜて",q:10,std:[160,300],gen:{t:"mix",list:[{t:"addc",a:[15,89],b:[15,89],carry:true},{t:"addc",a:[105,899],b:[105,899]},{t:"subc",a:[22,99],b:[11,60],borrow:true},{t:"subc",a:[210,999],b:[105,600]}]},ex:["＋ と − を よく見て",""]}
+{lv:"B",grade:"小2",title:"たし算・ひき算の ひっ算",aim:"A教材の暗算力をもとに、2〜3けたのたし算・ひき算の筆算を身につけ、C教材へ進む力をつけます。",q:10,std:[145,275],sec:[
+ ["1-10","Aの ふくしゅう",{t:"mix",list:[{t:"add",a:[2,9],b:[2,9],carry:true},S9([11,18],[2,9],{borrow:true})]},{q:20,std:[120,215]}],
+ ["11-20","2けた＋1けた ひっ算",{t:"addc",a:[11,89],b:[2,9]}],
+ ["21-30","2けた＋2けた（くり上がりなし）",{t:"addc",a:[11,44],b:[11,44],carry:false}],
+ ["31-40","2けた＋2けた（くり上がり）",{t:"addc",a:[15,89],b:[15,89],carry:true}],
+ ["41-50","3けた＋2けた",{t:"addc",a:[105,899],b:[11,89]}],
+ ["51-60","3けた＋3けた",{t:"addc",a:[105,899],b:[105,899]}],
+ ["61-70","たし算ひっ算の まとめ",{t:"mix",list:[{t:"addc",a:[15,89],b:[15,89],carry:true},{t:"addc",a:[105,899],b:[105,899]}]}],
+ ["71-80","2けた−1けた ひっ算",{t:"subc",a:[21,99],b:[2,9]}],
+ ["81-90","2けた−2けた（くり下がりなし）",{t:"subc",a:[22,99],b:[11,60],borrow:false}],
+ ["91-100","2けた−2けた（くり下がり）",{t:"subc",a:[22,99],b:[11,60],borrow:true}],
+ ["101-110","3けた−2けた",{t:"subc",a:[120,999],b:[11,99]}],
+ ["111-120","3けた−3けた",{t:"subc",a:[210,999],b:[105,600]}],
+ ["121-130","ひき算ひっ算の まとめ",{t:"mix",list:[{t:"subc",a:[22,99],b:[11,60],borrow:true},{t:"subc",a:[210,999],b:[105,600]}]}],
+ ["131-140","Bの まとめ",{t:"mix",list:[{t:"addc",a:[15,89],b:[15,89],carry:true},{t:"addc",a:[105,899],b:[105,899]},{t:"subc",a:[22,99],b:[11,60],borrow:true},{t:"subc",a:[210,999],b:[105,600]}]}]
 ]},
-{lv:"C",grade:"小3",title:"かけ算・わり算",
- aim:"B教材までのたし算・ひき算をもとに、かけ算・わり算の基礎的な計算力を身につけ、D教材へ進む力をつけます。",steps:[
- {id:"C-1",name:"2〜4のだん",q:20,std:[85,165],gen:{t:"mul",dan:[2,4],b:[1,9]},ex:["3 × 4 = 12","九九の はじまりです。"]},
- {id:"C-2",name:"5〜7のだん",q:20,std:[85,165],gen:{t:"mul",dan:[5,7],b:[1,9]},ex:["6 × 7 = 42",""]},
- {id:"C-3",name:"8〜9のだん",q:20,std:[90,170],gen:{t:"mul",dan:[8,9],b:[1,9]},ex:["8 × 7 = 56",""]},
- {id:"C-4",name:"九九 ぜんぶ",q:20,std:[90,170],gen:{t:"mul",dan:[2,9],b:[1,9]},ex:["7 × 8 = 56","すらすら 言えるまで。"]},
- {id:"C-5",name:"2けた×1けた",q:10,std:[150,290],gen:{t:"mulc",a:[12,99],b:[2,9]},ex:["26 × 3 = 78",""]},
- {id:"C-6",name:"3けた×1けた",q:10,std:[170,320],gen:{t:"mulc",a:[102,999],b:[2,9]},ex:["213 × 4 = 852",""]},
- {id:"C-7",name:"九九の ぎゃく（わり算）",q:20,std:[100,190],gen:{t:"div",b:[2,9],q:[1,9]},ex:["48 ÷ 6 = 8","6の だんから さがします。"]},
- {id:"C-8",name:"あまりの あるわり算",q:15,std:[130,250],gen:{t:"divr",a:[10,81],b:[2,9]},ex:["13 ÷ 4 = 3 あまり 1","わりきれない ぶんが あまり。"]},
- {id:"C-9",name:"2けた÷1けた",q:10,std:[150,290],gen:{t:"divr",a:[20,99],b:[2,9]},ex:["73 ÷ 3 = 24 あまり 1",""]},
- {id:"C-10",name:"3けた÷1けた",q:8,std:[175,330],gen:{t:"divr",a:[100,999],b:[3,9]},ex:["298 ÷ 3 = 99 あまり 1",""]}
+{lv:"C",grade:"小3",title:"かけ算・わり算",aim:"B教材までのたし算・ひき算の力をもとに、かけ算・わり算の基礎的な計算力を身につけ、D教材へ進む力をつけます。",q:20,std:[95,175],sec:[
+ ["1-10","Bまでの ふくしゅう",{t:"mix",list:[{t:"addc",a:[15,89],b:[15,89],carry:true},{t:"subc",a:[22,99],b:[11,60],borrow:true}]},{q:10,std:[145,275]}],
+ ["11-20","3までの 九九",{t:"mul",dan:[2,3],b:[1,9]}],
+ ["21-30","5までの 九九",{t:"mul",dan:[4,5],b:[1,9]}],
+ ["31-40","7までの 九九",{t:"mul",dan:[6,7],b:[1,9]}],
+ ["41-50","9までの 九九",{t:"mul",dan:[8,9],b:[1,9]}],
+ ["51-60","九九 ぜんぶ",{t:"mul",dan:[2,9],b:[1,9]}],
+ ["61-70","2けた×1けた の1",{t:"mulc",a:[12,29],b:[2,4]},{q:10,std:[150,290]}],
+ ["71-80","2けた×1けた の2",{t:"mulc",a:[12,49],b:[2,6]},{q:10,std:[150,290]}],
+ ["81-90","2けた×1けた の3",{t:"mulc",a:[12,99],b:[2,9]},{q:10,std:[155,295]}],
+ ["91-100","3けた×1けた",{t:"mulc",a:[102,999],b:[2,9]},{q:10,std:[170,320]}],
+ ["101-110","九九の ぎゃく の1",{t:"div",b:[2,5],q:[1,9]}],
+ ["111-120","九九の ぎゃく の2",{t:"div",b:[2,9],q:[1,9]}],
+ ["121-130","あまりの あるわり算 の1",{t:"divr",a:[10,45],b:[2,5],qm:9},{q:15,std:[130,250]}],
+ ["131-140","あまりの あるわり算 の2",{t:"divr",a:[10,81],b:[2,9],qm:9},{q:15,std:[130,250]}],
+ ["141-150","2けた÷1けた の1",{t:"divr",a:[20,60],b:[2,6]},{q:10,std:[150,290]}],
+ ["151-160","2けた÷1けた の2",{t:"divr",a:[20,99],b:[2,9]},{q:10,std:[155,295]}],
+ ["161-170","3けた÷1けた の1",{t:"divr",a:[100,400],b:[3,6]},{q:8,std:[175,330]}],
+ ["171-180","3けた÷1けた の2",{t:"divr",a:[100,999],b:[3,9]},{q:8,std:[180,340]}],
+ ["181-190","わり算の まとめ",{t:"mix",list:[{t:"div",b:[2,9],q:[1,9]},{t:"divr",a:[20,99],b:[2,9]}]},{q:12,std:[150,290]}],
+ ["191-200","Cの まとめ",{t:"mix",list:[{t:"mul",dan:[2,9],b:[1,9]},{t:"divr",a:[10,81],b:[2,9]}]},{q:15,std:[140,270]}]
 ]},
-{lv:"D",grade:"小4",title:"2けたの かけ算・わり算と 分数",
- aim:"C教材までの四則計算力を発展させ、2けたのわり算を身につけ「分数」という数になじみ、E教材へ進む力をつけます。",steps:[
- {id:"D-1",name:"2けた×2けた",q:6,std:[180,350],gen:{t:"mulc",a:[12,99],b:[12,99]},ex:["36 × 24 = 864",""]},
- {id:"D-2",name:"3けた×2けた",q:5,std:[200,390],gen:{t:"mulc",a:[102,999],b:[12,99]},ex:["213 × 45 = 9585",""]},
- {id:"D-3",name:"2けた÷2けた",q:8,std:[180,340],gen:{t:"divr",a:[20,99],b:[11,49]},ex:["45 ÷ 11 = 4 あまり 1",""]},
- {id:"D-4",name:"3けた÷2けた",q:6,std:[200,390],gen:{t:"divr",a:[100,999],b:[11,49]},ex:["531 ÷ 43 = 12 あまり 15",""]},
- {id:"D-5",name:"やくぶん",q:10,std:[150,290],gen:{t:"fsimp"},ex:["6/8 = 3/4","上と下を おなじ数で わります。"]},
- {id:"D-6",name:"かぶんすう と やくぶん",q:10,std:[160,300],gen:{t:"fsimp",big:true},ex:["18/12 = 3/2","答えは それ以上 やくぶん できない形に。"]}
+{lv:"D",grade:"小4",title:"2けたの かけ算・わり算と 分数",aim:"C教材までの四則計算力を発展させ、2けたのわり算を身につけ「分数」という数になじみ、E教材へ進む力をつけます。",q:8,std:[180,345],sec:[
+ ["1-10","Cの ふくしゅう",{t:"mix",list:[{t:"mulc",a:[12,99],b:[2,9]},{t:"divr",a:[20,99],b:[2,9]}]},{q:10,std:[160,300]}],
+ ["11-20","2けた×2けた の1",{t:"mulc",a:[12,49],b:[12,29]},{q:6,std:[180,350]}],
+ ["21-30","2けた×2けた の2",{t:"mulc",a:[12,99],b:[12,99]},{q:6,std:[185,355]}],
+ ["31-40","3けた×2けた",{t:"mulc",a:[102,999],b:[12,99]},{q:5,std:[200,390]}],
+ ["41-50","かけ算の まとめ",{t:"mulc",a:[12,999],b:[12,99]},{q:6,std:[195,375]}],
+ ["51-60","2けた÷1けた（あんざん）",{t:"divr",a:[20,99],b:[2,9]},{q:10,std:[150,290]}],
+ ["61-70","2けた÷2けた の1",{t:"divr",a:[20,99],b:[11,29]},{q:8,std:[175,330]}],
+ ["71-80","2けた÷2けた の2",{t:"divr",a:[20,99],b:[11,49]},{q:8,std:[180,340]}],
+ ["81-90","3けた÷2けた の1",{t:"divr",a:[100,500],b:[11,29]},{q:6,std:[200,380]}],
+ ["91-100","3けた÷2けた の2",{t:"divr",a:[100,999],b:[11,49]},{q:6,std:[205,395]}],
+ ["101-110","わり算の まとめ",{t:"divr",a:[100,999],b:[11,49]},{q:6,std:[205,395]}],
+ ["111-120","やくぶん の1",{t:"fsimp"},{q:10,std:[145,280]}],
+ ["121-130","やくぶん の2",{t:"fsimp",big:true},{q:10,std:[155,295]}],
+ ["131-140","Dの まとめ",{t:"mix",list:[{t:"mulc",a:[12,99],b:[12,99]},{t:"divr",a:[20,99],b:[11,49]},{t:"fsimp"}]},{q:8,std:[190,360]}]
 ]},
-{lv:"E",grade:"小5",title:"分数の 四則計算",
- aim:"D教材までの四則計算力と約分の力をもとに、分数の四則計算力を養成し、F教材へ進める力をつけます。",steps:[
- {id:"E-1",name:"分数の たし算（分母が同じ）",q:10,std:[140,270],gen:{t:"fadd",same:true},ex:["1/5 ＋ 2/5 = 3/5","分母は そのまま、分子を たします。"]},
- {id:"E-2",name:"分数の たし算（通分）",q:10,std:[170,320],gen:{t:"fadd"},ex:["1/2 ＋ 1/3 = 5/6","分母を そろえてから たします。"]},
- {id:"E-3",name:"分数の ひき算",q:10,std:[170,320],gen:{t:"fsub"},ex:["3/4 − 1/6 = 7/12",""]},
- {id:"E-4",name:"分数の かけ算",q:10,std:[150,290],gen:{t:"fmul"},ex:["2/3 × 3/4 = 1/2","分子どうし、分母どうしを かけます。"]},
- {id:"E-5",name:"分数の わり算",q:10,std:[160,300],gen:{t:"fdiv"},ex:["2/3 ÷ 4/5 = 5/6","わる数を ひっくり返して かけます。"]},
- {id:"E-6",name:"分数の 四則 まぜて",q:10,std:[180,340],gen:{t:"mix",list:[{t:"fadd"},{t:"fsub"},{t:"fmul"},{t:"fdiv"}]},ex:["記号を よく見て",""]}
+{lv:"E",grade:"小5",title:"分数の 四則計算",aim:"D教材までの四則計算力と約分の力をもとに、分数の四則計算力を養成し、F教材へ進める力をつけます。",q:10,std:[165,315],sec:[
+ ["1-10","やくぶんの ふくしゅう",{t:"fsimp",big:true}],
+ ["11-20","同じ分母の たし算",{t:"fadd",same:true},{std:[140,270]}],
+ ["21-30","同じ分母の ひき算",{t:"fsub",same:true},{std:[140,270]}],
+ ["31-40","通分の たし算 の1",{t:"fadd",easy:true}],
+ ["41-50","通分の たし算 の2",{t:"fadd"}],
+ ["51-60","通分の ひき算 の1",{t:"fsub",easy:true}],
+ ["61-70","通分の ひき算 の2",{t:"fsub"}],
+ ["71-80","たし算・ひき算の まとめ",{t:"mix",list:[{t:"fadd"},{t:"fsub"}]}],
+ ["81-90","分数の かけ算 の1",{t:"fmul",easy:true},{std:[150,290]}],
+ ["91-100","分数の かけ算 の2",{t:"fmul"},{std:[155,295]}],
+ ["101-110","分数の わり算 の1",{t:"fdiv",easy:true},{std:[155,295]}],
+ ["111-120","分数の わり算 の2",{t:"fdiv"},{std:[160,300]}],
+ ["121-130","かけ算・わり算の まとめ",{t:"mix",list:[{t:"fmul"},{t:"fdiv"}]}],
+ ["131-140","Eの まとめ（四則）",{t:"mix",list:[{t:"fadd"},{t:"fsub"},{t:"fmul"},{t:"fdiv"}]},{std:[180,340]}]
 ]},
-{lv:"F",grade:"小6",title:"分数の 応用と 小数",
- aim:"分数の四則計算を仕上げ、小数と分数の関係を学びます。小学校の算数の計算がここで完成します。",steps:[
- {id:"F-1",name:"3つの 分数の 計算",q:8,std:[190,360],gen:{t:"f3"},ex:["1/2 ＋ 1/3 ＋ 1/6 = 1","左から じゅんに 計算します。"]},
- {id:"F-2",name:"小数の たし算・ひき算",q:12,std:[150,290],gen:{t:"dadd"},ex:["1.4 ＋ 2.7 = 4.1","小数点を そろえます。"]},
- {id:"F-3",name:"小数の かけ算",q:10,std:[165,310],gen:{t:"dmul"},ex:["1.2 × 0.5 = 0.6","小数点いかの けた数を たします。"]},
- {id:"F-4",name:"小数を 分数に",q:10,std:[150,290],gen:{t:"d2f"},ex:["0.75 = 3/4","100分の75を やくぶん。"]},
- {id:"F-5",name:"分数と 小数の まざった 計算",q:8,std:[190,360],gen:{t:"fdmix"},ex:["0.5 ＋ 1/4 = 3/4","小数を 分数に なおします。"]}
+{lv:"F",grade:"小6",title:"分数の 応用と 小数",aim:"分数の四則計算を仕上げ、小数と分数の関係を学びます。小学校の算数の計算がここで完成します。",q:10,std:[170,325],sec:[
+ ["1-10","Eの ふくしゅう",{t:"mix",list:[{t:"fadd"},{t:"fsub"},{t:"fmul"},{t:"fdiv"}]}],
+ ["11-20","3つの 分数の たし算・ひき算",{t:"f3"},{q:8,std:[195,370]}],
+ ["21-30","小数の たし算・ひき算",{t:"dadd"},{q:12,std:[150,290]}],
+ ["31-40","小数の かけ算",{t:"dmul"},{q:10,std:[165,310]}],
+ ["41-50","小数を 分数に",{t:"d2f"},{q:10,std:[150,290]}],
+ ["51-60","分数と 小数の まざった 計算",{t:"fdmix"},{q:8,std:[190,360]}],
+ ["61-70","小学校の 計算 まとめ",{t:"mix",list:[{t:"fadd"},{t:"fmul"},{t:"dadd"},{t:"d2f"}]},{q:10,std:[175,330]}]
 ]},
-{lv:"G",grade:"中1",title:"正負の数・文字式・一次方程式",
- aim:"負の数を導入し、正負の数の四則計算と文字式、一次方程式の解法を学びます。",steps:[
- {id:"G-1",name:"正負の たし算・ひき算",q:14,std:[140,270],gen:{t:"sadd"},ex:["(−7) ＋ 4 = −3","符号に 注意します。"]},
- {id:"G-2",name:"正負の かけ算・わり算",q:14,std:[140,270],gen:{t:"smul"},ex:["(−6) × 3 = −18","異符号なら 答えは 負。"]},
- {id:"G-3",name:"四則の まざった 計算",q:12,std:[160,300],gen:{t:"smix"},ex:["−3 ＋ 2 × 4 = 5","かけ算・わり算が さきです。"]},
- {id:"G-4",name:"文字式の 値",q:12,std:[155,295],gen:{t:"subst"},ex:["x = 3 のとき 2x ＋ 5 = 11","x に 数を 代入します。"]},
- {id:"G-5",name:"一次方程式（ax ＋ b = c）",q:10,std:[170,320],gen:{t:"lineq1"},ex:["3x ＋ 4 = 19 → x = 5","移項して 両辺を わります。"]},
- {id:"G-6",name:"一次方程式（両辺に x）",q:10,std:[185,350],gen:{t:"lineq2"},ex:["5x − 3 = 2x ＋ 9 → x = 4","x を 左辺に あつめます。"]}
+{lv:"G",grade:"中1",title:"正負の数・文字式・一次方程式",aim:"負の数を導入し、正負の数の四則計算と文字式、一次方程式の解法を学びます。",q:14,std:[150,285],sec:[
+ ["1-10","正負の数の たし算",{t:"sadd",only:"+"}],
+ ["11-20","正負の数の ひき算",{t:"sadd",only:"-"}],
+ ["21-30","たし算・ひき算 まぜて",{t:"sadd"}],
+ ["31-40","正負の数の かけ算",{t:"smul",only:"x"}],
+ ["41-50","正負の数の わり算",{t:"smul",only:"d"}],
+ ["51-60","四則の まざった 計算",{t:"smix"},{q:12,std:[160,300]}],
+ ["61-70","文字式の 値 の1",{t:"subst",easy:true},{q:12,std:[150,290]}],
+ ["71-80","文字式の 値 の2",{t:"subst"},{q:12,std:[155,295]}],
+ ["81-90","一次方程式 の1",{t:"lineq1",easy:true},{q:10,std:[165,315]}],
+ ["91-100","一次方程式 の2",{t:"lineq1"},{q:10,std:[170,320]}],
+ ["101-110","一次方程式（両辺にx）",{t:"lineq2"},{q:10,std:[185,350]}],
+ ["111-120","Gの まとめ",{t:"mix",list:[{t:"smix"},{t:"subst"},{t:"lineq1"},{t:"lineq2"}]},{q:10,std:[185,350]}]
 ]},
-{lv:"H",grade:"中2",title:"連立方程式・一次関数",
- aim:"連立方程式の解法と一次関数を学び、多項式のかけ算で因数分解の入口に立ちます。",steps:[
- {id:"H-1",name:"連立方程式（加減法）",q:8,std:[200,380],gen:{t:"simul"},ex:["x ＋ y = 7, x − y = 1 → x=4, y=3","たしたり ひいたりして 文字を 消します。"]},
- {id:"H-2",name:"連立方程式（係数あり）",q:8,std:[220,410],gen:{t:"simul",hard:true},ex:["2x ＋ 3y = 12, x − y = 1 → x=3, y=2",""]},
- {id:"H-3",name:"一次関数の 値",q:12,std:[150,290],gen:{t:"linfn"},ex:["y = 3x − 2 で x = 4 のとき y = 10",""]},
- {id:"H-4",name:"多項式の かけ算（展開）",q:10,std:[180,340],gen:{t:"expand"},ex:["(x＋2)(x＋3) = x² ＋ 5x ＋ 6","和が 5、積が 6。"]}
+{lv:"H",grade:"中2",title:"連立方程式・一次関数",aim:"連立方程式の解法と一次関数を学び、多項式のかけ算で因数分解の入口に立ちます。",q:8,std:[200,380],sec:[
+ ["1-10","Gの ふくしゅう",{t:"mix",list:[{t:"lineq1"},{t:"lineq2"}]},{q:10,std:[175,330]}],
+ ["11-20","連立方程式（加減法）の1",{t:"simul"}],
+ ["21-30","連立方程式（加減法）の2",{t:"simul"}],
+ ["31-40","連立方程式（係数あり）の1",{t:"simul",hard:true},{std:[215,405]}],
+ ["41-50","連立方程式（係数あり）の2",{t:"simul",hard:true},{std:[220,410]}],
+ ["51-60","連立方程式の まとめ",{t:"simul",hard:true},{std:[220,410]}],
+ ["61-70","一次関数の 値",{t:"linfn"},{q:12,std:[150,290]}],
+ ["71-80","多項式の かけ算 の1",{t:"expand",easy:true},{q:10,std:[175,330]}],
+ ["81-90","多項式の かけ算 の2",{t:"expand"},{q:10,std:[180,340]}]
 ]},
-{lv:"I",grade:"中3",title:"因数分解・平方根・二次方程式",
- aim:"因数分解、平方根、二次方程式を学び、高校数学へ進む土台をつくります。",steps:[
- {id:"I-1",name:"因数分解",q:10,std:[180,340],gen:{t:"factor"},ex:["x² ＋ 5x ＋ 6 = (x＋2)(x＋3)","たして 5、かけて 6 の 2数。"]},
- {id:"I-2",name:"平方根の かんたんな形",q:12,std:[160,300],gen:{t:"sqrt"},ex:["√12 = 2√3","2乗の 数を 外に 出します。"]},
- {id:"I-3",name:"二次方程式（因数分解）",q:10,std:[190,360],gen:{t:"quad"},ex:["x² − 5x ＋ 6 = 0 → x = 2, 3","小さい じゅんに 答えます。"]}
+{lv:"I",grade:"中3",title:"因数分解・平方根・二次方程式",aim:"因数分解、平方根、二次方程式を学び、高校数学へ進む土台をつくります。",q:10,std:[180,345],sec:[
+ ["1-10","因数分解 の1",{t:"factor",easy:true}],
+ ["11-20","因数分解 の2",{t:"factor"}],
+ ["21-30","平方根の かんたんな形 の1",{t:"sqrt",easy:true},{q:12,std:[160,300]}],
+ ["31-40","平方根の かんたんな形 の2",{t:"sqrt"},{q:12,std:[165,310]}],
+ ["41-50","二次方程式 の1",{t:"quad",easy:true},{std:[190,360]}],
+ ["51-60","二次方程式 の2",{t:"quad"},{std:[195,370]}],
+ ["61-70","Iの まとめ",{t:"mix",list:[{t:"factor"},{t:"sqrt"},{t:"quad"}]},{std:[195,370]}]
 ]}
 ];
-
-/* J〜O は内容表示のみ */
-var FUTURE=[
+var FUT=[
 {lv:"J",grade:"高1（数Ⅰ）",title:"因数分解の応用・無理式・高次方程式",aim:"数Ⅰ相当。因数分解の発展、無理式の計算、高次方程式、不等式などを扱います。"},
 {lv:"K",grade:"高（数Ⅱ）",title:"指数・対数・三角関数・数列",aim:"指数関数、対数関数、三角関数、数列の計算を扱います。"},
 {lv:"L",grade:"高（数Ⅱ）",title:"微分・積分の基礎",aim:"多項式関数の微分・積分の基礎を扱います。"},
-{lv:"M",grade:"高（数Ⅲ）",title:"三角関数の応用・複素数平面・極限",aim:"複素数平面、極限などを扱います。"},
+{lv:"M",grade:"高（数Ⅲ）",title:"複素数平面・極限",aim:"三角関数の応用、複素数平面、極限などを扱います。"},
 {lv:"N",grade:"高（数Ⅲ）",title:"微分法",aim:"さまざまな関数の微分法を扱います。"},
-{lv:"O",grade:"高（数Ⅲ）",title:"積分法",aim:"積分法を扱い、高校数学の最終教材となります。この先には大学教養課程相当の研究コース（XP〜XT）が続きます。"}
+{lv:"O",grade:"高（数Ⅲ）",title:"積分法",aim:"積分法を扱い、高校数学の最終教材となります。この先に大学教養課程相当の研究コースが続きます。"}
 ];
-
 var STEPS=[];
-LEVELS.forEach(function(L,li){L.steps.forEach(function(s,si){
-  STEPS.push({id:s.id,name:s.name,q:s.q,std:s.std,gen:s.gen,ex:s.ex,lv:L.lv,lvTitle:L.title,grade:L.grade,li:li,si:si});
+LV.forEach(function(L,li){L.sec.forEach(function(s,si){
+  var o=s[3]||{};
+  STEPS.push({id:L.lv+" "+s[0],no:s[0],name:s[1],gen:s[2],q:o.q||L.q,std:o.std||L.std,
+    lv:L.lv,lvTitle:L.title,grade:L.grade,li:li,si:si});
 });});
 function idxOf(id){for(var i=0;i<STEPS.length;i++)if(STEPS[i].id===id)return i;return 0;}
-function firstIdxOfLevel(li){for(var i=0;i<STEPS.length;i++)if(STEPS[i].li===li)return i;return 0;}
+function firstOf(li){for(var i=0;i<STEPS.length;i++)if(STEPS[i].li===li)return i;return 0;}
+var GRADES=[["年少","6A 1-10"],["年中","5A 1-10"],["年長","4A 1-10"],["小1","3A 1-10"],["小2","A 1-10"],
+["小3","B 1-10"],["小4","C 1-10"],["小5","D 1-10"],["小6","E 1-10"],["中1","F 1-10"],["中2","G 1-10"],["中3以上","H 1-10"]];
 
-/* 学年 → おすすめ開始ステップ（学年相当より手前から） */
-var GRADES=[
- {g:"年少",id:"6A-1"},{g:"年中",id:"5A-1"},{g:"年長",id:"4A-1"},
- {g:"小1",id:"3A-1"},{g:"小2",id:"A-1"},{g:"小3",id:"B-1"},
- {g:"小4",id:"C-1"},{g:"小5",id:"D-1"},{g:"小6",id:"E-1"},
- {g:"中1",id:"F-1"},{g:"中2",id:"G-1"},{g:"中3以上",id:"H-1"}
-];
-
-/* ================================================================
-   問題生成
-   ================================================================ */
+/* ============================================================
+   2. 問題生成
+   ============================================================ */
 function rnd(r){return r[0]+Math.floor(Math.random()*(r[1]-r[0]+1));}
 function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
 function lcm(a,b){return a*b/gcd(a,b);}
 function red(n,d){var g=gcd(n,d)||1;return [n/g,d/g];}
-function fr(n,d){return '<span class="frac"><span class="n">'+n+'</span><span class="d">'+d+'</span></span>';}
-function S1(ans,cap){return [{ans:ans,cap:cap||""}];}
-function Q(prompt,slots,keys,layout){return {prompt:prompt,slots:slots,keys:keys||{},layout:layout||"row"};}
+function fr(n,d){return '<span class="fc"><span class="n">'+n+'</span><span class="d">'+d+'</span></span>';}
+function S1(a,c){return [{ans:a,cap:c||""}];}
+function Q(p,s,k,l){return {prompt:p,slots:s,keys:k||{},layout:l||"row"};}
+function vcol(a,b,op){return '<span class="vc num">'+a+'<br><span class="op">'+op+'</span>'+b+'<span class="rl"></span></span>';}
+function poly2(b,c){var s="x²";if(b!==0)s+=(b<0?" − ":" ＋ ")+(Math.abs(b)===1?"":Math.abs(b))+"x";if(c!==0)s+=(c<0?" − ":" ＋ ")+Math.abs(c);return s;}
+function ng(v){return v<0?"(−"+Math.abs(v)+")":String(v);}
+function sg(v){return v<0?" − ":" ＋ ";}
+function tm(c,v){return (c===1?"":(c===-1?"−":c))+v;}
+function fd(v){return (Math.round(v*100)/100).toString();}
 
 function tryQ(g){
-  var a,b,c,n,d,n1,d1,n2,d2,x,y,r,q,k,p,s,m;
-  switch(g.t){
-  case "mix": return tryQ(g.list[Math.floor(Math.random()*g.list.length)]);
-
-  case "count":
-    n=rnd(g.n);
-    var dots="";for(var i=0;i<n;i++)dots+="<i></i>";
-    return Q('<span class="jp">いくつ ありますか</span><span class="dotgrid">'+dots+'</span>',S1(n));
-
-  case "seq":
-    var st=g.step===1?1:ri(g.step[0],g.step[1]);
-    var start=ri(1,Math.max(1,g.max-st*3));
-    var pos=ri(1,2);
-    var arr=[start,start+st,start+st*2,start+st*3];
-    if(arr[3]>g.max) return null;
-    var html=arr.map(function(v,i){return i===pos?'<span class="blank">□</span>':v;}).join("　");
-    return Q('<span class="jp">□に 入る かず</span>'+html,S1(arr[pos]));
-
-  case "next":
-    n=ri(1,g.max-1);
-    return Q('<span class="jp">つぎの かずは</span>'+n+'　→　<span class="blank">□</span>',S1(n+1));
-
-  case "add":
-    a=rnd(g.a);b=rnd(g.b);
-    if(g.carry&&(a%10)+(b%10)<10) return null;
-    return Q(a+'<span class="op">＋</span>'+b+'<span class="op">＝</span>',S1(a+b));
-
-  case "sub":
-    a=rnd(g.a);b=rnd(g.b);
-    if(a-b<0) return null;
-    if(g.borrow&&(a%10)>=b) return null;
-    return Q(a+'<span class="op">−</span>'+b+'<span class="op">＝</span>',S1(a-b));
-
-  case "addc":
-    a=rnd(g.a);b=rnd(g.b);
-    c=(a%10)+(b%10)>=10;
-    if(g.carry===true&&!c) return null;
-    if(g.carry===false&&c) return null;
-    return Q(vcol(a,b,"＋"),S1(a+b));
-
-  case "subc":
-    a=rnd(g.a);b=rnd(g.b);
-    if(a-b<1) return null;
-    var bo=(a%10)<(b%10);
-    if(g.borrow===true&&!bo) return null;
-    if(g.borrow===false&&bo) return null;
-    return Q(vcol(a,b,"−"),S1(a-b));
-
-  case "mul":
-    a=rnd(g.dan);b=rnd(g.b);
-    return Q(a+'<span class="op">×</span>'+b+'<span class="op">＝</span>',S1(a*b));
-
-  case "mulc":
-    a=rnd(g.a);b=rnd(g.b);
-    return Q(vcol(a,b,"×"),S1(a*b));
-
-  case "div":
-    b=rnd(g.b);q=rnd(g.q);
-    return Q((b*q)+'<span class="op">÷</span>'+b+'<span class="op">＝</span>',S1(q));
-
-  case "divr":
-    b=rnd(g.b);if(b<2)return null;
-    q=1+Math.floor(Math.random()*Math.floor(g.a[1]/b));
-    r=1+Math.floor(Math.random()*(b-1));
-    a=b*q+r;
-    if(a<g.a[0]||a>g.a[1]||q<1) return null;
-    return Q(a+'<span class="op">÷</span>'+b+'<span class="op">＝</span>',
-      [{ans:q,cap:"商"},{ans:r,cap:"あまり"}],{},"rem");
-
-  case "fsimp":
-    var base=g.big?ri(2,9):ri(2,6);
-    n1=ri(1,g.big?9:5);d1=ri(n1===0?1:1,g.big?9:6);
-    if(d1<2) return null;
-    n=n1*base;d=d1*base;
-    if(n===d||gcd(n1,d1)!==1) return null;
-    if(d>99||n>99) return null;
-    return Q('<span class="jp">やくぶん しましょう</span>'+fr(n,d)+'<span class="op">＝</span>',
-      [{ans:n1,cap:"分子"},{ans:d1,cap:"分母"}],{},"frac");
-
-  case "fadd": case "fsub":
-    if(g.same){d1=d2=ri(3,9);n1=ri(1,d1-1);n2=ri(1,d1-1);}
-    else{d1=ri(2,9);d2=ri(2,9);if(d1===d2)return null;n1=ri(1,d1-1);n2=ri(1,d2-1);}
-    if(gcd(n1,d1)!==1||gcd(n2,d2)!==1) return null;
-    var L1=lcm(d1,d2);
-    n=g.t==="fadd"?n1*(L1/d1)+n2*(L1/d2):n1*(L1/d1)-n2*(L1/d2);
-    if(n<=0) return null;
-    r=red(n,L1);
-    if(r[1]>60||r[1]===1) return null;
-    return Q(fr(n1,d1)+'<span class="op">'+(g.t==="fadd"?"＋":"−")+'</span>'+fr(n2,d2)+'<span class="op">＝</span>',
-      [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
-
-  case "fmul": case "fdiv":
-    d1=ri(2,9);n1=ri(1,d1-1);d2=ri(2,9);n2=ri(1,d2-1);
-    if(n1<1||n2<1) return null;
-    if(gcd(n1,d1)!==1||gcd(n2,d2)!==1) return null;
-    if(g.t==="fmul"){n=n1*n2;d=d1*d2;}else{n=n1*d2;d=d1*n2;}
-    if(d===0) return null;
-    r=red(n,d);
-    if(r[1]>60||r[0]>60||r[1]===1) return null;
-    return Q(fr(n1,d1)+'<span class="op">'+(g.t==="fmul"?"×":"÷")+'</span>'+fr(n2,d2)+'<span class="op">＝</span>',
-      [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
-
-  case "f3":
-    d1=ri(2,6);d2=ri(2,6);var d3=ri(2,6);
-    n1=ri(1,d1-1);n2=ri(1,d2-1);var n3=ri(1,d3-1);
-    if(n1<1||n2<1||n3<1) return null;
-    if(gcd(n1,d1)!==1||gcd(n2,d2)!==1||gcd(n3,d3)!==1) return null;
-    var L2=lcm(lcm(d1,d2),d3);
-    n=n1*(L2/d1)+n2*(L2/d2)-n3*(L2/d3);
-    if(n<=0||L2>120) return null;
-    r=red(n,L2);
-    if(r[1]>60||r[1]===1) return null;
-    return Q(fr(n1,d1)+'<span class="op">＋</span>'+fr(n2,d2)+'<span class="op">−</span>'+fr(n3,d3)+'<span class="op">＝</span>',
-      [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
-
-  case "dadd":
-    a=ri(1,199)/10;b=ri(1,199)/10;
-    var plus=Math.random()<.5;
-    if(!plus&&a-b<=0) return null;
-    var res=plus?a+b:a-b;
-    res=Math.round(res*10)/10;
-    return Q(fmtD(a)+'<span class="op">'+(plus?"＋":"−")+'</span>'+fmtD(b)+'<span class="op">＝</span>',
-      S1(res),{dot:true});
-
-  case "dmul":
-    a=ri(1,99)/10;b=ri(1,9)/10;
-    res=Math.round(a*b*100)/100;
-    return Q(fmtD(a)+'<span class="op">×</span>'+fmtD(b)+'<span class="op">＝</span>',S1(res),{dot:true});
-
-  case "d2f":
-    var cand=[[25,1,4],[75,3,4],[5,1,2],[2,1,5],[4,2,5],[6,3,5],[8,4,5],[125,1,8],[375,3,8],[625,5,8],[875,7,8],[15,3,20],[35,7,20],[12,3,25],[16,4,25]];
-    k=cand[Math.floor(Math.random()*cand.length)];
-    var dec=k[0]<10?("0."+k[0]):(k[0]<100?("0."+(k[0]<10?"0":"")+k[0]):("0."+k[0]));
-    dec="0."+String(k[0]);
-    return Q('<span class="jp">分数に なおしましょう</span>'+dec+'<span class="op">＝</span>',
-      [{ans:k[1],cap:"分子"},{ans:k[2],cap:"分母"}],{},"frac");
-
-  case "fdmix":
-    var pair=[[5,1,2],[25,1,4],[75,3,4],[2,1,5],[4,2,5]];
-    k=pair[Math.floor(Math.random()*pair.length)];
-    d1=ri(2,6);n1=ri(1,d1-1);
-    if(n1<1||gcd(n1,d1)!==1) return null;
-    var L3=lcm(k[2],d1);
-    n=k[1]*(L3/k[2])+n1*(L3/d1);
-    r=red(n,L3);
-    if(r[1]>40||r[1]===1) return null;
-    return Q('0.'+k[0]+'<span class="op">＋</span>'+fr(n1,d1)+'<span class="op">＝</span>',
-      [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
-
-  case "sadd":
-    a=ri(-12,12);b=ri(-12,12);
-    if(a===0||b===0) return null;
-    if(a>0&&b>0) return null;
-    return Q(neg(a)+'<span class="op">＋</span>'+neg(b)+'<span class="op">＝</span>',S1(a+b),{neg:true});
-
-  case "smul":
-    a=ri(-9,9);b=ri(-9,9);
-    if(a===0||b===0) return null;
-    if(a>0&&b>0) return null;
-    if(Math.random()<.5) return Q(neg(a)+'<span class="op">×</span>'+neg(b)+'<span class="op">＝</span>',S1(a*b),{neg:true});
-    c=a*b;
-    return Q(neg(c)+'<span class="op">÷</span>'+neg(a)+'<span class="op">＝</span>',S1(b),{neg:true});
-
-  case "smix":
-    a=ri(-9,9);b=ri(-6,6);c=ri(-6,6);
-    if(!a||!b||!c) return null;
-    if(a>0&&b>0&&c>0) return null;
-    return Q(neg(a)+'<span class="op">＋</span>'+neg(b)+'<span class="op">×</span>'+neg(c)+'<span class="op">＝</span>',
-      S1(a+b*c),{neg:true});
-
-  case "subst":
-    x=ri(-6,8);a=ri(2,7);b=ri(-9,9);
-    if(!x) return null;
-    return Q('<span class="jp">x = '+x+' のとき</span>'+a+'x<span class="op">'+(b<0?"−":"＋")+'</span>'+Math.abs(b)+'<span class="op">＝</span>',
-      S1(a*x+b),{neg:true});
-
-  case "lineq1":
-    a=ri(2,9);x=ri(-8,9);b=ri(-9,9);
-    if(!x||!b) return null;
-    c=a*x+b;
-    return Q(a+'x<span class="op">'+(b<0?"−":"＋")+'</span>'+Math.abs(b)+'<span class="op">＝</span>'+c+
-      '<span class="jp" style="margin:10px 0 0">x =</span>',S1(x),{neg:true});
-
-  case "lineq2":
-    a=ri(3,9);b=ri(1,a-1);x=ri(-7,9);
-    c=ri(-9,9);d=(a*x+c)-b*x;
-    if(!x) return null;
-    return Q(a+'x<span class="op">'+(c<0?"−":"＋")+'</span>'+Math.abs(c)+'<span class="op">＝</span>'+b+'x'+
-      (d<0?'<span class="op">−</span>':'<span class="op">＋</span>')+Math.abs(d)+
-      '<span class="jp" style="margin:10px 0 0">x =</span>',S1(x),{neg:true});
-
-  case "simul":
-    x=ri(-5,8);y=ri(-5,8);
-    var a1,b1,a2,b2;
-    if(g.hard){a1=ri(1,4);b1=ri(1,4);a2=ri(1,4);b2=-ri(1,4);}
-    else{a1=1;b1=1;a2=1;b2=-1;}
-    if(a1*b2-a2*b1===0) return null;
-    var c1=a1*x+b1*y, c2=a2*x+b2*y;
-    return Q('<span class="sm">'+term(a1,"x")+sgn(b1)+term(Math.abs(b1),"y")+' ＝ '+c1+'</span><br>'+
-             '<span class="sm">'+term(a2,"x")+sgn(b2)+term(Math.abs(b2),"y")+' ＝ '+c2+'</span>',
-      [{ans:x,cap:"x"},{ans:y,cap:"y"}],{neg:true},"xy");
-
-  case "linfn":
-    a=ri(-5,6);b=ri(-9,9);x=ri(-5,7);
-    if(!a) return null;
-    return Q('<span class="jp">y = '+term(a,"x")+sgn(b)+Math.abs(b)+' で x = '+x+' のとき</span>y<span class="op">＝</span>',
-      S1(a*x+b),{neg:true});
-
-  case "expand":
-    p=ri(-7,8);q=ri(-7,8);
-    if(!p||!q) return null;
-    return Q('<span class="sm">(x'+sgn(p)+Math.abs(p)+')(x'+sgn(q)+Math.abs(q)+')</span>'+
-      '<span class="jp" style="margin:10px 0 0">＝ x² ＋ □x ＋ □</span>',
-      [{ans:p+q,cap:"xの係数"},{ans:p*q,cap:"定数"}],{neg:true},"two");
-
-  case "factor":
-    p=ri(-8,8);q=ri(-8,8);
-    if(!p||!q||p>=q) return null;
-    return Q('<span class="sm">'+poly2(p+q,p*q)+'</span>'+
-      '<span class="jp" style="margin:10px 0 0">＝ (x ＋ □)(x ＋ □)　小さい順</span>',
-      [{ans:p,cap:"1つめ"},{ans:q,cap:"2つめ"}],{neg:true},"two");
-
-  case "sqrt":
-    k=ri(2,6);m=[2,3,5,6,7,10,11,13,14,15][ri(0,9)];
-    n=k*k*m;
-    if(n>400) return null;
-    return Q('<span class="jp">かんたんな形に</span>√'+n+'<span class="op">＝</span>'+
-      '<span class="jp" style="margin:10px 0 0">□√□</span>',
-      [{ans:k,cap:"外"},{ans:m,cap:"中"}],{},"two");
-
-  case "quad":
-    p=ri(-7,7);q=ri(-7,7);
-    if(p===q||p>q) return null;
-    var bb=-(p+q), cc=p*q;
-    return Q('<span class="sm">'+poly2(bb,cc)+' ＝ 0</span>'+
-      '<span class="jp" style="margin:10px 0 0">x = □, □　小さい順</span>',
-      [{ans:p,cap:"小さい方"},{ans:q,cap:"大きい方"}],{neg:true},"two");
-  }
-  return null;
+ var a,b,c,n,d,n1,d1,n2,d2,x,y,r,q,k,p,m,L1,res;
+ switch(g.t){
+ case "mix": return tryQ(g.list[Math.floor(Math.random()*g.list.length)]);
+ case "count":
+   n=rnd(g.n);var dt="";for(var i=0;i<n;i++)dt+="<i></i>";
+   return Q('<span class="jp">いくつ ありますか</span><span class="dg">'+dt+'</span>',S1(n));
+ case "seq":
+   var st=g.step===1?1:rnd(g.step);
+   var s0=ri(1,Math.max(1,g.max-st*3)),pos=ri(1,2);
+   var ar=[s0,s0+st,s0+st*2,s0+st*3];
+   if(ar[3]>g.max)return null;
+   return Q('<span class="jp">□に 入る かず</span>'+ar.map(function(v,i){return i===pos?'<span class="bl">□</span>':v;}).join("　"),S1(ar[pos]));
+ case "next":
+   n=ri(1,g.max-1);
+   return Q('<span class="jp">つぎの かずは</span>'+n+'　→　<span class="bl">□</span>',S1(n+1));
+ case "add":
+   a=rnd(g.a);b=rnd(g.b);
+   if(g.carry&&(a%10)+(b%10)<10)return null;
+   return Q(a+'<span class="op">＋</span>'+b+'<span class="op">＝</span>',S1(a+b));
+ case "sub":
+   a=rnd(g.a);b=rnd(g.b);
+   if(a-b<0)return null;
+   if(g.borrow&&(a%10)>=b)return null;
+   return Q(a+'<span class="op">−</span>'+b+'<span class="op">＝</span>',S1(a-b));
+ case "addc":
+   a=rnd(g.a);b=rnd(g.b);c=(a%10)+(b%10)>=10;
+   if(g.carry===true&&!c)return null;
+   if(g.carry===false&&c)return null;
+   return Q(vcol(a,b,"＋"),S1(a+b));
+ case "subc":
+   a=rnd(g.a);b=rnd(g.b);
+   if(a-b<1)return null;
+   var bo=(a%10)<(b%10);
+   if(g.borrow===true&&!bo)return null;
+   if(g.borrow===false&&bo)return null;
+   return Q(vcol(a,b,"−"),S1(a-b));
+ case "mul":
+   a=rnd(g.dan);b=rnd(g.b);
+   return Q(a+'<span class="op">×</span>'+b+'<span class="op">＝</span>',S1(a*b));
+ case "mulc":
+   a=rnd(g.a);b=rnd(g.b);
+   return Q(vcol(a,b,"×"),S1(a*b));
+ case "div":
+   b=rnd(g.b);q=rnd(g.q);
+   return Q((b*q)+'<span class="op">÷</span>'+b+'<span class="op">＝</span>',S1(q));
+ case "divr":
+   b=rnd(g.b);if(b<2)return null;
+   q=1+Math.floor(Math.random()*Math.floor(g.a[1]/b));
+   r=1+Math.floor(Math.random()*(b-1));
+   a=b*q+r;
+   if(a<g.a[0]||a>g.a[1]||q<1)return null;
+   if(g.qm&&q>g.qm)return null;
+   return Q(a+'<span class="op">÷</span>'+b+'<span class="op">＝</span>',
+     [{ans:q,cap:"商"},{ans:r,cap:"あまり"}],{},"rem");
+ case "fsimp":
+   var bs=g.big?ri(2,9):ri(2,6);
+   n1=ri(1,g.big?9:5);d1=ri(2,g.big?9:6);
+   n=n1*bs;d=d1*bs;
+   if(n>=d||gcd(n1,d1)!==1||d>99||n>99||d1<2)return null;
+   return Q('<span class="jp">やくぶん しましょう</span>'+fr(n,d)+'<span class="op">＝</span>',
+     [{ans:n1,cap:"分子"},{ans:d1,cap:"分母"}],{},"frac");
+ case "fadd": case "fsub":
+   var mx=g.easy?6:9;
+   if(g.same){d1=d2=ri(3,mx);n1=ri(1,d1-1);n2=ri(1,d1-1);}
+   else{d1=ri(2,mx);d2=ri(2,mx);if(d1===d2)return null;n1=ri(1,d1-1);n2=ri(1,d2-1);}
+   if(n1<1||n2<1||gcd(n1,d1)!==1||gcd(n2,d2)!==1)return null;
+   L1=lcm(d1,d2);
+   n=g.t==="fadd"?n1*(L1/d1)+n2*(L1/d2):n1*(L1/d1)-n2*(L1/d2);
+   if(n<=0)return null;
+   r=red(n,L1);
+   if(r[1]>60||r[1]===1)return null;
+   return Q(fr(n1,d1)+'<span class="op">'+(g.t==="fadd"?"＋":"−")+'</span>'+fr(n2,d2)+'<span class="op">＝</span>',
+     [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
+ case "fmul": case "fdiv":
+   var mm=g.easy?5:9;
+   d1=ri(2,mm);n1=ri(1,d1-1);d2=ri(2,mm);n2=ri(1,d2-1);
+   if(n1<1||n2<1||gcd(n1,d1)!==1||gcd(n2,d2)!==1)return null;
+   if(g.t==="fmul"){n=n1*n2;d=d1*d2;}else{n=n1*d2;d=d1*n2;}
+   if(d===0)return null;
+   r=red(n,d);
+   if(r[1]>60||r[0]>60||r[1]===1)return null;
+   return Q(fr(n1,d1)+'<span class="op">'+(g.t==="fmul"?"×":"÷")+'</span>'+fr(n2,d2)+'<span class="op">＝</span>',
+     [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
+ case "f3":
+   d1=ri(2,6);d2=ri(2,6);var d3=ri(2,6);
+   n1=ri(1,d1-1);n2=ri(1,d2-1);var n3=ri(1,d3-1);
+   if(n1<1||n2<1||n3<1||gcd(n1,d1)!==1||gcd(n2,d2)!==1||gcd(n3,d3)!==1)return null;
+   var L2=lcm(lcm(d1,d2),d3);
+   n=n1*(L2/d1)+n2*(L2/d2)-n3*(L2/d3);
+   if(n<=0||L2>120)return null;
+   r=red(n,L2);
+   if(r[1]>60||r[1]===1)return null;
+   return Q(fr(n1,d1)+'<span class="op">＋</span>'+fr(n2,d2)+'<span class="op">−</span>'+fr(n3,d3)+'<span class="op">＝</span>',
+     [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
+ case "dadd":
+   a=ri(1,199)/10;b=ri(1,199)/10;
+   var pl=Math.random()<.5;
+   if(!pl&&a-b<=0)return null;
+   res=Math.round((pl?a+b:a-b)*10)/10;
+   return Q(fd(a)+'<span class="op">'+(pl?"＋":"−")+'</span>'+fd(b)+'<span class="op">＝</span>',S1(res),{dot:true});
+ case "dmul":
+   a=ri(1,99)/10;b=ri(1,9)/10;
+   res=Math.round(a*b*100)/100;
+   return Q(fd(a)+'<span class="op">×</span>'+fd(b)+'<span class="op">＝</span>',S1(res),{dot:true});
+ case "d2f":
+   var cd=[[25,1,4],[75,3,4],[5,1,2],[2,1,5],[4,2,5],[6,3,5],[8,4,5],[125,1,8],[375,3,8],[625,5,8],[875,7,8],[15,3,20],[35,7,20],[12,3,25],[16,4,25]];
+   k=cd[Math.floor(Math.random()*cd.length)];
+   return Q('<span class="jp">分数に なおしましょう</span>0.'+k[0]+'<span class="op">＝</span>',
+     [{ans:k[1],cap:"分子"},{ans:k[2],cap:"分母"}],{},"frac");
+ case "fdmix":
+   var pr=[[5,1,2],[25,1,4],[75,3,4],[2,1,5],[4,2,5]];
+   k=pr[Math.floor(Math.random()*pr.length)];
+   d1=ri(2,6);n1=ri(1,d1-1);
+   if(n1<1||gcd(n1,d1)!==1)return null;
+   var L3=lcm(k[2],d1);
+   n=k[1]*(L3/k[2])+n1*(L3/d1);
+   r=red(n,L3);
+   if(r[1]>40||r[1]===1)return null;
+   return Q('0.'+k[0]+'<span class="op">＋</span>'+fr(n1,d1)+'<span class="op">＝</span>',
+     [{ans:r[0],cap:"分子"},{ans:r[1],cap:"分母"}],{},"frac");
+ case "sadd":
+   a=ri(-12,12);b=ri(-12,12);
+   if(!a||!b||(a>0&&b>0))return null;
+   var op=g.only?g.only:(Math.random()<.5?"+":"-");
+   if(op==="-"){if(a-b===0)return null;return Q(ng(a)+'<span class="op">−</span>'+ng(b)+'<span class="op">＝</span>',S1(a-b),{neg:true});}
+   return Q(ng(a)+'<span class="op">＋</span>'+ng(b)+'<span class="op">＝</span>',S1(a+b),{neg:true});
+ case "smul":
+   a=ri(-9,9);b=ri(-9,9);
+   if(!a||!b||(a>0&&b>0))return null;
+   var md=g.only?g.only:(Math.random()<.5?"x":"d");
+   if(md==="x")return Q(ng(a)+'<span class="op">×</span>'+ng(b)+'<span class="op">＝</span>',S1(a*b),{neg:true});
+   return Q(ng(a*b)+'<span class="op">÷</span>'+ng(a)+'<span class="op">＝</span>',S1(b),{neg:true});
+ case "smix":
+   a=ri(-9,9);b=ri(-6,6);c=ri(-6,6);
+   if(!a||!b||!c||(a>0&&b>0&&c>0))return null;
+   return Q(ng(a)+'<span class="op">＋</span>'+ng(b)+'<span class="op">×</span>'+ng(c)+'<span class="op">＝</span>',S1(a+b*c),{neg:true});
+ case "subst":
+   x=g.easy?ri(1,8):ri(-6,8);a=ri(2,7);b=g.easy?ri(1,9):ri(-9,9);
+   if(!x||!b)return null;
+   return Q('<span class="jp">x = '+x+' のとき</span>'+a+'x<span class="op">'+(b<0?"−":"＋")+'</span>'+Math.abs(b)+'<span class="op">＝</span>',S1(a*x+b),{neg:true});
+ case "lineq1":
+   a=ri(2,9);x=g.easy?ri(1,9):ri(-8,9);b=g.easy?ri(1,9):ri(-9,9);
+   if(!x||!b)return null;
+   c=a*x+b;
+   return Q(a+'x<span class="op">'+(b<0?"−":"＋")+'</span>'+Math.abs(b)+'<span class="op">＝</span>'+c+'<span class="jp" style="margin:10px 0 0">x =</span>',S1(x),{neg:true});
+ case "lineq2":
+   a=ri(3,9);b=ri(1,a-1);x=ri(-7,9);c=ri(-9,9);
+   if(!x)return null;
+   d=(a*x+c)-b*x;
+   return Q(a+'x<span class="op">'+(c<0?"−":"＋")+'</span>'+Math.abs(c)+'<span class="op">＝</span>'+b+'x'+(d<0?'<span class="op">−</span>':'<span class="op">＋</span>')+Math.abs(d)+'<span class="jp" style="margin:10px 0 0">x =</span>',S1(x),{neg:true});
+ case "simul":
+   x=ri(-5,8);y=ri(-5,8);
+   var a1,b1,a2,b2;
+   if(g.hard){a1=ri(1,4);b1=ri(1,4);a2=ri(1,4);b2=-ri(1,4);}else{a1=1;b1=1;a2=1;b2=-1;}
+   if(a1*b2-a2*b1===0)return null;
+   return Q('<span class="sm">'+tm(a1,"x")+sg(b1)+tm(Math.abs(b1),"y")+' ＝ '+(a1*x+b1*y)+'</span><br>'+
+            '<span class="sm">'+tm(a2,"x")+sg(b2)+tm(Math.abs(b2),"y")+' ＝ '+(a2*x+b2*y)+'</span>',
+     [{ans:x,cap:"x"},{ans:y,cap:"y"}],{neg:true},"xy");
+ case "linfn":
+   a=ri(-5,6);b=ri(-9,9);x=ri(-5,7);
+   if(!a)return null;
+   return Q('<span class="jp">y = '+tm(a,"x")+sg(b)+Math.abs(b)+' で x = '+x+' のとき</span>y<span class="op">＝</span>',S1(a*x+b),{neg:true});
+ case "expand":
+   p=g.easy?ri(1,7):ri(-7,8);q=g.easy?ri(1,7):ri(-7,8);
+   if(!p||!q)return null;
+   return Q('<span class="sm">(x'+sg(p)+Math.abs(p)+')(x'+sg(q)+Math.abs(q)+')</span><span class="jp" style="margin:10px 0 0">＝ x² ＋ □x ＋ □</span>',
+     [{ans:p+q,cap:"xの係数"},{ans:p*q,cap:"定数"}],{neg:true},"two");
+ case "factor":
+   p=g.easy?ri(1,8):ri(-8,8);q=g.easy?ri(1,8):ri(-8,8);
+   if(!p||!q||p>=q)return null;
+   return Q('<span class="sm">'+poly2(p+q,p*q)+'</span><span class="jp" style="margin:10px 0 0">＝ (x ＋ □)(x ＋ □)　小さい順</span>',
+     [{ans:p,cap:"1つめ"},{ans:q,cap:"2つめ"}],{neg:true},"two");
+ case "sqrt":
+   k=g.easy?ri(2,4):ri(2,6);
+   m=[2,3,5,6,7,10,11,13,14,15][ri(0,g.easy?4:9)];
+   n=k*k*m;
+   if(n>400)return null;
+   return Q('<span class="jp">かんたんな形に</span>√'+n+'<span class="op">＝</span><span class="jp" style="margin:10px 0 0">□√□</span>',
+     [{ans:k,cap:"外"},{ans:m,cap:"中"}],{},"two");
+ case "quad":
+   p=g.easy?ri(1,7):ri(-7,7);q=g.easy?ri(1,7):ri(-7,7);
+   if(p>=q)return null;
+   return Q('<span class="sm">'+poly2(-(p+q),p*q)+' ＝ 0</span><span class="jp" style="margin:10px 0 0">x = □, □　小さい順</span>',
+     [{ans:p,cap:"小さい方"},{ans:q,cap:"大きい方"}],{neg:true},"two");
+ }
+ return null;
 }
-function poly2(b,c){
-  var s="x²";
-  if(b!==0) s+=(b<0?" − ":" ＋ ")+(Math.abs(b)===1?"":Math.abs(b))+"x";
-  if(c!==0) s+=(c<0?" − ":" ＋ ")+Math.abs(c);
-  return s;
-}
-function vcol(a,b,op){
-  return '<span class="vcol num">'+a+'<br><span class="op">'+op+'</span>'+b+
-         '<span class="rule"></span></span>';
-}
-function neg(v){return v<0?"("+"−"+Math.abs(v)+")":String(v);}
-function sgn(v){return v<0?" − ":" ＋ ";}
-function term(c,v){return (c===1?"":(c===-1?"−":c))+v;}
-function fmtD(v){return (Math.round(v*100)/100).toString();}
-function makeQ(g){for(var i=0;i<500;i++){var q=tryQ(g);if(q)return q;}return Q('1<span class="op">＋</span>1<span class="op">＝</span>',S1(2));}
-function makeSheet(step,count){
-  var list=[],seen={},guard=0;
-  while(list.length<count&&guard<count*40){
-    guard++;
-    var q=makeQ(step.gen);
-    var k=q.prompt;
-    if(seen[k]&&list.length<count*0.85)continue;
-    seen[k]=1;list.push(q);
-  }
-  while(list.length<count)list.push(makeQ(step.gen));
-  return list;
+function makeQ(g){for(var i=0;i<600;i++){var q=tryQ(g);if(q)return q;}return Q('1<span class="op">＋</span>1<span class="op">＝</span>',S1(2));}
+function makeSheet(st,n){
+ var l=[],seen={},gd=0;
+ while(l.length<n&&gd<n*40){gd++;var q=makeQ(st.gen);if(seen[q.prompt]&&l.length<n*.85)continue;seen[q.prompt]=1;l.push(q);}
+ while(l.length<n)l.push(makeQ(st.gen));
+ return l;
 }
 
-/* ================================================================
-   状態
-   ================================================================ */
-var DEF={ver:2,placed:false,stepIdx:0,printNo:1,printRepeat:0,daily:5,qmode:"std",
-  sound:true,instant:false,seenEx:{},history:[]};
+/* ============================================================
+   3. 状態（学習者プロフィール）
+   ============================================================ */
+var ICONS=["🐰","🐻","🐱","🐶","🦊","🐼","🦁","🐸","🐧","🦄"];
+var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,kids:[]};
+function newKid(name,icon,idx){
+ return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
+   stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[]};
+}
 var S=load();
 function load(){
-  try{
-    var raw=localStorage.getItem(KEY);
-    if(!raw){
-      var old=localStorage.getItem("kumonmath_v1");
-      if(old){var o1=JSON.parse(old);var s=JSON.parse(JSON.stringify(DEF));
-        s.history=o1.history||[];s.daily=o1.daily||5;s.placed=false;return s;}
-      return JSON.parse(JSON.stringify(DEF));
-    }
-    var o=JSON.parse(raw);
-    for(var k in DEF) if(!(k in o)) o[k]=DEF[k];
-    if(o.stepIdx>=STEPS.length) o.stepIdx=0;
-    return o;
-  }catch(e){return JSON.parse(JSON.stringify(DEF));}
+ try{
+  var raw=localStorage.getItem(KEY);
+  if(raw){var o=JSON.parse(raw);for(var k in DEF)if(!(k in o))o[k]=DEF[k];return o;}
+  var s=JSON.parse(JSON.stringify(DEF));
+  var old=localStorage.getItem("kumonmath_v2")||localStorage.getItem("kumonmath_v1");
+  if(old){try{var o2=JSON.parse(old);var kid=newKid("じぶん","🐰",0);kid.history=o2.history||[];kid.daily=o2.daily||5;s.kids=[kid];}catch(e){}}
+  return s;
+ }catch(e){return JSON.parse(JSON.stringify(DEF));}
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function pad2(n){return (n<10?"0":"")+n;}
-function dkey(d){d=d||new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());}
-function fmtT(s){return Math.floor(s/60)+":"+pad2(Math.floor(s%60));}
-function todayCount(){var t=dkey(),n=0;S.history.forEach(function(h){if(h.d===t)n++;});return n;}
+function P(){return S.kids[S.cur];}
+function p2(n){return (n<10?"0":"")+n;}
+function dk(d){d=d||new Date();return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());}
+function ft(s){return Math.floor(s/60)+":"+p2(Math.floor(s%60));}
+function todayN(){var t=dk(),n=0;P().history.forEach(function(h){if(h.d===t)n++;});return n;}
 function streak(){
-  var days={};S.history.forEach(function(h){days[h.d]=1;});
-  var n=0,d=new Date();
-  if(!days[dkey(d)])d.setDate(d.getDate()-1);
-  for(var i=0;i<400;i++){if(days[dkey(d)]){n++;d.setDate(d.getDate()-1);}else break;}
-  return n;
+ var dd={};P().history.forEach(function(h){dd[h.d]=1;});
+ var n=0,d=new Date();
+ if(!dd[dk(d)])d.setDate(d.getDate()-1);
+ for(var i=0;i<400;i++){if(dd[dk(d)]){n++;d.setDate(d.getDate()-1);}else break;}
+ return n;
 }
 
-/* ================================================================
-   画面
-   ================================================================ */
-var NAVS={"s-home":1,"s-map":1,"s-record":1,"s-set":1};
+/* ============================================================
+   4. 画面制御
+   ============================================================ */
+var NAVON={"s-home":1,"s-map":1,"s-rec":1,"s-set":1};
 function show(id){
-  var l=document.querySelectorAll(".screen");
-  for(var i=0;i<l.length;i++)l[i].classList.remove("on");
-  document.getElementById(id).classList.add("on");
-  var nav=document.getElementById("nav");
-  nav.classList.toggle("hide",!NAVS[id]);
-  var bs=nav.querySelectorAll("button");
-  for(var j=0;j<bs.length;j++)bs[j].classList.toggle("on",bs[j].getAttribute("data-nav")===id);
-  window.scrollTo(0,0);
+ var l=document.querySelectorAll(".sc");
+ for(var i=0;i<l.length;i++)l[i].classList.remove("on");
+ document.getElementById(id).classList.add("on");
+ var nv=document.getElementById("nav");
+ nv.classList.toggle("off",!NAVON[id]);
+ var bs=nv.querySelectorAll("button");
+ for(var j=0;j<bs.length;j++)bs[j].classList.toggle("on",bs[j].getAttribute("data-nv")===id);
+ window.scrollTo(0,0);
 }
 var actx=null;
-function beep(kind){
-  if(!S.sound)return;
-  try{
-    if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();
-    var seq=kind==="ok"?[[880,0,.1]]:kind==="ng"?[[200,0,.18]]:
-      kind==="clear"?[[660,0,.1],[880,.12,.1],[1175,.24,.2]]:[[520,0,.05]];
-    seq.forEach(function(t){
-      var o=actx.createOscillator(),g=actx.createGain();
-      o.type="sine";o.frequency.value=t[0];
-      g.gain.setValueAtTime(.0001,actx.currentTime+t[1]);
-      g.gain.exponentialRampToValueAtTime(.22,actx.currentTime+t[1]+.01);
-      g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+t[1]+t[2]);
-      o.connect(g);g.connect(actx.destination);
-      o.start(actx.currentTime+t[1]);o.stop(actx.currentTime+t[1]+t[2]+.02);
-    });
-  }catch(e){}
+function beep(t){
+ if(!S.sound)return;
+ try{
+  if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();
+  var sq=t==="ok"?[[880,0,.1]]:t==="ng"?[[196,0,.2]]:t==="clear"?[[660,0,.1],[880,.12,.1],[1175,.24,.2]]:[[520,0,.05]];
+  sq.forEach(function(v){
+   var o=actx.createOscillator(),g=actx.createGain();
+   o.type="sine";o.frequency.value=v[0];
+   g.gain.setValueAtTime(.0001,actx.currentTime+v[1]);
+   g.gain.exponentialRampToValueAtTime(.22,actx.currentTime+v[1]+.01);
+   g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+v[1]+v[2]);
+   o.connect(g);g.connect(actx.destination);
+   o.start(actx.currentTime+v[1]);o.stop(actx.currentTime+v[1]+v[2]+.02);
+  });
+ }catch(e){}
 }
 document.getElementById("nav").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-nav]");if(!b)return;
-  var id=b.getAttribute("data-nav");
-  if(id==="s-home")renderHome();
-  if(id==="s-map")renderMap();
-  if(id==="s-record")renderRecord();
-  if(id==="s-set")renderSet();
-  show(id);
+ var b=e.target.closest("button[data-nv]");if(!b)return;
+ var id=b.getAttribute("data-nv");
+ if(id==="s-set"){openGate(function(){renderSet();show("s-set");});return;}
+ if(id==="s-home")renderHome();
+ if(id==="s-map")renderMap();
+ if(id==="s-rec")renderRec();
+ show(id);
 });
 document.addEventListener("click",function(e){
-  var b=e.target.closest("[data-back]");if(!b)return;
-  var t=b.getAttribute("data-back");
-  if(!t){renderMap();show(S.placed?"s-map":"s-welcome");return;}
-  if(t==="s-map")renderMap();
-  if(t==="s-home")renderHome();
-  show(t);
+ var b=e.target.closest("[data-bk]");if(!b)return;
+ var t=b.getAttribute("data-bk");
+ if(t==="s-home")renderHome();
+ if(t==="s-map")renderMap();
+ if(t==="s-kids")renderKids();
+ show(t);
 });
 
-/* ---------- はじめかた ---------- */
-document.getElementById("s-welcome").addEventListener("click",function(e){
-  var b=e.target.closest("[data-w]");if(!b)return;
-  var w=b.getAttribute("data-w");
-  if(w==="grade"){renderGrade();show("s-grade");}
-  else if(w==="test"){show("s-test");}
-  else if(w==="map"){renderMap();show("s-map");}
-  else if(w==="first"){S.placed=true;S.stepIdx=0;S.printNo=1;S.printRepeat=0;save();renderHome();show("s-home");}
-});
-function renderGrade(){
-  document.getElementById("gradegrid").innerHTML=GRADES.map(function(g,i){
-    return '<button data-g="'+i+'">'+g.g+'</button>';}).join("");
-  document.getElementById("gradeout").hidden=true;
+/* 保護者ゲート */
+var gateCb=null,gateAns=0,gateTry=0;
+function openGate(cb){
+ gateCb=cb;gateTry=0;
+ var a=ri(12,29),b=ri(3,9);
+ gateAns=a*b;
+ document.getElementById("gate-q").textContent=a+" × "+b+" =";
+ document.getElementById("gate-a").value="";
+ document.getElementById("gate").classList.remove("hide");
+ setTimeout(function(){document.getElementById("gate-a").focus();},100);
 }
-document.getElementById("gradegrid").addEventListener("click",function(e){
-  var b=e.target.closest("[data-g]");if(!b)return;
-  var g=GRADES[Number(b.getAttribute("data-g"))];
-  var i=idxOf(g.id),st=STEPS[i];
-  var out=document.getElementById("gradeout");
-  out.hidden=false;
-  out.innerHTML='<h3>'+g.g+' の おすすめ</h3>'+
-    '<div style="font-family:var(--num);font-size:28px;font-weight:700;margin:6px 0 2px">'+st.lv+'</div>'+
-    '<div style="font-weight:700">'+st.lvTitle+'</div>'+
-    '<div class="note" style="margin-top:6px">'+LEVELS[st.li].aim+'</div>'+
-    '<button class="btn" style="margin-top:14px" id="grade-go">ここから 始める</button>'+
-    '<div class="note" style="margin-top:10px">かんたんすぎたら、あとで せっていから 進められます。</div>';
-  document.getElementById("grade-go").onclick=function(){
-    S.stepIdx=i;S.printNo=1;S.printRepeat=0;S.placed=true;save();renderHome();show("s-home");
-  };
+document.getElementById("gate-ok").addEventListener("click",function(){
+ var v=Number(document.getElementById("gate-a").value);
+ if(v===gateAns){document.getElementById("gate").classList.add("hide");if(gateCb)gateCb();}
+ else{gateTry++;document.getElementById("gate-a").value="";
+  if(gateTry>=3){document.getElementById("gate").classList.add("hide");renderHome();show("s-home");}
+  else alert("ちがいます。のこり "+(3-gateTry)+"かい");}
+});
+document.getElementById("gate-ng").addEventListener("click",function(){
+ document.getElementById("gate").classList.add("hide");renderHome();show("s-home");
 });
 
-/* ---------- 教材マップ ---------- */
-function renderMap(){
-  var cur=STEPS[S.stepIdx],html="",lastGroup="";
-  var groups=[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
-  groups.forEach(function(gr){
-    html+='<div class="mapgroup">'+gr[0]+'</div>';
-    gr[1].split(",").forEach(function(lv){
-      var li=-1;LEVELS.forEach(function(L,i){if(L.lv===lv)li=i;});
-      if(li>=0){
-        var L=LEVELS[li];
-        var done=cur.li>li, now=cur.li===li;
-        html+='<button class="lvrow '+(done?"done":"")+(now?" now":"")+'" data-lv="'+li+'">'+
-          '<span class="badge">'+L.lv+'</span><span class="t"><b>'+L.title+'</b>'+
-          '<span class="g">'+L.grade+'</span><p>'+L.aim+'</p></span></button>';
-      }else{
-        var F=null;FUTURE.forEach(function(f){if(f.lv===lv)F=f;});
-        if(F) html+='<div class="lvrow"><span class="badge">'+F.lv+'</span><span class="t"><b>'+F.title+'</b>'+
-          '<span class="g">'+F.grade+'</span><p>'+F.aim+'</p><span class="soon">内容の表示のみ</span></span></div>';
-      }
-    });
-  });
-  document.getElementById("maplist").innerHTML=html;
+/* ============================================================
+   5. 学習者
+   ============================================================ */
+function renderKids(){
+ document.getElementById("kidlist").innerHTML=S.kids.map(function(k,i){
+  var st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
+  return '<button class="kidrow'+(i===S.cur?" on":"")+'" data-k="'+i+'"><span class="av">'+k.icon+'</span>'+
+   '<span><b>'+esc(k.name)+'</b><span>'+st.lv+'　'+st.name+'</span></span></button>';
+ }).join("")||'<div class="note" style="margin-bottom:12px">まだ 学習者が いません。</div>';
 }
-document.getElementById("maplist").addEventListener("click",function(e){
-  var b=e.target.closest("[data-lv]");if(!b)return;
-  renderLevel(Number(b.getAttribute("data-lv")));
-  show("s-lv");
+function esc(s){return String(s).replace(/[<>&"]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c];});}
+document.getElementById("kidlist").addEventListener("click",function(e){
+ var b=e.target.closest("[data-k]");if(!b)return;
+ S.cur=Number(b.getAttribute("data-k"));save();renderHome();show("s-home");
 });
-var lvOpen=0;
-function renderLevel(li){
-  lvOpen=li;
-  var L=LEVELS[li],cur=STEPS[S.stepIdx];
-  document.getElementById("lv-h").textContent=L.lv+" 教材";
-  document.getElementById("lv-title").textContent=L.title+"（"+L.grade+"）";
-  document.getElementById("lv-aim").textContent=L.aim;
-  document.getElementById("lv-steps").innerHTML=L.steps.map(function(s){
-    var isNow=cur.id===s.id;
-    return '<div class="row"><span>'+(isNow?"▶ ":"")+s.name+'</span><span class="r">'+s.id+'</span></div>';
-  }).join("");
-  document.getElementById("lv-start").textContent=L.lv+" の さいしょから 始める";
+var addEditing=-1,addIcon="🐰";
+document.getElementById("kid-add").addEventListener("click",function(){openAdd(-1);});
+document.getElementById("st-addkid").addEventListener("click",function(){openAdd(-1);});
+function openAdd(i){
+ addEditing=i;
+ var k=i>=0?S.kids[i]:null;
+ addIcon=k?k.icon:ICONS[S.kids.length%ICONS.length];
+ document.getElementById("ad-name").value=k?k.name:"";
+ document.getElementById("ad-icons").innerHTML=ICONS.map(function(ic){
+  return '<button data-i="'+ic+'" class="'+(ic===addIcon?"on":"")+'">'+ic+'</button>';}).join("");
+ document.getElementById("ad-grade").innerHTML=GRADES.map(function(g,n){
+  return '<option value="'+n+'">'+g[0]+'</option>';}).join("");
+ document.getElementById("ad-grade").value="3";
+ document.getElementById("ad-del").classList.toggle("hide",i<0);
+ show("s-add");
 }
-document.getElementById("lv-start").addEventListener("click",function(){
-  S.stepIdx=firstIdxOfLevel(lvOpen);S.printNo=1;S.printRepeat=0;S.placed=true;save();
-  renderHome();show("s-home");
+document.getElementById("ad-icons").addEventListener("click",function(e){
+ var b=e.target.closest("[data-i]");if(!b)return;
+ addIcon=b.getAttribute("data-i");
+ var bs=this.querySelectorAll("button");
+ for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-i")===addIcon);
 });
+document.getElementById("ad-save").addEventListener("click",function(){
+ var nm=document.getElementById("ad-name").value.trim()||"なまえ";
+ var gi=Number(document.getElementById("ad-grade").value);
+ var idx=idxOf(GRADES[gi][1]);
+ if(addEditing>=0){S.kids[addEditing].name=nm;S.kids[addEditing].icon=addIcon;}
+ else{S.kids.push(newKid(nm,addIcon,idx));S.cur=S.kids.length-1;}
+ save();renderHome();show("s-home");
+});
+document.getElementById("ad-del").addEventListener("click",function(){
+ if(addEditing<0)return;
+ if(!confirm("この学習者と きろくを 消します。よろしいですか。"))return;
+ S.kids.splice(addEditing,1);
+ S.cur=0;save();
+ if(!S.kids.length){renderKids();show("s-kids");}else{renderHome();show("s-home");}
+});
+document.getElementById("h-switch").addEventListener("click",function(){renderKids();show("s-kids");});
 
-/* ---------- ホーム ---------- */
+/* ============================================================
+   6. ホーム
+   ============================================================ */
 function renderHome(){
-  var st=STEPS[S.stepIdx],d=new Date();
-  var w=["日","月","火","水","木","金","土"][d.getDay()];
-  document.getElementById("home-date").textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";
-  document.getElementById("home-id").textContent=st.lv;
-  document.getElementById("home-grade").textContent=st.grade+"の 内容";
-  document.getElementById("home-name").textContent=st.name;
-  document.getElementById("home-desc").textContent=st.lvTitle;
-  var dots="";
-  for(var i=1;i<=PPS;i++)dots+='<i class="'+(i<S.printNo?"done":(i===S.printNo?"now":""))+'"></i>';
-  document.getElementById("home-dots").innerHTML=dots;
-  document.getElementById("home-dotlbl").textContent=
-    st.id+"　"+S.printNo+" / "+PPS+" まいめ"+(S.printRepeat?"（くりかえし）":"");
-  var n=todayCount();
-  document.getElementById("c-today").textContent=n;
-  document.getElementById("c-daily").textContent=S.daily;
-  document.getElementById("c-streak").textContent=streak();
-  document.getElementById("home-title").textContent=n>=S.daily?"きょうの ぶんは おわり":"きょうの 学習";
-  document.getElementById("btn-start").textContent=
-    (n>=S.daily?"もう1まい やる":(S.printNo+"まいめを はじめる"));
+ if(!S.kids.length){renderKids();show("s-kids");return;}
+ var k=P(),st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
+ document.getElementById("h-av").textContent=k.icon;
+ document.getElementById("h-name").textContent=k.name;
+ document.getElementById("h-lv").textContent=st.lv;
+ document.getElementById("h-grade").textContent=st.grade;
+ document.getElementById("h-step").textContent=st.name;
+ document.getElementById("h-title").textContent=st.lvTitle;
+ var dt="";for(var i=1;i<=PPS;i++)dt+='<i class="'+(i<k.printNo?"d":(i===k.printNo?"n":""))+'"></i>';
+ document.getElementById("h-dots").innerHTML=dt;
+ document.getElementById("h-dl").textContent=st.id+"　"+k.printNo+" / "+PPS+" まいめ"+(k.printRepeat?"（くりかえし）":"");
+ var n=todayN(),dn=k.daily;
+ document.getElementById("h-num").textContent=n;
+ document.getElementById("h-den").textContent="/"+dn+"まい";
+ var rt=Math.min(1,n/dn);
+ document.getElementById("h-ring").setAttribute("stroke-dashoffset",String(201-201*rt));
+ document.getElementById("h-ring").setAttribute("stroke",rt>=1?"#17916b":"#2557c7");
+ document.getElementById("h-msg").textContent=n>=dn?"きょうの ぶんは おわり":"きょうの 学習";
+ document.getElementById("h-sub").textContent="つづけて "+streak()+"日";
+ document.getElementById("go-start").textContent=n>=dn?"もう1まい やる":(k.printNo+"まいめを はじめる");
 }
-document.getElementById("btn-start").addEventListener("click",function(){
-  var st=STEPS[S.stepIdx];
-  if(!S.seenEx[st.id]&&S.printNo===1){showEx(st);return;}
-  startPrint();
+document.getElementById("go-start").addEventListener("click",function(){
+ var st=STEPS[P().stepIdx];
+ if(!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
+ startPrint();
 });
 function showEx(st){
-  document.getElementById("ex-id").textContent=st.id;
-  document.getElementById("ex-name").textContent=st.name;
-  document.getElementById("ex-formula").innerHTML=st.ex?st.ex[0]:"";
-  document.getElementById("ex-msg").textContent=st.ex&&st.ex[1]?st.ex[1]:"じゅんばんに といていきましょう。";
-  show("s-ex");
+ var q=makeQ(st.gen);
+ var ans=q.slots.map(function(s){return s.ans;}).join(q.layout==="frac"?" / ":(q.layout==="rem"?" あまり ":" , "));
+ document.getElementById("ex-id").textContent=st.lv;
+ document.getElementById("ex-no").textContent=st.no;
+ document.getElementById("ex-name").textContent=st.name;
+ document.getElementById("ex-f").innerHTML=q.prompt+' <span style="color:var(--mid)">'+ans+'</span>';
+ document.getElementById("ex-m").textContent="こんな もんだいが 出ます。おなじ やり方で といていきましょう。";
+ show("s-ex");
 }
 document.getElementById("ex-go").addEventListener("click",function(){
-  S.seenEx[STEPS[S.stepIdx].id]=true;save();startPrint();
+ P().seenEx[STEPS[P().stepIdx].id]=true;save();startPrint();
 });
-document.getElementById("sh-hint").addEventListener("click",function(){
-  var st=STEPS[S.stepIdx];
-  alert("れいだい\n\n"+(st.ex?st.ex[0].replace(/<[^>]+>/g," "):"")+"\n"+(st.ex&&st.ex[1]?st.ex[1]:""));
+document.getElementById("sh-ex").addEventListener("click",function(){
+ var st=STEPS[P().stepIdx],q=makeQ(st.gen);
+ var ans=q.slots.map(function(s){return s.ans;}).join(" , ");
+ alert("れいだい\n\n"+q.prompt.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()+"  → "+ans);
 });
 
-/* ================================================================
-   プリント
-   ================================================================ */
-var run=null;
+/* ============================================================
+   7. プリント
+   ============================================================ */
+var run=null,lock=false;
 function startPrint(){
-  var st=STEPS[S.stepIdx];
-  var count=S.qmode==="half"?Math.max(4,Math.round(st.q/2)):st.q;
-  var sc=S.qmode==="half"?0.55:1;
-  run={step:st,qs:makeSheet(st,count),i:0,ans:[],inp:["",""],box:0,
-    t0:Date.now(),sec:0,std:[Math.round(st.std[0]*sc),Math.round(st.std[1]*sc)],
-    fixing:false,fixQ:[],wrong:0,timer:null,label:S.printNo+"まいめ"};
-  document.getElementById("sh-id").textContent=st.id;
-  document.getElementById("sh-print").textContent=S.printNo+"/"+PPS+"まいめ"+(S.printRepeat?"（くりかえし）":"");
-  document.getElementById("sh-name").textContent=st.name;
-  document.getElementById("sh-std").textContent="めやす "+fmtT(run.std[0])+"〜"+fmtT(run.std[1]);
-  var full=run.std[1]*1.25;
-  document.getElementById("tk-min").style.left=Math.round(100*run.std[0]/full)+"%";
-  document.getElementById("tk-max").style.left=Math.round(100*run.std[1]/full)+"%";
-  buildPad("sh-pad",onKey,run.qs[0].keys);
-  draw();
-  tick();
-  run.timer=setInterval(tick,1000);
-  show("s-sheet");
+ var k=P(),st=STEPS[k.stepIdx];
+ var cnt=k.qmode==="half"?Math.max(4,Math.round(st.q/2)):st.q;
+ var sc=k.qmode==="half"?.55:1;
+ run={step:st,qs:makeSheet(st,cnt),i:0,ans:[],inp:["",""],box:0,t0:Date.now(),sec:0,
+  std:[Math.round(st.std[0]*sc),Math.round(st.std[1]*sc)],fixing:false,fixQ:[],wrong:0,timer:null,
+  label:k.printNo+"まいめ"};
+ document.getElementById("sh-id").textContent=st.id;
+ document.getElementById("sh-p").textContent="　"+k.printNo+"/"+PPS+"まいめ"+(k.printRepeat?"（くりかえし）":"");
+ document.getElementById("sh-n").textContent=st.name;
+ document.getElementById("sh-s").textContent="めやす "+ft(run.std[0])+"〜"+ft(run.std[1]);
+ var full=run.std[1]*1.25;
+ document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
+ document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
+ lock=false;
+ draw();tick();
+ run.timer=setInterval(tick,1000);
+ show("s-sheet");
 }
 function tick(){
-  if(!run)return;
-  if(!run.fixing)run.sec=(Date.now()-run.t0)/1000;
-  document.getElementById("sh-time").textContent=fmtT(run.sec);
-  var g=document.getElementById("sh-gauge"),full=run.std[1]*1.25;
-  g.querySelector("b").style.width=Math.min(100,100*run.sec/full)+"%";
-  g.classList.toggle("over",run.sec>run.std[0]&&run.sec<=run.std[1]);
-  g.classList.toggle("late",run.sec>run.std[1]);
+ if(!run)return;
+ if(!run.fixing)run.sec=(Date.now()-run.t0)/1000;
+ document.getElementById("sh-t").textContent=ft(run.sec);
+ var g=document.getElementById("sh-g"),full=run.std[1]*1.25;
+ g.querySelector("b").style.width=Math.min(100,100*run.sec/full)+"%";
+ g.classList.toggle("ov",run.sec>run.std[0]&&run.sec<=run.std[1]);
+ g.classList.toggle("lt",run.sec>run.std[1]);
 }
-function curQ(){return run.fixing?run.qs[run.fixQ[0]]:run.qs[run.i];}
+function cq(){return run.fixing?run.qs[run.fixQ[0]]:run.qs[run.i];}
 function draw(){
-  var q=curQ();
-  document.getElementById("q-prompt").innerHTML=q.prompt;
-  document.getElementById("q-slots").innerHTML=slotsHTML(q,run.inp,run.box);
-  var pl="",total=run.qs.length;
-  for(var i=0;i<total;i++)pl+='<i class="'+(i<run.i?"on":"")+'"></i>';
-  document.getElementById("sh-prog").innerHTML=run.fixing?"":pl;
-  buildPad("sh-pad",onKey,q.keys);
-  bindSlots("q-slots",function(n){run.box=n;draw();});
-  ready();
+ var q=cq();
+ document.getElementById("qp").innerHTML=q.prompt;
+ document.getElementById("qs").innerHTML=slotHTML(q,run.inp,run.box,null);
+ var pg="";
+ for(var i=0;i<run.qs.length;i++){
+  var a=null;run.ans.forEach(function(x){if(x.i===i)a=x;});
+  pg+='<i class="'+(a?(a.right?"o":"x"):"")+'"></i>';
+ }
+ document.getElementById("sh-pg").innerHTML=run.fixing?"":pg;
+ buildPad("pad",onKey,q.keys);
+ bindSlots("qs",function(n){run.box=n;draw();});
+ readyBtn();
 }
-function slotsHTML(q,inp,box){
-  var h="";
-  if(q.layout==="frac"){
-    h='<span class="fracslot">'+bx(inp[0],box===0,true,0)+'<span class="bar"></span>'+bx(inp[1],box===1,true,1)+'</span>';
-    return h;
-  }
-  q.slots.forEach(function(s,i){
-    if(i>0&&q.layout==="rem")h+='<span class="slotlbl">あまり</span>';
-    if(i>0&&(q.layout==="two"||q.layout==="xy"))h+='<span class="slotlbl">,</span>';
-    h+='<span style="display:inline-flex;flex-direction:column;align-items:center;gap:2px">'
-      +bx(inp[i],box===i,q.slots.length>1,i)
-      +(s.cap?'<span class="slotcap">'+s.cap+'</span>':'')+'</span>';
-  });
-  return h;
+function slotHTML(q,inp,box,mark){
+ if(q.layout==="frac")
+  return '<span class="fs">'+bx(inp[0],box===0,true,0,mark)+'<span class="b"></span>'+bx(inp[1],box===1,true,1,mark)+'</span>';
+ var h="";
+ q.slots.forEach(function(s,i){
+  if(i>0&&q.layout==="rem")h+='<span class="sll">あまり</span>';
+  if(i>0&&(q.layout==="two"||q.layout==="xy"))h+='<span class="sll">,</span>';
+  h+='<span style="display:inline-flex;flex-direction:column;align-items:center;gap:3px">'+
+   bx(inp[i],box===i,q.slots.length>1,i,mark)+(s.cap?'<span class="cap">'+s.cap+'</span>':'')+'</span>';
+ });
+ return h;
 }
-function bx(v,act,sm,i){
-  return '<button class="box'+(sm?" sm":"")+(act?" act":"")+'" data-slot="'+i+'">'+
-    (v===""?'<span class="cur"></span>':v)+'</button>';
+function bx(v,act,sm,i,mark){
+ var cls="bx"+(sm?" s":"")+(act&&!mark?" a":"")+(mark?" "+mark:"");
+ return '<button class="'+cls+'" data-s="'+i+'">'+(v===""?'<span class="c"></span>':v)+'</button>';
 }
 function bindSlots(id,cb){
-  var bs=document.getElementById(id).querySelectorAll(".box");
-  for(var i=0;i<bs.length;i++)(function(el){
-    el.addEventListener("click",function(){cb(Number(el.getAttribute("data-slot")));});
-  })(bs[i]);
+ var bs=document.getElementById(id).querySelectorAll(".bx");
+ for(var i=0;i<bs.length;i++)(function(el){el.addEventListener("click",function(){cb(Number(el.getAttribute("data-s")));});})(bs[i]);
 }
-function buildPad(id,handler,keys){
-  keys=keys||{};
-  var ext=keys.neg?"−":(keys.dot?".":"");
-  var h="";
-  ["1","2","3","4","5","6","7","8","9"].forEach(function(k){h+='<button data-k="'+k+'">'+k+'</button>';});
-  h+=ext?'<button data-k="'+(keys.neg?"neg":"dot")+'">'+ext+'</button>':'<button class="void"></button>';
-  h+='<button data-k="0">0</button><button class="fn" data-k="del">けす</button>';
-  h+='<button class="go" data-k="go">こたえる</button>';
-  var pad=document.getElementById(id);
-  pad.innerHTML=h;
-  pad.onclick=function(e){var b=e.target.closest("button[data-k]");if(b)handler(b.getAttribute("data-k"));};
+function buildPad(id,h,keys){
+ keys=keys||{};
+ var ext=keys.neg?"−":(keys.dot?".":"");
+ var s="";
+ ["1","2","3","4","5","6","7","8","9"].forEach(function(k){s+='<button data-k="'+k+'">'+k+'</button>';});
+ s+=ext?'<button data-k="'+(keys.neg?"neg":"dot")+'">'+ext+'</button>':'<button class="vd"></button>';
+ s+='<button data-k="0">0</button><button class="fn" data-k="del">けす</button>';
+ s+=(S.voice&&SR)?'<button class="mic" id="mic-'+id+'" data-k="mic">🎤</button>':'<button class="vd"></button>';
+ s+='<button class="go" data-k="go">こたえる</button>';
+ var p=document.getElementById(id);
+ p.innerHTML=s;
+ p.onclick=function(e){var b=e.target.closest("button[data-k]");if(b)h(b.getAttribute("data-k"));};
 }
-function ready(){
-  var q=curQ(),ok=true;
-  q.slots.forEach(function(s,i){if(run.inp[i]===""||run.inp[i]==="-")ok=false;});
-  var go=document.querySelector("#sh-pad .go");
-  if(go)go.classList.toggle("ready",ok);
+function readyBtn(){
+ var q=cq(),ok=true;
+ q.slots.forEach(function(s,i){if(run.inp[i]===""||run.inp[i]==="-")ok=false;});
+ var g=document.querySelector("#pad .go");
+ if(g)g.classList.toggle("rd",ok);
 }
 function onKey(k){
-  var q=curQ();
-  if(k==="del"){run.inp[run.box]=run.inp[run.box].slice(0,-1);draw();return;}
-  if(k==="go"){submit();return;}
-  if(k==="neg"){
-    run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];
-    draw();return;
-  }
-  if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
-  if(run.inp[run.box].replace("-","").length>=6)return;
-  run.inp[run.box]+=k;
-  if(q.slots.length>1&&run.box===0&&run.inp[1]===""&&
-     run.inp[0].replace("-","").length>=String(Math.abs(q.slots[0].ans)).length) run.box=1;
-  draw();
+ if(lock)return;
+ var q=cq();
+ if(k==="del"){run.inp[run.box]=run.inp[run.box].slice(0,-1);draw();return;}
+ if(k==="go"){submit();return;}
+ if(k==="mic"){startVoice("pad",function(v){run.inp[run.box]=v;draw();});return;}
+ if(k==="neg"){run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];draw();return;}
+ if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
+ if(run.inp[run.box].replace("-","").length>=6)return;
+ run.inp[run.box]+=k;
+ if(q.slots.length>1&&run.box===0&&run.inp[1]===""&&run.inp[0].replace("-","").length>=String(Math.abs(q.slots[0].ans)).length)run.box=1;
+ draw();
 }
-function eq(input,ans){
-  if(input===""||input==="-")return false;
-  var v=Number(input);
-  if(isNaN(v))return false;
-  return Math.abs(v-ans)<1e-9;
+function same(inp,ans){
+ if(inp===""||inp==="-")return false;
+ var v=Number(inp);
+ return !isNaN(v)&&Math.abs(v-ans)<1e-9;
 }
 function submit(){
-  var q=curQ(),allIn=true,right=true;
-  q.slots.forEach(function(s,i){
-    if(run.inp[i]===""||run.inp[i]==="-")allIn=false;
-    if(!eq(run.inp[i],s.ans))right=false;
+ var q=cq(),all=true,right=true;
+ q.slots.forEach(function(s,i){
+  if(run.inp[i]===""||run.inp[i]==="-")all=false;
+  if(!same(run.inp[i],s.ans))right=false;
+ });
+ if(!all){
+  for(var i=0;i<q.slots.length;i++)if(run.inp[i]===""||run.inp[i]==="-"){run.box=i;break;}
+  draw();return;
+ }
+ var mine=run.inp.slice(0,q.slots.length);
+ if(run.fixing){
+  feedback(right,q,function(){
+   if(right){run.fixQ.shift();}
+   else{var hd=run.fixQ.shift();run.fixQ.push(hd);}
+   run.inp=["",""];run.box=0;
+   if(!run.fixQ.length){run.fixing=false;showResult();return;}
+   draw();
   });
-  if(!allIn){
-    for(var i=0;i<q.slots.length;i++)if(run.inp[i]===""||run.inp[i]==="-"){run.box=i;break;}
-    draw();return;
-  }
-  if(run.fixing){
-    if(right){beep("ok");run.fixQ.shift();}
-    else{beep("ng");var head=run.fixQ.shift();run.fixQ.push(head);}
-    run.inp=["",""];run.box=0;
-    if(run.fixQ.length===0){run.fixing=false;showResult();return;}
-    draw();return;
-  }
-  run.ans.push({i:run.i,right:right});
-  if(S.instant)beep(right?"ok":"ng"); else beep("tap");
+  return;
+ }
+ run.ans.push({i:run.i,right:right,mine:mine});
+ feedback(right,q,function(){
   run.inp=["",""];run.box=0;run.i++;
   if(run.i>=run.qs.length){endSheet();return;}
   draw();
+ });
 }
+function feedback(right,q,next){
+ beep(right?"ok":"ng");
+ if(!S.instant){next();return;}
+ lock=true;
+ var pp=document.getElementById("sh-pp");
+ var ansTxt=q.slots.map(function(s){return s.ans;}).join(q.layout==="frac"?" / ":(q.layout==="rem"?" あまり ":" , "));
+ var el=document.createElement("div");
+ el.className="fb "+(right?"ok":"ng");
+ el.innerHTML=right?'<div class="m">○</div>':'<div class="m">×</div><div class="t">こたえは</div><div class="a">'+ansTxt+'</div>';
+ pp.appendChild(el);
+ setTimeout(function(){
+  if(el.parentNode)el.parentNode.removeChild(el);
+  lock=false;next();
+ },right?650:1900);
+}
+document.getElementById("sh-q").addEventListener("click",function(){
+ clearInterval(run.timer);
+ if(confirm("この プリントを やめますか。きろくは のこりません。")){renderHome();show("s-home");}
+ else{run.t0=Date.now()-run.sec*1000;run.timer=setInterval(tick,1000);}
+});
+
+/* まるつけ */
 function endSheet(){
-  clearInterval(run.timer);
-  run.sec=(Date.now()-run.t0)/1000;
-  var wrong=[];
-  run.ans.forEach(function(a){if(!a.right)wrong.push(a.i);});
-  run.wrong=wrong.length;run.fixQ=wrong.slice();
-  document.getElementById("mk-time").textContent=fmtT(run.sec);
-  var grid=document.getElementById("mk-grid");
-  grid.innerHTML=run.ans.map(function(a){return '<div class="mk '+(a.right?"o":"x")+'">'+(a.right?"○":"×")+'</div>';}).join("");
-  var cells=grid.querySelectorAll(".mk");
-  for(var i=0;i<cells.length;i++)(function(el,n){setTimeout(function(){el.classList.add("show");},42*n);})(cells[i],i);
-  var note=document.getElementById("mk-note"),btn=document.getElementById("mk-next");
-  if(!wrong.length){
-    note.textContent="ぜんもん せいかい。100てんです。";
-    btn.textContent="けっかを みる";
-    setTimeout(function(){beep("clear");},42*cells.length+150);
-  }else{
-    note.textContent="まちがいが "+wrong.length+"もん。なおして 100てんに してから おわります。（なおしの じかんは かぞえません）";
-    btn.textContent="なおす（"+wrong.length+"もん）";
-  }
-  show("s-mark");
+ clearInterval(run.timer);
+ run.sec=(Date.now()-run.t0)/1000;
+ var wr=[];
+ run.ans.forEach(function(a){if(!a.right)wr.push(a.i);});
+ run.wrong=wr.length;run.fixQ=wr.slice();
+ document.getElementById("mk-t").textContent=ft(run.sec);
+ document.getElementById("mk-list").innerHTML=run.ans.map(function(a,n){
+  var q=run.qs[a.i];
+  var mine=a.mine.join(q.layout==="frac"?"/":(q.layout==="rem"?" あまり ":", "));
+  var corr=q.slots.map(function(s){return s.ans;}).join(q.layout==="frac"?"/":(q.layout==="rem"?" あまり ":", "));
+  return '<div class="mrow '+(a.right?"o":"x")+'"><span class="no">'+(n+1)+'</span>'+
+   '<span class="fm">'+q.prompt+'</span>'+
+   '<span class="yr">'+esc(mine)+'</span>'+
+   (a.right?"":'<span class="co">'+esc(corr)+'</span>')+
+   '<span class="mk">'+(a.right?"○":"×")+'</span></div>';
+ }).join("");
+ var nt=document.getElementById("mk-note"),bt=document.getElementById("mk-go");
+ if(!wr.length){
+  nt.textContent="ぜんもん せいかい。100てんです。";
+  bt.textContent="けっかを みる";
+  beep("clear");
+ }else{
+  nt.textContent="まちがいが "+wr.length+"もん。みどりの 数字が 正しい こたえです。なおして 100てんに してから おわります。（なおしの じかんは かぞえません）";
+  bt.textContent="なおす（"+wr.length+"もん）";
+ }
+ show("s-mark");
 }
-document.getElementById("mk-next").addEventListener("click",function(){
-  if(!run.fixQ.length){showResult();return;}
-  run.fixing=true;run.inp=["",""];run.box=0;
-  document.getElementById("sh-print").textContent="なおし";
-  draw();show("s-sheet");
+document.getElementById("mk-go").addEventListener("click",function(){
+ if(!run.fixQ.length){showResult();return;}
+ run.fixing=true;run.inp=["",""];run.box=0;
+ document.getElementById("sh-p").textContent="　なおし";
+ draw();show("s-sheet");
 });
+
+/* けっか */
 function showResult(){
-  var st=run.step,t=run.sec,mn=run.std[0],mx=run.std[1];
-  var score=Math.round(100*(run.qs.length-run.wrong)/run.qs.length);
-  var judge,title,msg,cls,adv;
-  if(run.wrong>0){judge="repeat_wrong";cls="again";adv=false;title="もういちど おなじ プリント";
-    msg="まちがえた ところを もう1かい。つぎは できます。";}
-  else if(t<=mn){judge="pass";cls="pass";adv=true;title="ごうかく";
-    msg="100てん、じかんも ばっちり。つぎへ すすみます。";}
-  else if(t<=mx){judge="pass_slow";cls="slow";adv=true;title="ごうかく";
-    msg="100てんです。じかんは めやすの なかなので つぎへ すすみます。";}
-  else{judge="repeat_slow";cls="again";adv=false;title="もういちど おなじ プリント";
-    msg="100てんでしたが じかんが かかりました。すらすらに してから すすみます。";}
-
-  S.history.push({d:dkey(),ts:Date.now(),id:st.id,name:st.name,lv:st.lv,p:S.printNo,
-    sec:Math.round(t),score:score,wrong:run.wrong,judge:judge,mn:mn,mx:mx});
-  if(S.history.length>800)S.history=S.history.slice(-800);
-
-  var stepClear=false,levelUp=false,back=false;
-  if(adv){
-    S.printRepeat=0;S.printNo++;
-    if(S.printNo>PPS){
-      stepClear=true;
-      var prev=STEPS[S.stepIdx].lv;
-      S.stepIdx=Math.min(STEPS.length-1,S.stepIdx+1);
-      S.printNo=1;
-      if(STEPS[S.stepIdx].lv!==prev)levelUp=true;
-    }
-  }else{
-    S.printRepeat++;
-    if(S.printRepeat>=3){S.printRepeat=0;S.printNo=1;back=true;}
+ var k=P(),st=run.step,t=run.sec,mn=run.std[0],mx=run.std[1];
+ var sc=Math.round(100*(run.qs.length-run.wrong)/run.qs.length);
+ var jd,ti,ms,cl,adv;
+ if(run.wrong>0){jd="repeat_wrong";cl="a";adv=false;ti="もういちど おなじ プリント";ms="まちがえた ところを もう1かい。つぎは できます。";}
+ else if(t<=mn){jd="pass";cl="p";adv=true;ti="ごうかく";ms="100てん、じかんも ばっちり。つぎへ すすみます。";}
+ else if(t<=mx){jd="pass_slow";cl="s";adv=true;ti="ごうかく";ms="100てんです。じかんは めやすの なかなので つぎへ すすみます。";}
+ else{jd="repeat_slow";cl="a";adv=false;ti="もういちど おなじ プリント";ms="100てんでしたが じかんが かかりました。すらすらに してから すすみます。";}
+ k.history.push({d:dk(),ts:Date.now(),id:st.id,name:st.name,lv:st.lv,p:k.printNo,sec:Math.round(t),
+   score:sc,wrong:run.wrong,judge:jd,mn:mn,mx:mx});
+ if(k.history.length>900)k.history=k.history.slice(-900);
+ var clear=false,up=false,back=false;
+ if(adv){
+  k.printRepeat=0;k.printNo++;
+  if(k.printNo>PPS){
+   clear=true;var pv=STEPS[k.stepIdx].lv;
+   k.stepIdx=Math.min(STEPS.length-1,k.stepIdx+1);k.printNo=1;
+   if(STEPS[k.stepIdx].lv!==pv)up=true;
   }
-  save();
-
-  var bd=document.getElementById("rs-badge");
-  bd.className="badge "+cls;
-  bd.querySelector("h2").textContent=title;
-  bd.querySelector("p").textContent=msg;
-  document.getElementById("rs-id").textContent=st.id+" "+run.label;
-  document.getElementById("rs-score").textContent=score;
-  document.getElementById("rs-time").textContent=fmtT(t);
-  document.getElementById("rs-std").textContent=fmtT(mn)+"〜"+fmtT(mx);
-  var ex="";
-  if(stepClear)ex+="「"+st.name+"」を クリアしました。";
-  if(levelUp)ex+=STEPS[S.stepIdx].lv+"教材（"+STEPS[S.stepIdx].lvTitle+"）に すすみます。";
-  if(back)ex+="おなじ プリントが 3かい つづいたので、この ステップの 1まいめから やりなおします。";
-  var n=todayCount();
-  ex+=n>=S.daily?"　きょうの "+S.daily+"まいは おわりです。":"　きょうは あと "+(S.daily-n)+"まい。";
-  document.getElementById("rs-note").textContent=ex;
-  var nb=document.getElementById("rs-next");
-  nb.textContent=adv?"つぎの プリントへ":"もういちど やる";
-  nb.className="btn"+(adv?" midori":" yamabuki");
-  if(stepClear)beep("clear");
-  show("s-result");
+ }else{
+  k.printRepeat++;
+  if(k.printRepeat>=3){k.printRepeat=0;k.printNo=1;back=true;}
+ }
+ save();
+ var b=document.getElementById("rs-bg");
+ b.className="bg "+cl;
+ b.querySelector("h2").textContent=ti;
+ b.querySelector("p").textContent=ms;
+ document.getElementById("rs-id").textContent=st.id;
+ document.getElementById("rs-sc").textContent=sc;
+ document.getElementById("rs-tm").textContent=ft(t);
+ document.getElementById("rs-st").textContent=ft(mn)+"〜"+ft(mx);
+ var ex="";
+ if(clear)ex+="「"+st.name+"」を クリアしました。";
+ if(up)ex+=STEPS[k.stepIdx].lv+"教材（"+STEPS[k.stepIdx].lvTitle+"）に すすみます。";
+ if(back)ex+="おなじ プリントが 3かい つづいたので、この ステップの 1まいめから やりなおします。";
+ var n=todayN();
+ ex+=n>=k.daily?"　きょうの "+k.daily+"まいは おわりです。":"　きょうは あと "+(k.daily-n)+"まい。";
+ document.getElementById("rs-nt").textContent=ex;
+ var nb=document.getElementById("rs-nx");
+ nb.textContent=adv?"つぎの プリントへ":"もういちど やる";
+ nb.className="btn"+(adv?" g":" y");
+ if(clear)beep("clear");
+ show("s-res");
 }
-document.getElementById("rs-next").addEventListener("click",function(){
-  var st=STEPS[S.stepIdx];
-  if(!S.seenEx[st.id]&&S.printNo===1){showEx(st);return;}
-  startPrint();
+document.getElementById("rs-nx").addEventListener("click",function(){
+ var st=STEPS[P().stepIdx];
+ if(!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
+ startPrint();
 });
-document.getElementById("rs-home").addEventListener("click",function(){renderHome();show("s-home");});
-document.getElementById("sh-quit").addEventListener("click",function(){
-  clearInterval(run.timer);
-  if(confirm("この プリントを やめますか。きろくは のこりません。")){renderHome();show("s-home");}
-  else{run.t0=Date.now()-run.sec*1000;run.timer=setInterval(tick,1000);}
-});
+document.getElementById("rs-hm").addEventListener("click",function(){renderHome();show("s-home");});
 
-/* ================================================================
-   診断テスト
-   ================================================================ */
-var TIDS=["6A-3","5A-2","4A-1","3A-3","2A-4","A-1","A-6","B-2","B-5","C-4","C-8","D-1"];
-var test=null;
-document.getElementById("t-begin").addEventListener("click",function(){
-  test={n:0,qs:[],idx:[],inp:["",""],box:0,left:30,timer:null,last:-1};
-  TIDS.forEach(function(id){var i=idxOf(id);test.idx.push(i);test.qs.push(makeQ(STEPS[i].gen));});
-  document.getElementById("t-intro").classList.add("hidden");
-  document.getElementById("t-run").classList.remove("hidden");
-  drawTest();
-  test.timer=setInterval(function(){
-    test.left--;document.getElementById("t-tick").textContent=test.left+"秒";
-    if(test.left<=0)tAns(false);
-  },1000);
-});
-function drawTest(){
-  var q=test.qs[test.n];
-  document.getElementById("t-count").textContent=(test.n+1)+" / "+test.qs.length+"　"+STEPS[test.idx[test.n]].lv+"教材";
-  document.getElementById("t-tick").textContent=test.left+"秒";
-  var pl="";for(var i=0;i<test.qs.length;i++)pl+='<i class="'+(i<test.n?"on":"")+'"></i>';
-  document.getElementById("t-prog").innerHTML=pl;
-  document.getElementById("tq-prompt").innerHTML=q.prompt;
-  document.getElementById("tq-slots").innerHTML=slotsHTML(q,test.inp,test.box);
-  buildPad("t-pad",onTKey,q.keys);
-  bindSlots("tq-slots",function(n){test.box=n;drawTest();});
+/* ============================================================
+   8. 音声入力
+   ============================================================ */
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+var rec=null,recBtn=null;
+var KN={"〇":0,"零":0,"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9};
+function kanji2num(s){
+ if(/^[0-9]+$/.test(s))return Number(s);
+ var t=0,cur=0,ok=false;
+ for(var i=0;i<s.length;i++){
+  var c=s[i];
+  if(c in KN){cur=cur*10+KN[c];ok=true;}
+  else if(c==="十"){cur=(cur||1)*10;ok=true;}
+  else if(c==="百"){cur=(cur||1)*100;ok=true;}
+  else if(c==="千"){t+=(cur||1)*1000;cur=0;ok=true;}
+  else return null;
+ }
+ return ok?t+cur:null;
 }
-function onTKey(k){
-  var q=test.qs[test.n];
-  if(k==="del"){test.inp[test.box]=test.inp[test.box].slice(0,-1);drawTest();return;}
-  if(k==="neg"){test.inp[test.box]=test.inp[test.box].charAt(0)==="-"?test.inp[test.box].slice(1):"-"+test.inp[test.box];drawTest();return;}
-  if(k==="dot"){if(test.inp[test.box].indexOf(".")<0&&test.inp[test.box]!=="")test.inp[test.box]+=".";drawTest();return;}
-  if(k==="go"){
-    var ok=true;
-    q.slots.forEach(function(s,i){if(!eq(test.inp[i],s.ans))ok=false;});
-    if(test.inp[0]==="")return;
-    tAns(ok);return;
+function parseSpeech(txt){
+ txt=txt.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);}).replace(/\s/g,"");
+ var neg=/マイナス|まいなす|-/.test(txt);
+ var m=txt.match(/\d+(\.\d+)?/);
+ var v=null;
+ if(m)v=m[0];
+ else{
+  var km=txt.match(/[〇零一二三四五六七八九十百千]+/);
+  if(km){var n=kanji2num(km[0]);if(n!==null)v=String(n);}
+ }
+ if(v===null)return null;
+ return (neg?"-":"")+v;
+}
+function startVoice(padId,cb){
+ if(!SR){alert("この ブラウザでは 音声入力が つかえません。");return;}
+ if(rec){try{rec.stop();}catch(e){}rec=null;return;}
+ recBtn=document.getElementById("mic-"+padId);
+ rec=new SR();
+ rec.lang="ja-JP";rec.interimResults=false;rec.maxAlternatives=3;
+ if(recBtn)recBtn.classList.add("rec");
+ rec.onresult=function(e){
+  for(var i=0;i<e.results[0].length;i++){
+   var v=parseSpeech(e.results[0][i].transcript);
+   if(v!==null){cb(v);return;}
   }
-  if(test.inp[test.box].replace("-","").length>=6)return;
-  test.inp[test.box]+=k;
-  if(q.slots.length>1&&test.box===0&&test.inp[1]==="")test.box=1;
-  drawTest();
+  alert("すうじが ききとれませんでした。");
+ };
+ rec.onerror=function(){};
+ rec.onend=function(){if(recBtn)recBtn.classList.remove("rec");rec=null;};
+ try{rec.start();}catch(e){rec=null;if(recBtn)recBtn.classList.remove("rec");}
 }
-function tAns(ok){
-  if(ok){test.last=test.n;beep("ok");}else beep("ng");
-  test.n++;test.inp=["",""];test.box=0;test.left=30;
-  if(!ok||test.n>=test.qs.length){
-    clearInterval(test.timer);
-    var start=test.last>=0?Math.max(0,test.idx[test.last]-2):0;
-    S.stepIdx=start;S.printNo=1;S.printRepeat=0;S.placed=true;save();
-    var st=STEPS[start];
-    alert("スタートは "+st.id+"「"+st.name+"」です。\n\nいま解けるところより 2ステップ 手前から 始めます。やさしいところから 始めるほど 進みが 速くなります。");
-    renderHome();show("s-home");
-    return;
-  }
-  drawTest();
-}
-document.getElementById("t-skipq").addEventListener("click",function(){tAns(false);});
 
-/* ================================================================
-   きろく
-   ================================================================ */
-function renderRecord(){
-  document.getElementById("rc-total").textContent=S.history.length;
-  document.getElementById("rc-streak").textContent=streak();
-  var wk=0,lim=Date.now()-7*86400000;
-  S.history.forEach(function(h){if(h.ts>lim)wk++;});
-  document.getElementById("rc-week").textContent=wk;
-
-  var html="",cur=STEPS[S.stepIdx];
-  LEVELS.forEach(function(L,li){
-    var p=cur.li>li?1:(cur.li<li?0:(cur.si+(S.printNo-1)/PPS)/L.steps.length);
-    html+='<div class="row" style="border:none;padding:8px 0 2px"><span>'+L.lv+'　'+L.title+'</span>'+
-      '<span class="r">'+Math.round(p*100)+'%</span></div><div class="bar"><b style="width:'+Math.round(p*100)+'%"></b></div>';
+/* ============================================================
+   9. 教材マップ
+   ============================================================ */
+function renderMap(){
+ var cur=STEPS[P().stepIdx],h="";
+ var gs=[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
+ gs.forEach(function(g){
+  h+='<div class="gp">'+g[0]+'</div>';
+  g[1].split(",").forEach(function(lv){
+   var li=-1;LV.forEach(function(L,i){if(L.lv===lv)li=i;});
+   if(li>=0){
+    var L=LV[li],dn=cur.li>li,nw=cur.li===li;
+    h+='<button class="lvr'+(dn?" dn":"")+(nw?" nw":"")+'" data-lv="'+li+'"><span class="bd">'+L.lv+'</span>'+
+     '<span><b>'+L.title+'</b><span class="g">'+L.grade+'</span><p>'+L.aim+'</p>'+
+     '<p style="color:var(--usu)">'+L.sec.length+'ステップ / '+(L.sec.length*PPS)+'まい</p></span></button>';
+   }else{
+    var F=null;FUT.forEach(function(f){if(f.lv===lv)F=f;});
+    if(F)h+='<div class="lvr"><span class="bd">'+F.lv+'</span><span><b>'+F.title+'</b>'+
+      '<span class="g">'+F.grade+'</span><p>'+F.aim+'</p><span class="so">内容の表示のみ</span></span></div>';
+   }
   });
-  document.getElementById("rc-levels").innerHTML=html;
+ });
+ document.getElementById("maplist").innerHTML=h;
+}
+var lvOpen=0;
+document.getElementById("maplist").addEventListener("click",function(e){
+ var b=e.target.closest("[data-lv]");if(!b)return;
+ renderLv(Number(b.getAttribute("data-lv")));show("s-lv");
+});
+function renderLv(li){
+ lvOpen=li;
+ var L=LV[li],cur=STEPS[P().stepIdx];
+ document.getElementById("lv-h").textContent=L.lv+" 教材";
+ document.getElementById("lv-t").textContent=L.title+"（"+L.grade+"）";
+ document.getElementById("lv-a").textContent=L.aim;
+ document.getElementById("lv-s").innerHTML=L.sec.map(function(s){
+  var id=L.lv+" "+s[0],nw=cur.id===id;
+  return '<div class="strow'+(nw?" now":"")+'"><span>'+(nw?"▶ ":"")+s[1]+'</span><span class="n">'+s[0]+'</span></div>';
+ }).join("");
+ document.getElementById("lv-go").textContent=L.lv+" の さいしょから 始める";
+}
+document.getElementById("lv-go").addEventListener("click",function(){
+ openGate(function(){
+  var k=P();k.stepIdx=firstOf(lvOpen);k.printNo=1;k.printRepeat=0;save();
+  renderHome();show("s-home");
+ });
+});
 
-  var rec=S.history.slice(-20),W=300,H=110,pd=8;
-  if(rec.length<2){
-    document.getElementById("rc-chart").innerHTML='<div class="note">2まい いじょう やると グラフが 出ます。</div>';
-  }else{
-    var max=1;rec.forEach(function(h){max=Math.max(max,h.sec,h.mx);});
-    var p1=rec.map(function(h,i){return (pd+i*(W-pd*2)/(rec.length-1)).toFixed(1)+","+(H-pd-(H-pd*2)*h.sec/max).toFixed(1);}).join(" ");
-    var p2=rec.map(function(h,i){return (pd+i*(W-pd*2)/(rec.length-1)).toFixed(1)+","+(H-pd-(H-pd*2)*h.mn/max).toFixed(1);}).join(" ");
-    document.getElementById("rc-chart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+
-      '<polyline points="'+p2+'" fill="none" stroke="#0e8560" stroke-width="2" stroke-dasharray="4 4"/>'+
-      '<polyline points="'+p1+'" fill="none" stroke="#1f4b8e" stroke-width="2.5" stroke-linejoin="round"/></svg>';
-  }
-  var list=S.history.slice(-30).reverse().map(function(h){
-    return '<div class="row"><span>'+(h.judge.indexOf("pass")===0?"○":"↺")+' '+h.id+'　'+h.name+'</span>'+
-      '<span class="r">'+fmtT(h.sec)+' / '+h.score+'てん</span></div>';}).join("");
-  document.getElementById("rc-list").innerHTML=list||'<div class="note">まだ きろくが ありません。</div>';
+/* ============================================================
+   10. きろく
+   ============================================================ */
+function renderRec(){
+ var k=P();
+ document.getElementById("rc-who").textContent=k.icon+" "+k.name;
+ document.getElementById("rc-t").textContent=k.history.length;
+ document.getElementById("rc-s").textContent=streak();
+ var wk=0,lim=Date.now()-7*864e5;
+ k.history.forEach(function(h){if(h.ts>lim)wk++;});
+ document.getElementById("rc-w").textContent=wk;
+ var cur=STEPS[k.stepIdx],h2="";
+ LV.forEach(function(L,li){
+  var p=cur.li>li?1:(cur.li<li?0:(cur.si+(k.printNo-1)/PPS)/L.sec.length);
+  h2+='<div class="row" style="border:none;padding:7px 0 2px"><span>'+L.lv+'　'+L.title+'</span><span class="r">'+Math.round(p*100)+'%</span></div>'+
+   '<div class="bar"><b style="width:'+Math.round(p*100)+'%"></b></div>';
+ });
+ document.getElementById("rc-lv").innerHTML=h2;
+ var rc=k.history.slice(-20),W=300,H=104,pd=8;
+ if(rc.length<2)document.getElementById("rc-ch").innerHTML='<div class="note">2まい いじょうで グラフが 出ます。</div>';
+ else{
+  var mx=1;rc.forEach(function(h){mx=Math.max(mx,h.sec,h.mx);});
+  var f=function(key){return rc.map(function(h,i){return (pd+i*(W-pd*2)/(rc.length-1)).toFixed(1)+","+(H-pd-(H-pd*2)*h[key]/mx).toFixed(1);}).join(" ");};
+  document.getElementById("rc-ch").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+
+   '<polyline points="'+f("mn")+'" fill="none" stroke="#17916b" stroke-width="2" stroke-dasharray="4 4"/>'+
+   '<polyline points="'+f("sec")+'" fill="none" stroke="#2557c7" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+ }
+ document.getElementById("rc-li").innerHTML=k.history.slice(-30).reverse().map(function(h){
+  return '<div class="row"><span>'+(h.judge.indexOf("pass")===0?"○":"↺")+' '+h.id+'　'+h.name+'</span>'+
+   '<span class="r">'+ft(h.sec)+' / '+h.score+'てん</span></div>';}).join("")||'<div class="note">まだ ありません。</div>';
 }
 
-/* ================================================================
-   せってい
-   ================================================================ */
+/* ============================================================
+   11. 保護者メニュー
+   ============================================================ */
 function renderSet(){
-  document.getElementById("st-daily").value=String(S.daily);
-  document.getElementById("st-qmode").value=S.qmode;
-  document.getElementById("st-sound").classList.toggle("on",!!S.sound);
-  document.getElementById("st-instant").classList.toggle("on",!!S.instant);
-  var sel=document.getElementById("st-level");
-  sel.innerHTML=LEVELS.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
-  sel.value=String(STEPS[S.stepIdx].li);
-  fillSteps(STEPS[S.stepIdx].li,STEPS[S.stepIdx].id);
+ var k=P();
+ document.getElementById("st-daily").value=String(k.daily);
+ document.getElementById("st-qm").value=k.qmode;
+ document.getElementById("st-inst").classList.toggle("on",!!S.instant);
+ document.getElementById("st-snd").classList.toggle("on",!!S.sound);
+ document.getElementById("st-voice").classList.toggle("on",!!S.voice);
+ document.getElementById("st-who").textContent=k.name;
+ var sl=document.getElementById("st-lv");
+ sl.innerHTML=LV.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
+ sl.value=String(STEPS[k.stepIdx].li);
+ fillSteps(STEPS[k.stepIdx].li,STEPS[k.stepIdx].id);
+ document.getElementById("st-kids").innerHTML=S.kids.map(function(x,i){
+  return '<div class="row"><span>'+x.icon+' '+esc(x.name)+'</span><button class="r" data-ed="'+i+'" style="color:var(--ai)">へんしゅう</button></div>';
+ }).join("");
 }
 function fillSteps(li,sel){
-  var s=document.getElementById("st-step");
-  s.innerHTML=LEVELS[li].steps.map(function(x){return '<option value="'+x.id+'">'+x.id+'　'+x.name+'</option>';}).join("");
-  if(sel)s.value=sel;
+ var s=document.getElementById("st-sp");
+ s.innerHTML=LV[li].sec.map(function(x){
+  var id=LV[li].lv+" "+x[0];
+  return '<option value="'+id+'">'+x[0]+'　'+x[1]+'</option>';}).join("");
+ if(sel)s.value=sel;
 }
-document.getElementById("st-level").addEventListener("change",function(e){fillSteps(Number(e.target.value));});
-document.getElementById("st-apply").addEventListener("click",function(){
-  S.stepIdx=idxOf(document.getElementById("st-step").value);S.printNo=1;S.printRepeat=0;save();
+document.getElementById("st-lv").addEventListener("change",function(e){fillSteps(Number(e.target.value));});
+document.getElementById("st-ap").addEventListener("click",function(){
+ var k=P();k.stepIdx=idxOf(document.getElementById("st-sp").value);k.printNo=1;k.printRepeat=0;save();
+ renderHome();show("s-home");
+});
+document.getElementById("st-test").addEventListener("click",function(){
+ document.getElementById("t-in").classList.remove("hide");
+ document.getElementById("t-run").classList.add("hide");
+ show("s-test");
+});
+document.getElementById("st-kids").addEventListener("click",function(e){
+ var b=e.target.closest("[data-ed]");if(!b)return;
+ openAdd(Number(b.getAttribute("data-ed")));
+});
+document.getElementById("st-daily").addEventListener("change",function(e){P().daily=Number(e.target.value);save();});
+document.getElementById("st-qm").addEventListener("change",function(e){P().qmode=e.target.value;save();});
+document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
+document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
+document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
+document.getElementById("st-ex").addEventListener("click",function(){
+ var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(b);
+ a.download="kumon_math_data_"+dk()+".json";a.click();
+ setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+});
+document.getElementById("st-im").addEventListener("click",function(){document.getElementById("st-fl").click();});
+document.getElementById("st-fl").addEventListener("change",function(e){
+ var f=e.target.files[0];if(!f)return;
+ var r=new FileReader();
+ r.onload=function(){
+  try{
+   var o=JSON.parse(r.result);
+   if(!o.kids||!o.kids.length)throw 0;
+   S=o;for(var k in DEF)if(!(k in S))S[k]=DEF[k];
+   S.cur=0;save();renderSet();renderHome();alert("きろくを 読みこみました。");
+  }catch(err){alert("読みこめませんでした。書き出したJSONを えらんでください。");}
+ };
+ r.readAsText(f);
+});
+document.getElementById("st-rs").addEventListener("click",function(){
+ if(!confirm("すべての 学習者と きろくを 消します。よろしいですか。"))return;
+ if(!confirm("元に もどせません。本当に 消しますか。"))return;
+ S=JSON.parse(JSON.stringify(DEF));save();renderKids();show("s-kids");
+});
+
+/* ============================================================
+   12. 診断テスト
+   ============================================================ */
+var TIDS=["6A 31-40","5A 11-20","4A 11-20","3A 21-30","2A 31-40","A 11-20","A 91-100","B 31-40","B 91-100","C 51-60","C 131-140","D 21-30"];
+var test=null;
+document.getElementById("t-go").addEventListener("click",function(){
+ test={n:0,qs:[],idx:[],inp:["",""],box:0,left:30,timer:null,last:-1};
+ TIDS.forEach(function(id){var i=idxOf(id);test.idx.push(i);test.qs.push(makeQ(STEPS[i].gen));});
+ document.getElementById("t-in").classList.add("hide");
+ document.getElementById("t-run").classList.remove("hide");
+ drawT();
+ test.timer=setInterval(function(){
+  test.left--;document.getElementById("t-k").textContent=test.left+"秒";
+  if(test.left<=0)tAns(false);
+ },1000);
+});
+function drawT(){
+ var q=test.qs[test.n];
+ document.getElementById("t-c").textContent=(test.n+1)+" / "+test.qs.length+"　"+STEPS[test.idx[test.n]].lv+"教材";
+ document.getElementById("t-k").textContent=test.left+"秒";
+ var pg="";for(var i=0;i<test.qs.length;i++)pg+='<i class="'+(i<test.n?"o":"")+'"></i>';
+ document.getElementById("t-pg").innerHTML=pg;
+ document.getElementById("tqp").innerHTML=q.prompt;
+ document.getElementById("tqs").innerHTML=slotHTML(q,test.inp,test.box,null);
+ buildPad("t-pad",onTK,q.keys);
+ bindSlots("tqs",function(n){test.box=n;drawT();});
+}
+function onTK(k){
+ var q=test.qs[test.n];
+ if(k==="del"){test.inp[test.box]=test.inp[test.box].slice(0,-1);drawT();return;}
+ if(k==="mic"){startVoice("t-pad",function(v){test.inp[test.box]=v;drawT();});return;}
+ if(k==="neg"){test.inp[test.box]=test.inp[test.box].charAt(0)==="-"?test.inp[test.box].slice(1):"-"+test.inp[test.box];drawT();return;}
+ if(k==="dot"){if(test.inp[test.box].indexOf(".")<0&&test.inp[test.box]!=="")test.inp[test.box]+=".";drawT();return;}
+ if(k==="go"){
+  if(test.inp[0]==="")return;
+  var ok=true;q.slots.forEach(function(s,i){if(!same(test.inp[i],s.ans))ok=false;});
+  tAns(ok);return;
+ }
+ if(test.inp[test.box].replace("-","").length>=6)return;
+ test.inp[test.box]+=k;
+ if(q.slots.length>1&&test.box===0&&test.inp[1]==="")test.box=1;
+ drawT();
+}
+function tAns(ok){
+ beep(ok?"ok":"ng");
+ if(ok)test.last=test.n;
+ test.n++;test.inp=["",""];test.box=0;test.left=30;
+ if(!ok||test.n>=test.qs.length){
+  clearInterval(test.timer);
+  var start=test.last>=0?Math.max(0,test.idx[test.last]-2):0;
+  var k=P();k.stepIdx=start;k.printNo=1;k.printRepeat=0;save();
+  var st=STEPS[start];
+  alert("スタートは "+st.id+"「"+st.name+"」です。\n\nいま解けるところより 2ステップ 手前から 始めます。");
   renderHome();show("s-home");
-});
-document.getElementById("st-daily").addEventListener("change",function(e){S.daily=Number(e.target.value);save();});
-document.getElementById("st-qmode").addEventListener("change",function(e){S.qmode=e.target.value;save();});
-document.getElementById("st-sound").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
-document.getElementById("st-instant").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
-document.getElementById("st-export").addEventListener("click",function(){
-  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
-  var a=document.createElement("a");a.href=URL.createObjectURL(b);
-  a.download="kumon_math_data_"+dkey()+".json";a.click();
-  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
-});
-document.getElementById("st-import").addEventListener("click",function(){document.getElementById("st-file").click();});
-document.getElementById("st-file").addEventListener("change",function(e){
-  var f=e.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){
-    try{
-      var o=JSON.parse(r.result);
-      if(typeof o.stepIdx!=="number")throw 0;
-      S=o;for(var k in DEF)if(!(k in S))S[k]=DEF[k];
-      if(S.stepIdx>=STEPS.length)S.stepIdx=0;
-      save();renderSet();renderHome();alert("きろくを 読みこみました。");
-    }catch(err){alert("読みこめませんでした。書き出したJSONを えらんでください。");}
-  };
-  r.readAsText(f);
-});
-document.getElementById("st-reset").addEventListener("click",function(){
-  if(!confirm("すべての きろくと すすみぐあいを 消します。よろしいですか。"))return;
-  if(!confirm("元に もどせません。本当に 消しますか。"))return;
-  S=JSON.parse(JSON.stringify(DEF));save();renderSet();show("s-welcome");
-});
-
-/* ================================================================
-   キーボード・起動
-   ================================================================ */
-document.addEventListener("keydown",function(e){
-  var onSheet=document.getElementById("s-sheet").classList.contains("on");
-  var onTest=document.getElementById("s-test").classList.contains("on")&&
-             !document.getElementById("t-run").classList.contains("hidden");
-  if(!onSheet&&!onTest)return;
-  var h=onSheet?onKey:onTKey;
-  if(e.key>="0"&&e.key<="9"){h(e.key);e.preventDefault();}
-  else if(e.key==="Backspace"){h("del");e.preventDefault();}
-  else if(e.key==="Enter"){h("go");e.preventDefault();}
-  else if(e.key==="-"){h("neg");e.preventDefault();}
-  else if(e.key==="."){h("dot");e.preventDefault();}
-  else if(e.key==="Tab"){
-    var st=onSheet?run:test;st.box=st.box===0?1:0;
-    onSheet?draw():drawTest();e.preventDefault();
-  }
-});
-
-if(S.placed){renderHome();show("s-home");}else{show("s-welcome");}
-if("serviceWorker" in navigator){
-  window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+  return;
+ }
+ drawT();
 }
+document.getElementById("t-sk").addEventListener("click",function(){tAns(false);});
+
+/* ============================================================
+   13. 起動
+   ============================================================ */
+document.addEventListener("keydown",function(e){
+ var sh=document.getElementById("s-sheet").classList.contains("on");
+ var ts=document.getElementById("s-test").classList.contains("on")&&!document.getElementById("t-run").classList.contains("hide");
+ if(!sh&&!ts)return;
+ var h=sh?onKey:onTK;
+ if(e.key>="0"&&e.key<="9"){h(e.key);e.preventDefault();}
+ else if(e.key==="Backspace"){h("del");e.preventDefault();}
+ else if(e.key==="Enter"){h("go");e.preventDefault();}
+ else if(e.key==="-"){h("neg");e.preventDefault();}
+ else if(e.key==="."){h("dot");e.preventDefault();}
+});
+if(S.kids.length){renderHome();show("s-home");}else{renderKids();show("s-kids");}
+if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
 </script>
 </body>
 </html>
