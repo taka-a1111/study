@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01e / kumon_math_ver3.2 -->
+<!-- BUILD_TAG: 2026-09-01f / kumon_math_ver3.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -216,6 +216,19 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .tg.on{background:var(--mid)}.tg.on b{left:24px}
 .dgr{color:var(--aka)}
 
+/* インストール案内 */
+.inst{display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid var(--line);
+  border-radius:14px;padding:13px 14px;margin-top:14px}
+.inst .ic{width:38px;height:38px;border-radius:10px;background:var(--ai);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-size:21px;font-weight:700;flex:0 0 auto}
+.inst .tx{flex:1;min-width:0}
+.inst .tx b{display:block;font-size:14.5px}
+.inst .tx span{font-size:11.5px;color:var(--sumi);display:block;line-height:1.5}
+.inst .go{background:var(--ai);color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:700;flex:0 0 auto}
+.inst .cl{width:28px;height:28px;color:var(--usu);font-size:17px;flex:0 0 auto}
+.steps li{margin-bottom:10px;font-size:14px;line-height:1.7}
+.steps li b{background:var(--ai-s);color:var(--ai);border-radius:6px;padding:2px 7px;font-size:13px}
+
 /* モーダル */
 .mask{position:fixed;inset:0;background:rgba(20,26,32,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .mask.hide{display:none}
@@ -240,7 +253,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.2 / 2026-09-01e</div>
+  <div class="tiny">まいにち計算 ver3.3 / 2026-09-01f</div>
 </section>
 
 <!-- こども追加 -->
@@ -279,8 +292,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="dl" id="h-dl"></div>
   </div>
   <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
+  <div class="inst hide" id="inst">
+    <span class="ic">＋</span>
+    <span class="tx"><b>アプリとして つかう</b><span>ホーム画面から すぐ ひらけます。オフラインでも 学習できます</span></span>
+    <button class="go" id="inst-go">入れる</button>
+    <button class="cl" id="inst-cl">×</button>
+  </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01e</div>
+  <div class="tiny">BUILD 2026-09-01f</div>
 </section>
 
 <!-- れいだい -->
@@ -420,6 +439,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="btn l" id="st-addkid" style="margin-top:10px">＋ 学習者を ついか</button>
   </div>
   <div class="card">
+    <h3>アプリ・共有</h3>
+    <div class="stk">
+      <button class="btn o" id="st-inst">アプリとして 入れる</button>
+      <button class="btn l" id="st-share">リンクを 共有する</button>
+    </div>
+    <div class="note" style="padding-top:8px">共有した相手も、同じリンクを開いて「アプリとして入れる」を押せば ホーム画面から使えます。学習の記録は端末ごとに保存されます。</div>
+  </div>
+  <div class="card">
     <h3>データ</h3>
     <div class="stk">
       <button class="btn l" id="st-ex">きろくを書き出す（JSON）</button>
@@ -428,7 +455,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.2 / BUILD 2026-09-01e</div>
+  <div class="tiny">kumon_math ver3.3 / BUILD 2026-09-01f</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -437,6 +464,13 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="howto"><div class="dlg">
+  <h3>ホーム画面に 入れる</h3>
+  <div class="note" id="ht-lead"></div>
+  <ol class="steps" id="ht-steps" style="padding-left:20px;margin:14px 0 0"></ol>
+  <button class="btn" id="ht-cl" style="margin-top:16px">とじる</button>
+</div></div>
 
 <div class="mask hide" id="gate"><div class="dlg">
   <h3>保護者の かくにん</h3>
@@ -455,7 +489,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01e";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01f";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -939,6 +973,12 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var ht=document.getElementById("howto");
+ if(ht&&!ht.classList.contains("hide")){
+  ht.classList.add("hide");
+  try{history.pushState({sc:"howto"},"");}catch(e){}
+  return;
+ }
  var g=document.getElementById("gate");
  if(g&&!g.classList.contains("hide")){
   g.classList.add("hide");
@@ -1105,6 +1145,7 @@ function renderHome(){
  document.getElementById("h-msg").textContent=n>=dn?"きょうの ぶんは おわり":"きょうの 学習";
  document.getElementById("h-sub").textContent="つづけて "+streak()+"日";
  document.getElementById("go-start").textContent=n>=dn?"もう1まい やる":(k.printNo+"まいめを はじめる");
+ updateInstallUI();
 }
 document.getElementById("go-start").addEventListener("click",function(){
  var st=STEPS[P().stepIdx];
@@ -1373,6 +1414,62 @@ document.getElementById("rs-nx").addEventListener("click",function(){
 document.getElementById("rs-hm").addEventListener("click",function(){renderHome();show("s-home");});
 
 /* ============================================================
+   7.5 アプリのインストール・共有
+   ============================================================ */
+var deferredPrompt=null;
+function isStandalone(){
+ return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent);}
+function updateInstallUI(){
+ var el=document.getElementById("inst");
+ var hideIt=isStandalone()||localStorage.getItem("inst_off")==="1";
+ el.classList.toggle("hide",hideIt);
+ var b=document.getElementById("st-inst");
+ if(b)b.classList.toggle("hide",isStandalone());
+}
+window.addEventListener("beforeinstallprompt",function(e){
+ e.preventDefault();deferredPrompt=e;updateInstallUI();
+});
+window.addEventListener("appinstalled",function(){
+ deferredPrompt=null;updateInstallUI();
+ alert("ホーム画面に ついかしました。つぎからは アイコンから ひらけます。");
+});
+function doInstall(){
+ if(deferredPrompt){
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){deferredPrompt=null;updateInstallUI();});
+  return;
+ }
+ openHowto();
+}
+function openHowto(){
+ var lead,steps;
+ if(isIOS()){
+  lead="iPhone・iPad の Safari では、つぎの 手順で ホーム画面に 追加できます。";
+  steps=["画面下の <b>共有</b>（□に↑のマーク）を おす","<b>ホーム画面に追加</b> を えらぶ","右上の <b>追加</b> を おす"];
+ }else{
+  lead="ブラウザの メニューから ホーム画面に 追加できます。";
+  steps=["右上の <b>⋮</b>（メニュー）を おす","<b>アプリをインストール</b> または <b>ホーム画面に追加</b> を えらぶ","<b>インストール</b> を おす"];
+ }
+ document.getElementById("ht-lead").textContent=lead;
+ document.getElementById("ht-steps").innerHTML=steps.map(function(x){return "<li>"+x+"</li>";}).join("");
+ document.getElementById("howto").classList.remove("hide");
+}
+document.getElementById("ht-cl").addEventListener("click",function(){document.getElementById("howto").classList.add("hide");});
+document.getElementById("inst-go").addEventListener("click",doInstall);
+document.getElementById("inst-cl").addEventListener("click",function(){
+ localStorage.setItem("inst_off","1");updateInstallUI();
+});
+function shareApp(){
+ var url=location.href.split("#")[0];
+ var data={title:"まいにち計算",text:"公文式の進め方で 算数を 毎日つづける アプリです。",url:url};
+ if(navigator.share){navigator.share(data).catch(function(){});return;}
+ if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){alert("リンクを コピーしました。\n\n"+url);},function(){prompt("このリンクを 共有してください",url);});return;}
+ prompt("このリンクを 共有してください",url);
+}
+
+/* ============================================================
    8. 音声入力
    ============================================================ */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
@@ -1548,6 +1645,8 @@ document.getElementById("st-qm").addEventListener("change",function(e){P().qmode
 document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
+document.getElementById("st-inst").addEventListener("click",doInstall);
+document.getElementById("st-share").addEventListener("click",shareApp);
 document.getElementById("st-ex").addEventListener("click",function(){
  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
  var a=document.createElement("a");a.href=URL.createObjectURL(b);
