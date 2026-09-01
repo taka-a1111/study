@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01d / kumon_math_ver3.1 -->
+<!-- BUILD_TAG: 2026-09-01e / kumon_math_ver3.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -217,12 +217,18 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .dgr{color:var(--aka)}
 
 /* モーダル */
-.mask{position:fixed;inset:0;background:rgba(20,26,32,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px}
+.mask{position:fixed;inset:0;background:rgba(20,26,32,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .mask.hide{display:none}
-.dlg{background:var(--surf);border-radius:18px;padding:22px;width:100%;max-width:360px}
-.dlg h3{margin:0 0 8px;font-size:17px}
-.dlg .q{font-family:var(--num);font-size:32px;font-weight:700;text-align:center;margin:14px 0}
-.dlg input{text-align:center;font-family:var(--num);font-size:26px;font-weight:700}
+.dlg{background:var(--surf);border-radius:18px;padding:20px;width:100%;max-width:340px;max-height:92dvh;overflow-y:auto}
+.dlg h3{margin:0 0 6px;font-size:17px}
+.dlg .q{font-family:var(--num);font-size:30px;font-weight:700;text-align:center;margin:12px 0 10px}
+.gdisp{height:58px;border:2px solid var(--ai);border-radius:12px;background:var(--ai-s);display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:28px;font-weight:700;letter-spacing:.06em}
+.gdisp .c{width:3px;height:28px;background:var(--ai);animation:bk 1s steps(2,start) infinite}
+.gpad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.gpad button{height:48px;border-radius:11px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:22px;font-weight:600}
+.gpad button:active{background:var(--ai-s)}
+.gpad .fn{font-family:var(--jp);font-size:14px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
+.gpad .ok{background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:15px;font-weight:700}
 </style>
 </head>
 <body>
@@ -234,7 +240,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.1 / 2026-09-01d</div>
+  <div class="tiny">まいにち計算 ver3.2 / 2026-09-01e</div>
 </section>
 
 <!-- こども追加 -->
@@ -274,7 +280,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   </div>
   <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01d</div>
+  <div class="tiny">BUILD 2026-09-01e</div>
 </section>
 
 <!-- れいだい -->
@@ -422,7 +428,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.1 / BUILD 2026-09-01d</div>
+  <div class="tiny">kumon_math ver3.2 / BUILD 2026-09-01e</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -436,17 +442,20 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <h3>保護者の かくにん</h3>
   <div class="note">つぎの かけ算の 答えを 入れてください。</div>
   <div class="q" id="gate-q"></div>
-  <input type="text" inputmode="numeric" id="gate-a" placeholder="答え">
-  <div class="stk" style="margin-top:14px">
-    <button class="btn" id="gate-ok">かくにん</button>
-    <button class="btn q" id="gate-ng">やめる</button>
+  <div class="gdisp" id="gate-d"><span class="c"></span></div>
+  <div class="gpad" id="gate-pad">
+    <button data-g="1">1</button><button data-g="2">2</button><button data-g="3">3</button>
+    <button data-g="4">4</button><button data-g="5">5</button><button data-g="6">6</button>
+    <button data-g="7">7</button><button data-g="8">8</button><button data-g="9">9</button>
+    <button class="fn" data-g="del">けす</button><button data-g="0">0</button><button class="ok" data-g="ok">OK</button>
   </div>
+  <button class="btn q" id="gate-ng" style="margin-top:6px">やめる</button>
 </div></div>
 </div>
 
 <script>
 "use strict";
-var BUILD="2026-09-01d";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01e";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -986,25 +995,36 @@ document.addEventListener("click",function(e){
 });
 
 /* 保護者ゲート */
-var gateCb=null,gateAns=0,gateTry=0;
+var gateCb=null,gateAns=0,gateTry=0,gateIn="";
+function gateDraw(){
+ document.getElementById("gate-d").innerHTML=gateIn===""?'<span class="c"></span>':gateIn;
+}
 function openGate(cb){
- gateCb=cb;gateTry=0;
+ gateCb=cb;gateTry=0;gateIn="";
  var a=ri(12,29),b=ri(3,9);
  gateAns=a*b;
  document.getElementById("gate-q").textContent=a+" × "+b+" =";
- document.getElementById("gate-a").value="";
+ gateDraw();
  document.getElementById("gate").classList.remove("hide");
- setTimeout(function(){document.getElementById("gate-a").focus();},100);
 }
-document.getElementById("gate-ok").addEventListener("click",function(){
- var v=Number(document.getElementById("gate-a").value);
- if(v===gateAns){document.getElementById("gate").classList.add("hide");if(gateCb)gateCb();}
- else{gateTry++;document.getElementById("gate-a").value="";
-  if(gateTry>=3){document.getElementById("gate").classList.add("hide");renderHome();show("s-home");}
-  else alert("ちがいます。のこり "+(3-gateTry)+"かい");}
+function closeGate(){document.getElementById("gate").classList.add("hide");}
+document.getElementById("gate-pad").addEventListener("click",function(e){
+ var b=e.target.closest("[data-g]");if(!b)return;
+ var k=b.getAttribute("data-g");
+ if(k==="del"){gateIn=gateIn.slice(0,-1);gateDraw();return;}
+ if(k==="ok"){
+  if(gateIn===""){return;}
+  if(Number(gateIn)===gateAns){closeGate();if(gateCb)gateCb();return;}
+  gateTry++;gateIn="";gateDraw();
+  if(gateTry>=3){closeGate();renderHome();show("s-home");}
+  else alert("ちがいます。のこり "+(3-gateTry)+"かい");
+  return;
+ }
+ if(gateIn.length>=5)return;
+ gateIn+=k;gateDraw();
 });
 document.getElementById("gate-ng").addEventListener("click",function(){
- document.getElementById("gate").classList.add("hide");renderHome();show("s-home");
+ closeGate();renderHome();show("s-home");
 });
 
 /* ============================================================
@@ -1630,7 +1650,36 @@ document.addEventListener("keydown",function(e){
 });
 try{history.replaceState({sc:"root"},"");}catch(e){}
 if(S.kids.length){renderHome();show("s-home");}else{renderKids();show("s-kids");}
-if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+/* 自動アップデート：新しいビルドが出ていたらキャッシュを捨てて読み込み直す */
+function checkUpdate(){
+ if(!navigator.onLine)return;
+ fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){
+  if(!j||!j.build||j.build===BUILD)return;
+  var k="updated_"+j.build;
+  if(sessionStorage.getItem(k))return;
+  sessionStorage.setItem(k,"1");
+  var done=function(){location.reload();};
+  if(window.caches)caches.keys().then(function(ks){
+   return Promise.all(ks.map(function(x){return caches.delete(x);}));
+  }).then(done,done);
+  else done();
+ }).catch(function(){});
+}
+var swRefreshing=false;
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.addEventListener("controllerchange",function(){
+  if(swRefreshing)return;swRefreshing=true;location.reload();
+ });
+ window.addEventListener("load",function(){
+  navigator.serviceWorker.register("sw.js").then(function(reg){
+   reg.update();
+   setInterval(function(){reg.update();},30*60*1000);
+   document.addEventListener("visibilitychange",function(){if(!document.hidden)reg.update();});
+  }).catch(function(){});
+ });
+}
+checkUpdate();
+document.addEventListener("visibilitychange",function(){if(!document.hidden)checkUpdate();});
 </script>
 </body>
 </html>
