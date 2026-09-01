@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02e / kumon_math_ver5.6 -->
+<!-- BUILD_TAG: 2026-09-02f / kumon_math_ver5.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -367,7 +367,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.6 / 2026-09-02e</div>
+  <div class="tiny">まいにち計算 ver5.7 / 2026-09-02f</div>
 </section>
 
 <!-- こども追加 -->
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02e</div>
+  <div class="tiny">BUILD 2026-09-02f</div>
 </section>
 
 <!-- れいだい -->
@@ -484,6 +484,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="card note" id="mk-note" style="margin-top:12px"></div>
   <div class="sp"></div>
   <button class="btn" id="mk-go"></button>
+  <button class="btn q hide" id="mk-skip">なおさずに おわる</button>
   <div class="tiny">&nbsp;</div>
 </section>
 
@@ -566,6 +567,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="st"><b id="rc-s"></b><span>つづけて日</span></div>
     <div class="st"><b id="rc-w"></b><span>7日で</span></div>
   </div>
+  <div class="card"><h3>まい数（この2しゅうかん）</h3><div id="rc-bar"></div></div>
   <div class="card"><h3>じかんの うつりかわり</h3><div id="rc-ch"></div>
     <div class="note" style="margin-top:6px">青が かかった じかん、緑の点線が 標準完成時間です。下がるほど 力がついています。</div></div>
   <div class="card"><h3 id="rc-calh">つづけた日</h3>
@@ -573,7 +575,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="cal" id="rc-cal"></div></div>
   <div class="card"><h3>しゅうりょうしょう</h3><div id="rc-certs"></div></div>
   <div class="card"><h3>すすみぐあい</h3><div id="rc-lv"></div></div>
-  <div class="card"><h3>りれき</h3><div id="rc-li"></div></div>
+  <div class="card"><h3 id="rc-lih">りれき</h3><div id="rc-li"></div>
+    <button class="btn l" id="rc-more" style="margin-top:12px">もっと 見る</button></div>
   <div class="tiny">&nbsp;</div>
 </section>
 
@@ -599,6 +602,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn l" id="st-s1" style="width:auto;padding:9px 14px;font-size:14px">ピンポーン</button>
       <button class="btn l" id="st-s2" style="width:auto;padding:9px 14px;font-size:14px">ブー</button></span></div>
     <div class="row"><span>音声で答える（マイク）</span><div class="tg" id="st-voice"><b></b></div></div>
+    <div class="row"><span>まちがいは かならず なおす</span><div class="tg" id="st-fix"><b></b></div></div>
     <div class="row" id="st-biorow"><span>指紋・顔で 保護者メニューを ひらく</span><div class="tg" id="st-bio"><b></b></div></div>
     <div class="note" id="st-bionote" style="padding-top:6px">指紋を 登録しても、かけ算での ロック解除は そのまま 使えます。指紋が 使えないときは「かけ算で ひらく」を おしてください。</div>
     <div class="note" style="padding-top:8px">公文式の教室では全部解いてからまとめて採点しますが、家庭学習では1問ごとに正誤が分かるほうが定着しやすいため既定でオンにしています。<br><br>マイクを押したときの「ポン」という音は Android の音声認識機能が鳴らしているもので、アプリからは止められません。気になる場合は端末のメディア音量を下げるか、マイクをオフにしてください。</div>
@@ -668,7 +672,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.6 / BUILD 2026-09-02e</div>
+  <div class="tiny">kumon_math ver5.7 / BUILD 2026-09-02f</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -728,7 +732,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02e";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02f";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1344,7 +1348,7 @@ function makeSheet(st,n){
    3. 状態（学習者プロフィール）
    ============================================================ */
 var ICONS=["🐰","🐻","🐱","🐶","🦊","🐼","🦁","🐸","🐧","🦄"];
-var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,kids:[]};
+var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,kids:[]};
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
@@ -1935,13 +1939,18 @@ function endSheet(){
  if(!wr.length){
   nt.textContent="ぜんもん せいかい。100てんです。";
   bt.textContent="けっかを みる";
+  document.getElementById("mk-skip").classList.add("hide");
   beep("clear");
  }else{
   nt.textContent="まちがいが "+wr.length+"もん。みどりの 数字が 正しい こたえです。なおして 100てんに してから おわります。（なおしの じかんは かぞえません）";
   bt.textContent="なおす（"+wr.length+"もん）";
+  document.getElementById("mk-skip").classList.toggle("hide",S.mustFix===true);
  }
  show("s-mark");
 }
+document.getElementById("mk-skip").addEventListener("click",function(){
+ run.fixQ=[];run.fixing=false;showResult();
+});
 document.getElementById("mk-go").addEventListener("click",function(){
  if(!run.fixQ.length){showResult();return;}
  run.fixing=true;run.inp=["",""];run.box=0;
@@ -2803,6 +2812,7 @@ document.getElementById("lv-go").addEventListener("click",function(){
 /* ============================================================
    10. きろく
    ============================================================ */
+var recShow=30,recFilter=null;
 function renderRec(){
  var k=P();
  document.getElementById("rc-who").textContent=k.icon+" "+k.name;
@@ -2830,6 +2840,15 @@ function renderRec(){
   cal+='<span class="'+(on?"on":"")+(key===dk()?" today":"")+'">'+d2+'</span>';
  }
  document.getElementById("rc-cal").innerHTML=cal;
+ var cs2=document.getElementById("rc-cal").querySelectorAll("span.on");
+ for(var ci=0;ci<cs2.length;ci++)(function(el){
+  el.style.cursor="pointer";
+  el.onclick=function(){
+   recFilter=y+"-"+p2(mo+1)+"-"+p2(Number(el.textContent));
+   renderRec();
+   document.getElementById("rc-lih").scrollIntoView({behavior:"smooth",block:"start"});
+  };
+ })(cs2[ci]);
  document.getElementById("rc-calh").textContent=(mo+1)+"月に つづけた日　"+cnt+"日";
  /* しゅうりょうしょう */
  var cs=(k.certs||[]).slice().reverse();
@@ -2846,9 +2865,52 @@ function renderRec(){
    '<polyline points="'+f("mn")+'" fill="none" stroke="#17916b" stroke-width="2" stroke-dasharray="4 4"/>'+
    '<polyline points="'+f("sec")+'" fill="none" stroke="#2557c7" stroke-width="2.5" stroke-linejoin="round"/></svg>';
  }
- document.getElementById("rc-li").innerHTML=k.history.slice(-30).reverse().map(function(h){
-  return '<div class="row"><span>'+(h.judge.indexOf("pass")===0?"○":"↺")+' '+h.id+'　'+h.name+'</span>'+
-   '<span class="r">'+ft(h.sec)+' / '+h.score+'てん</span></div>';}).join("")||'<div class="note">まだ ありません。</div>';
+ /* 日別のまい数（2週間） */
+ var bd=[],bmax=1;
+ for(var i2=13;i2>=0;i2--){
+  var dd=new Date();dd.setDate(dd.getDate()-i2);
+  var key2=dk(dd),c2=days[key2]||0;
+  bd.push({d:dd,n:c2});if(c2>bmax)bmax=c2;
+ }
+ var BW=300,BH=92,bw=BW/14;
+ var bars=bd.map(function(x,i3){
+  var hgt=Math.round((BH-16)*x.n/bmax);
+  var col=x.n>=(k.daily||5)?"#17916b":(x.n>0?"#2557c7":"#e4e8e2");
+  return '<rect x="'+(i3*bw+2).toFixed(1)+'" y="'+(BH-hgt-2)+'" width="'+(bw-4).toFixed(1)+'" height="'+Math.max(hgt,2)+'" rx="2" fill="'+col+'"/>'+
+   '<text x="'+(i3*bw+bw/2).toFixed(1)+'" y="'+(BH-hgt-6)+'" text-anchor="middle" font-size="8" fill="#5a6672">'+(x.n||"")+'</text>';
+ }).join("");
+ var labs=bd.map(function(x,i3){
+  return (i3%3===0)?'<text x="'+(i3*bw+bw/2).toFixed(1)+'" y="8" text-anchor="middle" font-size="8" fill="#9aa4ae">'+(x.d.getMonth()+1)+'/'+x.d.getDate()+'</text>':"";
+ }).join("");
+ document.getElementById("rc-bar").innerHTML='<svg viewBox="0 0 '+BW+' '+(BH+12)+'" style="width:100%;height:auto">'+
+  '<g transform="translate(0,12)">'+bars+'</g>'+labs+'</svg>';
+
+ /* りれき（日付と時刻つき・日ごとにまとめる） */
+ var list=k.history.slice();
+ if(recFilter)list=list.filter(function(h){return h.d===recFilter;});
+ list=list.reverse();
+ var lim=recFilter?9999:recShow;
+ var shown=list.slice(0,lim),html3="",curD="";
+ shown.forEach(function(h){
+  if(h.d!==curD){
+   curD=h.d;
+   var p3=curD.split("-"),dt=new Date(Number(p3[0]),Number(p3[1])-1,Number(p3[2]));
+   var wd=["日","月","火","水","木","金","土"][dt.getDay()];
+   html3+='<div style="font-size:12.5px;color:var(--ai);font-weight:700;padding:12px 0 4px">'+
+     Number(p3[1])+"月"+Number(p3[2])+"日（"+wd+"）</div>";
+  }
+  var tm2=new Date(h.ts),mk2=h.judge.indexOf("pass")===0?"○":"↺";
+  html3+='<div class="row"><span>'+mk2+' <span class="num" style="color:var(--sumi);font-size:12.5px">'+
+   p2(tm2.getHours())+":"+p2(tm2.getMinutes())+'</span>　'+h.id+'　'+h.name+'</span>'+
+   '<span class="r">'+h.score+'てん / '+ft(h.sec)+'</span></div>';
+ });
+ document.getElementById("rc-li").innerHTML=html3||'<div class="note">まだ ありません。</div>';
+ document.getElementById("rc-lih").innerHTML=recFilter
+  ? 'りれき（'+Number(recFilter.split("-")[1])+'月'+Number(recFilter.split("-")[2])+'日）　<button id="rc-clear" style="color:var(--ai);font-size:12px">ぜんぶ見る</button>'
+  : "りれき";
+ document.getElementById("rc-more").classList.toggle("hide",!!recFilter||list.length<=recShow);
+ var rcl=document.getElementById("rc-clear");
+ if(rcl)rcl.onclick=function(){recFilter=null;renderRec();};
 }
 
 /* ============================================================
@@ -2858,6 +2920,7 @@ document.getElementById("rc-certs").addEventListener("click",function(e){
  var b=e.target.closest("[data-c]");if(!b)return;
  var k=P();certOpen(k.certs[Number(b.getAttribute("data-c"))]);
 });
+document.getElementById("rc-more").addEventListener("click",function(){recShow+=50;renderRec();});
 function renderSet(){
  var k=P();
  document.getElementById("st-daily").value=String(k.daily);
@@ -2871,6 +2934,7 @@ function renderSet(){
  document.getElementById("pr-kid").innerHTML=S.kids.map(function(x,i){
   return '<option value="'+i+'">'+x.icon+' '+esc(x.name)+'</option>';}).join("");
  document.getElementById("pr-kid").value=String(S.cur);
+ document.getElementById("st-fix").classList.toggle("on",S.mustFix===true);
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
   document.getElementById("st-biorow").classList.toggle("hide",!ok&&!waOn());
@@ -2941,6 +3005,10 @@ document.getElementById("pr-send").addEventListener("click",function(){
  if(kk.praise.length>20)kk.praise=kk.praise.slice(-20);
  save();
  alert("おくりました。お子さんの 学習画面に 出ます。");
+});
+document.getElementById("st-fix").addEventListener("click",function(e){
+ S.mustFix=(S.mustFix===true)?false:true;
+ e.currentTarget.classList.toggle("on",S.mustFix===true);save();
 });
 document.getElementById("st-inst").addEventListener("click",function(){imOpen(false);});
 document.getElementById("st-upd").addEventListener("click",function(){
