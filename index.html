@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01c / kumon_math_ver3.0 -->
+<!-- BUILD_TAG: 2026-09-01d / kumon_math_ver3.1 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="まいにち計算">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>まいにち計算</title>
 <style>
 :root{
@@ -233,7 +234,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.0 / 2026-09-01c</div>
+  <div class="tiny">まいにち計算 ver3.1 / 2026-09-01d</div>
 </section>
 
 <!-- こども追加 -->
@@ -273,7 +274,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   </div>
   <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01c</div>
+  <div class="tiny">BUILD 2026-09-01d</div>
 </section>
 
 <!-- れいだい -->
@@ -421,7 +422,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.0 / BUILD 2026-09-01c</div>
+  <div class="tiny">kumon_math ver3.1 / BUILD 2026-09-01d</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -445,7 +446,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01c";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01d";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -902,7 +903,9 @@ function streak(){
    4. 画面制御
    ============================================================ */
 var NAVON={"s-home":1,"s-map":1,"s-rec":1,"s-set":1};
-function show(id){
+var STACK=[];
+var SKIPBACK={"s-set":1,"s-sheet":1,"s-mark":1,"s-res":1,"s-ex":1};
+function applyScreen(id){
  var l=document.querySelectorAll(".sc");
  for(var i=0;i<l.length;i++)l[i].classList.remove("on");
  document.getElementById(id).classList.add("on");
@@ -912,6 +915,43 @@ function show(id){
  for(var j=0;j<bs.length;j++)bs[j].classList.toggle("on",bs[j].getAttribute("data-nv")===id);
  window.scrollTo(0,0);
 }
+function show(id){
+ applyScreen(id);
+ if(STACK[STACK.length-1]===id)return;
+ STACK.push(id);
+ try{history.pushState({sc:id,n:STACK.length},"");}catch(e){}
+}
+function prep(id){
+ if(id==="s-home")renderHome();
+ else if(id==="s-map")renderMap();
+ else if(id==="s-rec")renderRec();
+ else if(id==="s-kids")renderKids();
+}
+function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
+/* Android の戻るジェスチャー・戻るボタンで前の画面へ */
+window.addEventListener("popstate",function(){
+ var g=document.getElementById("gate");
+ if(g&&!g.classList.contains("hide")){
+  g.classList.add("hide");
+  try{history.pushState({sc:"gate"},"");}catch(e){}
+  return;
+ }
+ var cur=STACK[STACK.length-1]||"s-home";
+ if(cur==="s-sheet"){
+  if(lock){try{history.pushState({sc:cur},"");}catch(e){}return;}
+  if(!confirm("この プリントを やめますか。きろくは のこりません。")){
+   try{history.pushState({sc:cur},"");}catch(e){}return;
+  }
+  if(run&&run.timer)clearInterval(run.timer);
+  goHomeHard();return;
+ }
+ if(cur==="s-mark"||cur==="s-res"||cur==="s-ex"){goHomeHard();return;}
+ STACK.pop();
+ var prev=STACK[STACK.length-1];
+ while(prev&&SKIPBACK[prev]){STACK.pop();prev=STACK[STACK.length-1];}
+ if(!prev){STACK=[cur];return;}
+ prep(prev);applyScreen(prev);
+});
 var actx=null;
 function beep(t){
  if(!S.sound)return;
@@ -940,11 +980,9 @@ document.getElementById("nav").addEventListener("click",function(e){
 });
 document.addEventListener("click",function(e){
  var b=e.target.closest("[data-bk]");if(!b)return;
+ if(STACK.length>1){history.back();return;}
  var t=b.getAttribute("data-bk");
- if(t==="s-home")renderHome();
- if(t==="s-map")renderMap();
- if(t==="s-kids")renderKids();
- show(t);
+ prep(t);show(t);
 });
 
 /* 保護者ゲート */
@@ -1590,6 +1628,7 @@ document.addEventListener("keydown",function(e){
  else if(e.key==="-"){h("neg");e.preventDefault();}
  else if(e.key==="."){h("dot");e.preventDefault();}
 });
+try{history.replaceState({sc:"root"},"");}catch(e){}
 if(S.kids.length){renderHome();show("s-home");}else{renderKids();show("s-kids");}
 if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
 </script>
