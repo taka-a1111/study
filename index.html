@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01w / kumon_math_ver4.8 -->
+<!-- BUILD_TAG: 2026-09-01x / kumon_math_ver4.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -208,16 +208,17 @@ body.pen .pp{background-image:
   font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .tools button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
 .ib.act{background:var(--ai);color:#fff;border-color:var(--ai)}
-.fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  background:rgba(255,255,255,.62);border-radius:6px;z-index:8;animation:pop .18s ease-out}
+.fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:0 12px 12px;background:rgba(255,255,255,.62);border-radius:6px;z-index:8;animation:pop .18s ease-out}
 @keyframes pop{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
 .fb svg{position:absolute;inset:0;width:100%;height:100%}
 .fb.ok svg{stroke:var(--mid)}
 .fb.ng svg{stroke:var(--aka)}
-.fb .ans{position:relative;z-index:2;background:#fff;border-radius:14px;padding:10px 18px;
-  box-shadow:0 2px 10px rgba(0,0,0,.12);text-align:center}
-.fb .ans .t{font-size:14px;color:var(--sumi)}
-.fb .ans .a{font-family:var(--num);font-size:30px;font-weight:700;color:var(--aka);line-height:1.2}
+.fb .ans{position:relative;z-index:2;background:#fff;border:2px solid var(--aka);border-radius:14px;
+  padding:9px 18px;box-shadow:0 3px 12px rgba(0,0,0,.14);display:flex;align-items:baseline;gap:10px;
+  max-width:100%;flex-wrap:wrap;justify-content:center}
+.fb .ans .t{font-size:14.5px;color:var(--sumi);white-space:nowrap}
+.fb .ans .a{font-family:var(--num);font-size:30px;font-weight:700;color:var(--aka);line-height:1.15;word-break:break-all}
 @media (prefers-reduced-motion:reduce){.fb{animation:none}}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pad button{height:58px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:27px;font-weight:600}
@@ -320,7 +321,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.8 / 2026-09-01w</div>
+  <div class="tiny">まいにち計算 ver4.9 / 2026-09-01x</div>
 </section>
 
 <!-- こども追加 -->
@@ -368,7 +369,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01w</div>
+  <div class="tiny">BUILD 2026-09-01x</div>
 </section>
 
 <!-- れいだい -->
@@ -546,7 +547,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.8 / BUILD 2026-09-01w</div>
+  <div class="tiny">kumon_math ver4.9 / BUILD 2026-09-01x</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -606,7 +607,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01w";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01x";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1720,7 +1721,7 @@ function feedback(right,q,next){
   ? '<ellipse cx="50" cy="50" rx="45" ry="43" vector-effect="non-scaling-stroke"/>'
   : '<line x1="12" y1="12" x2="88" y2="88" vector-effect="non-scaling-stroke"/><line x1="88" y1="12" x2="12" y2="88" vector-effect="non-scaling-stroke"/>';
  sv+='</svg>';
- el.innerHTML=sv+(right?"":'<div class="ans"><div class="t">こたえは</div><div class="a">'+ansTxt+'</div></div>');
+ el.innerHTML=sv+(right?"":'<div class="ans"><span class="t">こたえは</span><span class="a">'+ansTxt+'</span></div>');
  pp.appendChild(el);
  setTimeout(function(){
   if(el.parentNode)el.parentNode.removeChild(el);
