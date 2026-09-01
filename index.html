@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01g / kumon_math_ver3.4 -->
+<!-- BUILD_TAG: 2026-09-01h / kumon_math_ver3.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -261,7 +261,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.4 / 2026-09-01g</div>
+  <div class="tiny">まいにち計算 ver3.5 / 2026-09-01h</div>
 </section>
 
 <!-- こども追加 -->
@@ -307,7 +307,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01g</div>
+  <div class="tiny">BUILD 2026-09-01h</div>
 </section>
 
 <!-- れいだい -->
@@ -463,7 +463,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.4 / BUILD 2026-09-01g</div>
+  <div class="tiny">kumon_math ver3.5 / BUILD 2026-09-01h</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -472,6 +472,17 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="im"><div class="dlg" style="text-align:center">
+  <img src="icon-192.png" width="76" height="76" alt="" style="border-radius:20px;margin:2px auto 10px;display:block">
+  <h3 style="font-size:19px">アプリを 入れますか</h3>
+  <div class="note" style="margin-top:6px">ホーム画面の アイコンから すぐ ひらけます。電波がなくても 学習できます。</div>
+  <ol class="steps hide" id="im-steps" style="padding-left:20px;margin:16px 0 0;text-align:left"></ol>
+  <div class="stk" style="margin-top:18px">
+    <button class="btn" id="im-go">インストール</button>
+    <button class="btn q" id="im-later">あとで</button>
+  </div>
+</div></div>
 
 <div class="mask hide" id="howto"><div class="dlg">
   <h3>ホーム画面に 入れる</h3>
@@ -498,7 +509,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01g";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01h";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -982,6 +993,12 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var im=document.getElementById("im");
+ if(im&&!im.classList.contains("hide")){
+  im.classList.add("hide");
+  try{history.pushState({sc:"im"},"");}catch(e){}
+  return;
+ }
  var ht=document.getElementById("howto");
  if(ht&&!ht.classList.contains("hide")){
   ht.classList.add("hide");
@@ -1439,7 +1456,7 @@ function updateInstallUI(){
  if(b)b.classList.toggle("hide",isStandalone());
 }
 window.addEventListener("appinstalled",function(){
- deferredPrompt=null;updateInstallUI();
+ deferredPrompt=null;window.__bip=null;localStorage.setItem("inst_off","1");updateInstallUI();
  alert("ホーム画面に ついかしました。つぎからは アイコンから ひらけます。");
 });
 function doInstall(){
@@ -1451,13 +1468,46 @@ function doInstall(){
    if(d.userChoice&&d.userChoice.then){
     d.userChoice.then(function(c){
      deferredPrompt=null;window.__bip=null;updateInstallUI();
-     if(c&&c.outcome==="dismissed")openHowto();
+     if(c&&c.outcome==="dismissed"){var m=Number(localStorage.getItem("inst_shown")||0);localStorage.setItem("inst_shown",String(Math.max(m,IM_MAX)));}
     });
    }
    return;
   }catch(e){}
  }
  openHowto();
+}
+var IM_MAX=3;
+function imOpen(auto){
+ var d=deferredPrompt||window.__bip;
+ var box=document.getElementById("im"),steps=document.getElementById("im-steps"),go=document.getElementById("im-go");
+ if(d){
+  steps.classList.add("hide");
+  go.classList.remove("hide");
+  go.textContent="インストール";
+ }else{
+  var list=isIOS()
+   ?["画面下の <b>共有</b>（□に↑のマーク）を おす","<b>ホーム画面に追加</b> を えらぶ","右上の <b>追加</b> を おす"]
+   :["右上の <b>⋮</b>（メニュー）を おす","<b>アプリをインストール</b> または <b>ホーム画面に追加</b> を えらぶ","<b>インストール</b> を おす"];
+  steps.innerHTML=list.map(function(x){return "<li>"+x+"</li>";}).join("");
+  steps.classList.remove("hide");
+  go.classList.add("hide");
+ }
+ document.getElementById("im-later").textContent=auto?"あとで":"とじる";
+ box.classList.remove("hide");
+}
+function imClose(){document.getElementById("im").classList.add("hide");}
+document.getElementById("im-go").addEventListener("click",function(){imClose();doInstall();});
+document.getElementById("im-later").addEventListener("click",imClose);
+/* 初回にひらいたとき、自動で案内を出す */
+function autoInstallPrompt(){
+ if(isStandalone())return;
+ if(localStorage.getItem("inst_off")==="1")return;
+ var n=Number(localStorage.getItem("inst_shown")||0);
+ if(n>=IM_MAX)return;
+ var d=deferredPrompt||window.__bip;
+ if(!d&&!isIOS())return;
+ localStorage.setItem("inst_shown",String(n+1));
+ imOpen(true);
 }
 function openHowto(){
  var lead,steps;
@@ -1477,7 +1527,7 @@ document.getElementById("ht-go").addEventListener("click",function(){
  document.getElementById("howto").classList.add("hide");doInstall();
 });
 document.getElementById("ht-cl").addEventListener("click",function(){document.getElementById("howto").classList.add("hide");});
-document.getElementById("inst-go").addEventListener("click",doInstall);
+document.getElementById("inst-go").addEventListener("click",function(){imOpen(false);});
 document.getElementById("inst-cl").addEventListener("click",function(){
  localStorage.setItem("inst_off","1");updateInstallUI();
 });
@@ -1665,7 +1715,7 @@ document.getElementById("st-qm").addEventListener("change",function(e){P().qmode
 document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
-document.getElementById("st-inst").addEventListener("click",doInstall);
+document.getElementById("st-inst").addEventListener("click",function(){imOpen(false);});
 document.getElementById("st-share").addEventListener("click",shareApp);
 document.getElementById("st-ex").addEventListener("click",function(){
  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
@@ -1799,6 +1849,12 @@ if("serviceWorker" in navigator){
 }
 checkUpdate();
 document.addEventListener("visibilitychange",function(){if(!document.hidden)checkUpdate();});
+setTimeout(autoInstallPrompt,1400);
+window.__onBip=function(){
+ deferredPrompt=window.__bip;updateInstallUI();
+ if(!document.getElementById("im").classList.contains("hide"))imOpen(true);
+ else setTimeout(autoInstallPrompt,300);
+};
 </script>
 </body>
 </html>
