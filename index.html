@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02h / kumon_math_ver5.9 -->
+<!-- BUILD_TAG: 2026-09-02i / kumon_math_ver6.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -342,6 +342,40 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .steps li{margin-bottom:10px;font-size:14px;line-height:1.7}
 .steps li b{background:var(--ai-s);color:var(--ai);border-radius:6px;padding:2px 7px;font-size:13px}
 
+/* 全部そろったときの お祝い */
+.cele{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:20px;overflow:hidden;
+  background:radial-gradient(circle at 50% 62%,#20406e 0%,#111d33 55%,#080e1a 100%)}
+.cele.hide{display:none}
+.cele .sky{position:absolute;inset:0;pointer-events:none}
+.cele .spark{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe9a8;
+  opacity:0;animation:tw 2.6s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.4)}45%{opacity:.95;transform:scale(1)}}
+.cele .stage{position:relative;width:100%;max-width:460px}
+.cele svg.dragon{width:100%;height:auto;display:block;filter:drop-shadow(0 0 18px rgba(120,220,190,.45));
+  animation:fly 5.5s ease-in-out infinite}
+@keyframes fly{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.cele .body{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.8s ease-out .25s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cele .head{opacity:0;transform-origin:340px 96px;animation:hpop .5s cubic-bezier(.2,1.5,.4,1) 1.75s forwards}
+@keyframes hpop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+.cele .whis{animation:wav 2.4s ease-in-out infinite}
+@keyframes wav{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.cele .orbline{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.cele .orbline svg{width:30px;height:30px;opacity:0;animation:rise .6s ease-out forwards}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.4)}to{opacity:1;transform:none}}
+.cele h2{color:#ffe9a8;font-size:28px;margin:18px 0 4px;text-align:center;
+  opacity:0;animation:fadeup .7s ease-out 2.2s forwards;text-shadow:0 2px 16px rgba(255,200,74,.5)}
+.cele p{color:#dbe6f5;font-size:16px;margin:0;text-align:center;opacity:0;
+  animation:fadeup .7s ease-out 2.5s forwards}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cele .btn{max-width:320px;margin-top:26px;opacity:0;animation:fadeup .6s ease-out 3s forwards}
+@media (prefers-reduced-motion:reduce){
+ .cele .body{animation:none;stroke-dashoffset:0}
+ .cele .head,.cele h2,.cele p,.cele .btn,.cele .orbline svg{animation:none;opacity:1}
+ .cele svg.dragon,.cele .whis,.cele .spark{animation:none}
+}
+
 /* モーダル */
 .mask{position:fixed;inset:0;background:rgba(20,26,32,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .mask.hide{display:none}
@@ -369,7 +403,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.9 / 2026-09-02h</div>
+  <div class="tiny">まいにち計算 ver6.0 / 2026-09-02i</div>
 </section>
 
 <!-- こども追加 -->
@@ -423,7 +457,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02h</div>
+  <div class="tiny">BUILD 2026-09-02i</div>
 </section>
 
 <!-- れいだい -->
@@ -684,7 +718,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.9 / BUILD 2026-09-02h</div>
+  <div class="tiny">kumon_math ver6.0 / BUILD 2026-09-02i</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -699,6 +733,60 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="cele hide" id="cele">
+  <div class="sky" id="cele-sky"></div>
+  <div class="stage">
+    <svg class="dragon" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="dgb" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1f7a63"/><stop offset="55%" stop-color="#37b48c"/>
+          <stop offset="100%" stop-color="#7fe3c0"/>
+        </linearGradient>
+        <linearGradient id="dgl" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8ff0cc" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#d8fff2" stop-opacity=".85"/>
+        </linearGradient>
+      </defs>
+      <g class="head">
+        <path d="M18,236 C4,224 2,208 8,196 C10,212 16,224 26,230 Z" fill="#e9d59a"/>
+        <path d="M20,244 C6,244 0,232 2,220 C10,230 18,236 28,238 Z" fill="#e9d59a" opacity=".85"/>
+      </g>
+      <g class="head">
+        <path d="M51.4,210.2 L45.1,193.4 L62.3,198.5 Z" fill="#1f7a63"/>
+        <path d="M98.0,168.9 L100.7,151.2 L113.2,163.9 Z" fill="#1f7a63"/>
+        <path d="M177.0,178.9 L192.5,170.1 L190.3,187.8 Z" fill="#1f7a63"/>
+        <path d="M216.5,207.0 L227.7,193.0 L232.2,210.3 Z" fill="#1f7a63"/>
+        <path d="M279.1,181.9 L269.2,167.0 L287.1,168.1 Z" fill="#1f7a63"/>
+        <path d="M302.0,132.5 L291.8,117.7 L309.7,118.4 Z" fill="#1f7a63"/>
+      </g>
+      <path class="body" d="M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104"
+            fill="none" stroke="url(#dgb)" stroke-width="26" stroke-linecap="round"/>
+      <path class="body" d="M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104"
+            fill="none" stroke="url(#dgl)" stroke-width="8" stroke-linecap="round"/>
+      <g class="head">
+        <path d="M326,122 C310,120 298,126 292,138 C304,130 316,128 330,130 Z" fill="#2a9d7d"/>
+        <path d="M330,118 C322,94 338,74 362,74 C386,74 398,90 394,108 C391,122 374,132 356,130 C344,129 333,126 330,118 Z"
+              fill="#37b48c" stroke="#1f7a63" stroke-width="3"/>
+        <path d="M392,100 C404,94 416,98 418,106 C412,112 400,112 392,108 Z" fill="#7fe3c0" stroke="#1f7a63" stroke-width="2"/>
+        <path d="M394,112 C404,114 410,120 410,128 C402,126 396,120 392,114 Z" fill="#2a9d7d"/>
+        <path d="M350,76 C344,60 336,50 324,44 C338,44 352,54 358,72 Z" fill="#e9d59a"/>
+        <path d="M370,74 C368,58 366,48 358,40 C370,42 380,54 382,72 Z" fill="#e9d59a"/>
+        <path d="M334,92 C320,88 310,90 302,96 C314,94 324,94 334,98 Z" fill="#e9d59a"/>
+        <circle cx="372" cy="96" r="7" fill="#fff"/><circle cx="374" cy="97" r="3.6" fill="#12324f"/>
+        <g class="whis">
+          <path d="M394,110 C406,118 416,130 420,146" fill="none" stroke="#e9d59a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M386,120 C396,132 400,144 400,158" fill="none" stroke="#e9d59a" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <path d="M338,126 C336,138 340,148 348,152 C342,142 340,134 342,126 Z" fill="#e9d59a"/>
+      </g>
+    </svg>
+    <div class="orbline" id="cele-orbs"></div>
+  </div>
+  <h2 id="cele-t">ぜんぶ そろった！</h2>
+  <p id="cele-m">きょうも よく がんばったね</p>
+  <button class="btn y" id="cele-close">とじる</button>
+</div>
 
 <div class="mask hide" id="im"><div class="dlg" style="text-align:center">
   <img src="icon-192.png" width="76" height="76" alt="" style="border-radius:20px;margin:2px auto 10px;display:block">
@@ -744,7 +832,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02h";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02i";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1429,6 +1517,12 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var ce=document.getElementById("cele");
+ if(ce&&!ce.classList.contains("hide")){
+  ce.classList.add("hide");
+  try{history.pushState({sc:"cele"},"");}catch(e){}
+  return;
+ }
  var im=document.getElementById("im");
  if(im&&!im.classList.contains("hide")){
   im.classList.add("hide");
@@ -1734,6 +1828,37 @@ function orbSVG(stars,filled,isNew){
   '<g>'+body+pts.map(function(p){return star(p[0],p[1],sr);}).join("")+'</g></svg>';
 }
 var lastOrbCount=-1;
+/* 玉が全部そろったときの お祝い */
+function celebrate(n){
+ var sky="";
+ for(var i=0;i<26;i++){
+  sky+='<span class="spark" style="left:'+(Math.random()*98).toFixed(1)+'%;top:'+(Math.random()*92).toFixed(1)+
+   '%;animation-delay:'+(Math.random()*2.6).toFixed(2)+'s;width:'+(3+Math.random()*4).toFixed(1)+
+   'px;height:'+(3+Math.random()*4).toFixed(1)+'px"></span>';
+ }
+ document.getElementById("cele-sky").innerHTML=sky;
+ var ob="";
+ for(var j=0;j<Math.min(n,7);j++)
+  ob+=orbSVG(j+1,true,false).replace('class="orb"','style="animation-delay:'+(2.3+j*0.12).toFixed(2)+'s"');
+ document.getElementById("cele-orbs").innerHTML=ob;
+ document.getElementById("cele").classList.remove("hide");
+ celeSound();
+}
+function celeSound(){
+ if(!S.sound)return;
+ try{
+  /* 龍のうなり */
+  tone({f:70,f2:120,dur:1.6,vol:.16,wave:"sawtooth",atk:.2});
+  tone({f:140,f2:210,dur:1.4,vol:.08,wave:"triangle",atk:.25,at:.1});
+  /* 上がっていく きらめき */
+  [[523.3,1.9],[659.3,2.02],[784,2.14],[1046.5,2.26],[1318.5,2.4]].forEach(function(v){
+   tone({f:v[0],at:v[1],dur:.5,vol:.18,wave:"triangle"});
+  });
+ }catch(e){}
+}
+document.getElementById("cele-close").addEventListener("click",function(){
+ document.getElementById("cele").classList.add("hide");
+});
 function renderHome(){
  if(!S.kids.length){renderKids();show("s-kids");return;}
  var k=P(),st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
@@ -2064,6 +2189,11 @@ function showResult(){
  var nb=document.getElementById("rs-nx");
  nb.textContent=adv?"つぎの プリントへ":"もういちど やる";
  nb.className="btn"+(adv?" g":" y");
+ var todN=todayN();
+ if(todN>=(k.daily||5)&&k.celebDay!==dk()){
+  k.celebDay=dk();save();
+  setTimeout(function(){celebrate(k.daily||5);},700);
+ }
  if(up&&k.certs&&k.certs.length){certOpen(k.certs[k.certs.length-1]);}
  if(clear)beep("clear");
  if(auth)syncPush(function(ok){if(ok)markSynced();});
