@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02g / kumon_math_ver5.8 -->
+<!-- BUILD_TAG: 2026-09-02h / kumon_math_ver5.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -369,7 +369,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.8 / 2026-09-02g</div>
+  <div class="tiny">まいにち計算 ver5.9 / 2026-09-02h</div>
 </section>
 
 <!-- こども追加 -->
@@ -423,7 +423,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02g</div>
+  <div class="tiny">BUILD 2026-09-02h</div>
 </section>
 
 <!-- れいだい -->
@@ -617,6 +617,16 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="btn l" id="st-test" style="margin-top:10px">診断テストで 決めなおす</button>
   </div>
   <div class="card">
+    <h3>はじめから やりなおす</h3>
+    <div class="note">試しに進めた ぶんを 消して、まっさらな 状態から 始められます。</div>
+    <label class="f"><span>だれの きろくを もどしますか</span><select id="rs-kid"></select></label>
+    <div class="stk" style="margin-top:14px">
+      <button class="btn l" id="rs-pos">進度だけ もどす（きろくは のこす）</button>
+      <button class="btn l dgr" id="rs-all">きろくも ぜんぶ 消す</button>
+    </div>
+    <div class="note" style="padding-top:8px">「きろくも ぜんぶ 消す」を えらぶと、りれき・グラフ・じこベスト・しゅうりょうしょう・メッセージも 消えます。クラウド同期を している 場合は、もう1台の 端末でも 同じように 消えます。</div>
+  </div>
+  <div class="card">
     <h3>学習者</h3>
     <div id="st-kids"></div>
     <button class="btn l" id="st-addkid" style="margin-top:10px">＋ 学習者を ついか</button>
@@ -674,7 +684,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.8 / BUILD 2026-09-02g</div>
+  <div class="tiny">kumon_math ver5.9 / BUILD 2026-09-02h</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -734,7 +744,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02g";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02h";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1354,7 +1364,7 @@ var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,kids:[]};
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
-   best:{},certs:[],praise:[],praiseSeen:0};
+   best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0};
 }
 var S=load();
 function load(){
@@ -1373,7 +1383,7 @@ function save(){
 }
 function P(){
  var k=S.kids[S.cur];
- if(k){if(!k.best)k.best={};if(!k.certs)k.certs=[];if(!k.praise)k.praise=[];if(!k.praiseSeen)k.praiseSeen=0;}
+ if(k){if(!k.best)k.best={};if(!k.certs)k.certs=[];if(!k.praise)k.praise=[];if(!k.praiseSeen)k.praiseSeen=0;if(!k.wipedAt)k.wipedAt=0;}
  return k;
 }
 function p2(n){return (n<10?"0":"")+n;}
@@ -2569,28 +2579,35 @@ function mergeState(local,remote){
   }
   var lk=out.kids[idx];
   lk.id=rk.id;
+  /* どちらかで「きろくを消した」場合、その時刻より前の記録は復活させない */
+  var wipe=Math.max(lk.wipedAt||0,rk.wipedAt||0);
   var seen={},h=[];
   (lk.history||[]).concat(rk.history||[]).forEach(function(x){
+   if(x.ts<wipe)return;
    var key=x.ts+"_"+x.id;
    if(!seen[key]){seen[key]=1;h.push(x);}
   });
   h.sort(function(a,b){return a.ts-b.ts;});
-  var lLast=lk.history&&lk.history.length?lk.history[lk.history.length-1].ts:0;
-  var rLast=rk.history&&rk.history.length?rk.history[rk.history.length-1].ts:0;
+  var lt=lk.history&&lk.history.length?lk.history[lk.history.length-1].ts:0;
+  var rt=rk.history&&rk.history.length?rk.history[rk.history.length-1].ts:0;
+  var lLast=Math.max(lt,lk.wipedAt||0),rLast=Math.max(rt,rk.wipedAt||0);
   var src=rLast>lLast?rk:lk;
+  var rFresh=rLast>=wipe;
+  lk.wipedAt=wipe;
   lk.history=h.slice(-900);
   lk.stepIdx=src.stepIdx;lk.printNo=src.printNo;lk.printRepeat=src.printRepeat;
   lk.name=src.name;lk.icon=src.icon;lk.daily=src.daily;lk.qmode=src.qmode;
   lk.best=lk.best||{};
-  for(var bk in (rk.best||{}))
+  if(rFresh)for(var bk in (rk.best||{}))
    if(lk.best[bk]===undefined||rk.best[bk]<lk.best[bk])lk.best[bk]=rk.best[bk];
   var cs={},cl=[];
-  (lk.certs||[]).concat(rk.certs||[]).forEach(function(c){
+  (lk.certs||[]).concat(rFresh?(rk.certs||[]):[]).forEach(function(c){
    var ck=c.lv+"_"+c.d;if(!cs[ck]){cs[ck]=1;cl.push(c);}
   });
   lk.certs=cl;
   var ps={},pl=[];
   (lk.praise||[]).concat(rk.praise||[]).forEach(function(x){
+   if(x.ts<wipe)return;
    if(!ps[x.ts]){ps[x.ts]=1;pl.push(x);}
   });
   pl.sort(function(a,b){return a.ts-b.ts;});
@@ -2967,6 +2984,9 @@ function renderSet(){
  document.getElementById("pr-kid").innerHTML=S.kids.map(function(x,i){
   return '<option value="'+i+'">'+x.icon+' '+esc(x.name)+'</option>';}).join("");
  document.getElementById("pr-kid").value=String(S.cur);
+ document.getElementById("rs-kid").innerHTML=S.kids.map(function(x,i){
+  return '<option value="'+i+'">'+x.icon+' '+esc(x.name)+'</option>';}).join("");
+ document.getElementById("rs-kid").value=String(S.cur);
  document.getElementById("st-fix").classList.toggle("on",S.mustFix===true);
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
@@ -3038,6 +3058,32 @@ document.getElementById("pr-send").addEventListener("click",function(){
  if(kk.praise.length>20)kk.praise=kk.praise.slice(-20);
  save();
  alert("おくりました。お子さんの 学習画面に 出ます。");
+});
+function resetKid(i,wipe){
+ var k=S.kids[i];if(!k)return;
+ k.stepIdx=0;k.printNo=1;k.printRepeat=0;k.seenEx={};
+ if(wipe){
+  k.history=[];k.best={};k.certs=[];k.praise=[];k.praiseSeen=0;
+  k.wipedAt=Date.now();
+ }
+ save();
+}
+document.getElementById("rs-pos").addEventListener("click",function(){
+ var i=Number(document.getElementById("rs-kid").value);
+ var k=S.kids[i];if(!k)return;
+ if(!confirm(k.name+" の 進度を いちばん はじめ（6A）に もどします。りれきは のこります。よろしいですか。"))return;
+ resetKid(i,false);
+ alert("もどしました。学習者を えらびなおして 始めてください。");
+ renderSet();renderHome();
+});
+document.getElementById("rs-all").addEventListener("click",function(){
+ var i=Number(document.getElementById("rs-kid").value);
+ var k=S.kids[i];if(!k)return;
+ if(!confirm(k.name+" の きろくを ぜんぶ 消します。りれき・グラフ・じこベスト・しゅうりょうしょうも 消えます。よろしいですか。"))return;
+ if(!confirm("元に もどせません。本当に 消しますか。"))return;
+ resetKid(i,true);
+ alert("消しました。まっさらな 状態です。");
+ renderSet();renderHome();
 });
 document.getElementById("st-fix").addEventListener("click",function(e){
  S.mustFix=(S.mustFix===true)?false:true;
