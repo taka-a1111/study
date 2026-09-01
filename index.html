@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02f / kumon_math_ver5.7 -->
+<!-- BUILD_TAG: 2026-09-02g / kumon_math_ver5.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -119,11 +119,13 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .dl{font-size:12.5px;color:var(--sumi);margin-top:7px;font-family:var(--num)}
 
 /* スタンプ・ごほうび */
-.stamps{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;align-items:center}
-.stamps i{width:30px;height:30px;border-radius:50%;border:2px dashed #d5dbd3;display:flex;
-  align-items:center;justify-content:center;font-size:15px;color:transparent;font-style:normal}
-.stamps i.on{border:2px solid var(--yam);background:var(--yam-s);color:var(--yam)}
-.stamps b{font-size:12.5px;color:var(--sumi);font-weight:400;margin-left:4px}
+.stamps{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.stamps .orb{width:34px;height:34px;flex:0 0 auto;transition:transform .25s cubic-bezier(.2,1.4,.5,1)}
+.stamps .orb.new{animation:orbpop .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes orbpop{0%{transform:scale(.3) rotate(-25deg)}70%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1)}}
+.stamps b{font-size:12.5px;color:var(--sumi);font-weight:400;margin-left:2px}
+.stamps b.done{color:var(--yam);font-weight:700}
+@media (prefers-reduced-motion:reduce){.stamps .orb.new{animation:none}}
 .best{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--yam);
   border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;margin-top:10px}
 .praise{background:var(--yam-s);border:1px solid #eddcbf;border-radius:16px;padding:16px;margin-top:14px}
@@ -367,7 +369,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.7 / 2026-09-02f</div>
+  <div class="tiny">まいにち計算 ver5.8 / 2026-09-02g</div>
 </section>
 
 <!-- こども追加 -->
@@ -421,7 +423,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02f</div>
+  <div class="tiny">BUILD 2026-09-02g</div>
 </section>
 
 <!-- れいだい -->
@@ -672,7 +674,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.7 / BUILD 2026-09-02f</div>
+  <div class="tiny">kumon_math ver5.8 / BUILD 2026-09-02g</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -732,7 +734,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02f";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02g";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1692,6 +1694,36 @@ document.getElementById("h-switch").addEventListener("click",function(){renderKi
 /* ============================================================
    6. ホーム
    ============================================================ */
+/* 星の数だけ 星が入った 玉。1枚おえるごとに 1つ 手に入る */
+function orbSVG(stars,filled,isNew){
+ var id="og"+stars+(filled?"f":"e");
+ var pts=[];
+ if(stars===1)pts=[[0,0]];
+ else if(stars===2)pts=[[-4.6,0],[4.6,0]];
+ else if(stars===3)pts=[[0,-5],[-4.8,3],[4.8,3]];
+ else if(stars===4)pts=[[-4.6,-4.6],[4.6,-4.6],[-4.6,4.6],[4.6,4.6]];
+ else if(stars===5)pts=[[-5,-5],[5,-5],[0,0],[-5,5],[5,5]];
+ else if(stars===6)pts=[[-5,-5],[5,-5],[-6,0],[6,0],[-5,5],[5,5]];
+ else{pts=[];for(var a=0;a<6;a++)pts.push([6*Math.cos(a*Math.PI/3),6*Math.sin(a*Math.PI/3)]);pts.push([0,0]);}
+ function star(x,y,r){
+  var d="";
+  for(var i=0;i<10;i++){
+   var ang=-Math.PI/2+i*Math.PI/5,rr=(i%2===0)?r:r*0.42;
+   d+=(i?"L":"M")+(x+rr*Math.cos(ang)).toFixed(2)+","+(y+rr*Math.sin(ang)).toFixed(2);
+  }
+  return '<path d="'+d+'Z" fill="'+(filled?"#1f3d7a":"#c9d0c8")+'"/>';
+ }
+ var sr=stars>=6?2.5:(stars>=4?3:3.6);
+ var body=filled
+  ? '<defs><radialGradient id="'+id+'" cx="35%" cy="30%"><stop offset="0%" stop-color="#ffe9a8"/>'+
+    '<stop offset="55%" stop-color="#ffc84a"/><stop offset="100%" stop-color="#e2911b"/></radialGradient></defs>'+
+    '<circle cx="0" cy="0" r="15" fill="url(#'+id+')" stroke="#c67f12" stroke-width="1.2"/>'+
+    '<ellipse cx="-5" cy="-6" rx="4.6" ry="3" fill="#fff" opacity=".55"/>'
+  : '<circle cx="0" cy="0" r="15" fill="#f2f4f1" stroke="#d5dbd3" stroke-width="1.6" stroke-dasharray="3 3"/>';
+ return '<svg class="orb'+(isNew?" new":"")+'" viewBox="-17 -17 34 34" aria-hidden="true">'+
+  '<g>'+body+pts.map(function(p){return star(p[0],p[1],sr);}).join("")+'</g></svg>';
+}
+var lastOrbCount=-1;
 function renderHome(){
  if(!S.kids.length){renderKids();show("s-kids");return;}
  var k=P(),st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
@@ -1714,9 +1746,10 @@ function renderHome(){
  document.getElementById("h-sub").textContent="つづけて "+streak()+"日";
  document.getElementById("go-start").textContent=n>=dn?"もう1まい やる":(k.printNo+"まいめを はじめる");
  var st2="";
- for(var j=0;j<dn;j++)st2+='<i class="'+(j<n?"on":"")+'">★</i>';
- st2+='<b>'+(n>=dn?"きょうの ぶん かんりょう":"きょうの スタンプ")+'</b>';
+ for(var j=0;j<dn;j++)st2+=orbSVG(Math.min(j+1,7),j<n,(j===n-1&&lastOrbCount>=0&&n>lastOrbCount));
+ st2+='<b class="'+(n>=dn?"done":"")+'">'+(n>=dn?"ぜんぶ そろった！":("あと "+(dn-n)+"つ"))+'</b>';
  document.getElementById("h-stamps").innerHTML=st2;
+ lastOrbCount=n;
  var pr=null;
  (k.praise||[]).forEach(function(x){if(x.ts>(k.praiseSeen||0))pr=x;});
  document.getElementById("h-praise").classList.toggle("hide",!pr);
