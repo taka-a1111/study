@@ -1,7 +1,16 @@
-# まいにち計算 ver3.0
+# まいにち計算 ver3.1
 
 公文式の学習法をもとにした算数・数学の自学自習PWA。スマホ前提。
-BUILD_TAG: 2026-09-01c
+BUILD_TAG: 2026-09-01d
+
+## ver3.1 の修正
+
+- アイコンを作り直し。maskable用（Androidで円形に切り抜かれるもの）は中身を中央40%に収め、端が欠けないようにした。通常用は角丸の全面塗り。
+- Androidの戻るジェスチャー・戻るボタンで、アプリを閉じずに前の画面へ戻るようにした。
+  - プリント中の戻るは「やめますか」の確認を出す（採点中は無視）
+  - まるつけ・けっか・れいだいからの戻るは学習画面へ
+  - 保護者メニューは戻る履歴から除外（子どもが戻るで入り込めない）
+  - 学習画面での戻るは1回目は何もせず、もう一度でアプリ終了
 
 ## ver2.0 からの変更
 
@@ -70,7 +79,7 @@ BUILD_TAG: 2026-09-01c
 
 ## ファイル
 
-index.html / manifest.webmanifest / sw.js / icon-192.png / icon-512.png / README.md
+index.html / manifest.webmanifest / sw.js / icon-192.png / icon-512.png / icon-maskable-512.png / README.md
 
 ## 今後
 
