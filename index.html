@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01i / kumon_math_ver3.6 -->
+<!-- BUILD_TAG: 2026-09-01j / kumon_math_ver3.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -72,6 +72,12 @@ button{font:inherit;color:inherit;border:none;background:none;padding:0;cursor:p
 .brand img{width:28px;height:28px;border-radius:8px;display:block}
 .brand span{font-size:14.5px;font-weight:700;letter-spacing:.03em}
 .brand+.who{padding-top:10px}
+.who2{display:flex;align-items:center;gap:8px;margin-left:auto;background:var(--surf);
+  border:1px solid var(--line);border-radius:999px;padding:5px 10px 5px 13px;max-width:56%}
+.who2:active{background:var(--ai-s)}
+.who2 b{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who2 .av{width:27px;height:27px;font-size:16px}
+.who2 i{font-style:normal;font-size:10px;color:var(--usu);margin-left:-2px}
 .brand+.hd{padding-top:8px;min-height:50px}
 .brand+.greet{padding-top:8px}
 
@@ -270,7 +276,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.6 / 2026-09-01i</div>
+  <div class="tiny">まいにち計算 ver3.7 / 2026-09-01j</div>
 </section>
 
 <!-- こども追加 -->
@@ -295,8 +301,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- ホーム -->
 <section class="sc" id="s-home">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span></div>
-  <div class="who"><span class="av" id="h-av">🐰</span><b id="h-name"></b><button class="sw" id="h-switch">きりかえ</button></div>
+  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span>
+    <button class="who2" id="h-switch"><b id="h-name"></b><span class="av" id="h-av">🐰</span><i>▾</i></button>
+  </div>
   <div class="hero">
     <div class="top">
       <div class="ring"><svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="32" fill="none" stroke="#e4e8e2" stroke-width="7"/><circle id="h-ring" cx="37" cy="37" r="32" fill="none" stroke="#2557c7" stroke-width="7" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201" transform="rotate(-90 37 37)"/></svg><div class="m"><b id="h-num">0</b><i id="h-den">/5まい</i></div></div>
@@ -317,7 +324,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01i</div>
+  <div class="tiny">BUILD 2026-09-01j</div>
 </section>
 
 <!-- れいだい -->
@@ -476,7 +483,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.6 / BUILD 2026-09-01i</div>
+  <div class="tiny">kumon_math ver3.7 / BUILD 2026-09-01j</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -522,7 +529,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01i";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01j";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
