@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02i / kumon_math_ver6.0 -->
+<!-- BUILD_TAG: 2026-09-02j / kumon_math_ver6.1 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -352,7 +352,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   opacity:0;animation:tw 2.6s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:0;transform:scale(.4)}45%{opacity:.95;transform:scale(1)}}
 .cele .stage{position:relative;width:100%;max-width:460px}
-.cele svg.dragon{width:100%;height:auto;display:block;filter:drop-shadow(0 0 18px rgba(120,220,190,.45));
+.cele svg.art{width:100%;height:auto;display:block;filter:drop-shadow(0 0 18px rgba(120,220,190,.45));
   animation:fly 5.5s ease-in-out infinite}
 @keyframes fly{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .cele .body{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.8s ease-out .25s forwards}
@@ -360,6 +360,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .cele .head{opacity:0;transform-origin:340px 96px;animation:hpop .5s cubic-bezier(.2,1.5,.4,1) 1.75s forwards}
 @keyframes hpop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
 .cele .whis{animation:wav 2.4s ease-in-out infinite}
+.cele .pop{opacity:0;transform-origin:50% 50%;animation:cpop 1s cubic-bezier(.2,1.35,.4,1) .2s forwards}
+@keyframes cpop{0%{opacity:0;transform:scale(.45) translate(-70px,40px) rotate(-10deg)}
+ 100%{opacity:1;transform:none}}
 @keyframes wav{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 .cele .orbline{display:flex;gap:8px;justify-content:center;margin-top:6px}
 .cele .orbline svg{width:30px;height:30px;opacity:0;animation:rise .6s ease-out forwards}
@@ -373,7 +376,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 @media (prefers-reduced-motion:reduce){
  .cele .body{animation:none;stroke-dashoffset:0}
  .cele .head,.cele h2,.cele p,.cele .btn,.cele .orbline svg{animation:none;opacity:1}
- .cele svg.dragon,.cele .whis,.cele .spark{animation:none}
+ .cele svg.art,.cele .whis,.cele .spark,.cele .pop{animation:none;opacity:1}
 }
 
 /* モーダル */
@@ -403,7 +406,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.0 / 2026-09-02i</div>
+  <div class="tiny">まいにち計算 ver6.1 / 2026-09-02j</div>
 </section>
 
 <!-- こども追加 -->
@@ -457,7 +460,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02i</div>
+  <div class="tiny">BUILD 2026-09-02j</div>
 </section>
 
 <!-- れいだい -->
@@ -718,7 +721,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.0 / BUILD 2026-09-02i</div>
+  <div class="tiny">kumon_math ver6.1 / BUILD 2026-09-02j</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -737,50 +740,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <div class="cele hide" id="cele">
   <div class="sky" id="cele-sky"></div>
   <div class="stage">
-    <svg class="dragon" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="dgb" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stop-color="#1f7a63"/><stop offset="55%" stop-color="#37b48c"/>
-          <stop offset="100%" stop-color="#7fe3c0"/>
-        </linearGradient>
-        <linearGradient id="dgl" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stop-color="#8ff0cc" stop-opacity="0"/>
-          <stop offset="100%" stop-color="#d8fff2" stop-opacity=".85"/>
-        </linearGradient>
-      </defs>
-      <g class="head">
-        <path d="M18,236 C4,224 2,208 8,196 C10,212 16,224 26,230 Z" fill="#e9d59a"/>
-        <path d="M20,244 C6,244 0,232 2,220 C10,230 18,236 28,238 Z" fill="#e9d59a" opacity=".85"/>
-      </g>
-      <g class="head">
-        <path d="M51.4,210.2 L45.1,193.4 L62.3,198.5 Z" fill="#1f7a63"/>
-        <path d="M98.0,168.9 L100.7,151.2 L113.2,163.9 Z" fill="#1f7a63"/>
-        <path d="M177.0,178.9 L192.5,170.1 L190.3,187.8 Z" fill="#1f7a63"/>
-        <path d="M216.5,207.0 L227.7,193.0 L232.2,210.3 Z" fill="#1f7a63"/>
-        <path d="M279.1,181.9 L269.2,167.0 L287.1,168.1 Z" fill="#1f7a63"/>
-        <path d="M302.0,132.5 L291.8,117.7 L309.7,118.4 Z" fill="#1f7a63"/>
-      </g>
-      <path class="body" d="M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104"
-            fill="none" stroke="url(#dgb)" stroke-width="26" stroke-linecap="round"/>
-      <path class="body" d="M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104"
-            fill="none" stroke="url(#dgl)" stroke-width="8" stroke-linecap="round"/>
-      <g class="head">
-        <path d="M326,122 C310,120 298,126 292,138 C304,130 316,128 330,130 Z" fill="#2a9d7d"/>
-        <path d="M330,118 C322,94 338,74 362,74 C386,74 398,90 394,108 C391,122 374,132 356,130 C344,129 333,126 330,118 Z"
-              fill="#37b48c" stroke="#1f7a63" stroke-width="3"/>
-        <path d="M392,100 C404,94 416,98 418,106 C412,112 400,112 392,108 Z" fill="#7fe3c0" stroke="#1f7a63" stroke-width="2"/>
-        <path d="M394,112 C404,114 410,120 410,128 C402,126 396,120 392,114 Z" fill="#2a9d7d"/>
-        <path d="M350,76 C344,60 336,50 324,44 C338,44 352,54 358,72 Z" fill="#e9d59a"/>
-        <path d="M370,74 C368,58 366,48 358,40 C370,42 380,54 382,72 Z" fill="#e9d59a"/>
-        <path d="M334,92 C320,88 310,90 302,96 C314,94 324,94 334,98 Z" fill="#e9d59a"/>
-        <circle cx="372" cy="96" r="7" fill="#fff"/><circle cx="374" cy="97" r="3.6" fill="#12324f"/>
-        <g class="whis">
-          <path d="M394,110 C406,118 416,130 420,146" fill="none" stroke="#e9d59a" stroke-width="3" stroke-linecap="round"/>
-          <path d="M386,120 C396,132 400,144 400,158" fill="none" stroke="#e9d59a" stroke-width="3" stroke-linecap="round"/>
-        </g>
-        <path d="M338,126 C336,138 340,148 348,152 C342,142 340,134 342,126 Z" fill="#e9d59a"/>
-      </g>
-    </svg>
+    <div id="cele-art"></div>
     <div class="orbline" id="cele-orbs"></div>
   </div>
   <h2 id="cele-t">ぜんぶ そろった！</h2>
@@ -832,7 +792,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02i";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02j";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1828,8 +1788,19 @@ function orbSVG(stars,filled,isNew){
   '<g>'+body+pts.map(function(p){return star(p[0],p[1],sr);}).join("")+'</g></svg>';
 }
 var lastOrbCount=-1;
-/* 玉が全部そろったときの お祝い */
+var CELE=[
+{n:"りゅうが あらわれた！",g:"<svg class=\"art\" viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\"> <defs> <linearGradient id=\"dgb\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"> <stop offset=\"0%\" stop-color=\"#1f7a63\"/><stop offset=\"55%\" stop-color=\"#37b48c\"/> <stop offset=\"100%\" stop-color=\"#7fe3c0\"/> </linearGradient> <linearGradient id=\"dgl\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"> <stop offset=\"0%\" stop-color=\"#8ff0cc\" stop-opacity=\"0\"/> <stop offset=\"100%\" stop-color=\"#d8fff2\" stop-opacity=\".85\"/> </linearGradient> </defs> <g class=\"head\"> <path d=\"M18,236 C4,224 2,208 8,196 C10,212 16,224 26,230 Z\" fill=\"#e9d59a\"/> <path d=\"M20,244 C6,244 0,232 2,220 C10,230 18,236 28,238 Z\" fill=\"#e9d59a\" opacity=\".85\"/> </g> <g class=\"head\"> <path d=\"M51.4,210.2 L45.1,193.4 L62.3,198.5 Z\" fill=\"#1f7a63\"/> <path d=\"M98.0,168.9 L100.7,151.2 L113.2,163.9 Z\" fill=\"#1f7a63\"/> <path d=\"M177.0,178.9 L192.5,170.1 L190.3,187.8 Z\" fill=\"#1f7a63\"/> <path d=\"M216.5,207.0 L227.7,193.0 L232.2,210.3 Z\" fill=\"#1f7a63\"/> <path d=\"M279.1,181.9 L269.2,167.0 L287.1,168.1 Z\" fill=\"#1f7a63\"/> <path d=\"M302.0,132.5 L291.8,117.7 L309.7,118.4 Z\" fill=\"#1f7a63\"/> </g> <path class=\"body\" d=\"M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104\" fill=\"none\" stroke=\"url(#dgb)\" stroke-width=\"26\" stroke-linecap=\"round\"/> <path class=\"body\" d=\"M22,230 C60,250 76,168 132,176 C196,184 202,244 262,212 C312,186 300,124 344,104\" fill=\"none\" stroke=\"url(#dgl)\" stroke-width=\"8\" stroke-linecap=\"round\"/> <g class=\"head\"> <path d=\"M326,122 C310,120 298,126 292,138 C304,130 316,128 330,130 Z\" fill=\"#2a9d7d\"/> <path d=\"M330,118 C322,94 338,74 362,74 C386,74 398,90 394,108 C391,122 374,132 356,130 C344,129 333,126 330,118 Z\" fill=\"#37b48c\" stroke=\"#1f7a63\" stroke-width=\"3\"/> <path d=\"M392,100 C404,94 416,98 418,106 C412,112 400,112 392,108 Z\" fill=\"#7fe3c0\" stroke=\"#1f7a63\" stroke-width=\"2\"/> <path d=\"M394,112 C404,114 410,120 410,128 C402,126 396,120 392,114 Z\" fill=\"#2a9d7d\"/> <path d=\"M350,76 C344,60 336,50 324,44 C338,44 352,54 358,72 Z\" fill=\"#e9d59a\"/> <path d=\"M370,74 C368,58 366,48 358,40 C370,42 380,54 382,72 Z\" fill=\"#e9d59a\"/> <path d=\"M334,92 C320,88 310,90 302,96 C314,94 324,94 334,98 Z\" fill=\"#e9d59a\"/> <circle cx=\"372\" cy=\"96\" r=\"7\" fill=\"#fff\"/><circle cx=\"374\" cy=\"97\" r=\"3.6\" fill=\"#12324f\"/> <g class=\"whis\"> <path d=\"M394,110 C406,118 416,130 420,146\" fill=\"none\" stroke=\"#e9d59a\" stroke-width=\"3\" stroke-linecap=\"round\"/> <path d=\"M386,120 C396,132 400,144 400,158\" fill=\"none\" stroke=\"#e9d59a\" stroke-width=\"3\" stroke-linecap=\"round\"/> </g> <path d=\"M338,126 C336,138 340,148 348,152 C342,142 340,134 342,126 Z\" fill=\"#e9d59a\"/> </g> </svg>"},
+{n:"ほうおうが とんできた！",g:"<svg class=\"art\" viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\"> <defs><linearGradient id=\"pw\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"> <stop offset=\"0%\" stop-color=\"#c9401f\"/><stop offset=\"55%\" stop-color=\"#f08a2a\"/><stop offset=\"100%\" stop-color=\"#ffd66b\"/></linearGradient> <linearGradient id=\"pt\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"> <stop offset=\"0%\" stop-color=\"#ffd66b\"/><stop offset=\"100%\" stop-color=\"#e2571f\" stop-opacity=\".2\"/></linearGradient></defs> <g class=\"pop\"> <path d=\"M196,150 C150,180 90,214 26,232 C86,196 130,168 168,140 Z\" fill=\"url(#pt)\"/> <path d=\"M198,138 C148,158 84,178 18,186 C82,166 132,144 176,124 Z\" fill=\"url(#pt)\" opacity=\".85\"/> <path d=\"M200,162 C160,196 108,232 48,248 C104,214 150,182 180,152 Z\" fill=\"url(#pt)\" opacity=\".7\"/> <path d=\"M206,120 C176,72 128,44 66,38 C124,66 158,98 182,138 Z\" fill=\"url(#pw)\"/> <path d=\"M214,120 C242,68 296,36 358,32 C298,64 260,98 236,140 Z\" fill=\"url(#pw)\"/> <ellipse cx=\"212\" cy=\"150\" rx=\"34\" ry=\"42\" fill=\"url(#pw)\"/> <circle cx=\"228\" cy=\"112\" r=\"24\" fill=\"#f08a2a\" stroke=\"#c9401f\" stroke-width=\"3\"/> <path d=\"M248,110 C262,104 274,108 278,116 C268,120 256,120 248,116 Z\" fill=\"#ffd66b\" stroke=\"#c9401f\" stroke-width=\"2\"/> <path d=\"M222,90 C218,74 224,62 236,56 C232,70 232,80 236,90 Z\" fill=\"#ffd66b\"/> <path d=\"M232,92 C234,76 244,66 256,62 C248,74 244,84 244,94 Z\" fill=\"#ffd66b\" opacity=\".85\"/> <circle cx=\"234\" cy=\"108\" r=\"6\" fill=\"#fff\"/><circle cx=\"236\" cy=\"109\" r=\"3\" fill=\"#3a1d0c\"/> </g></svg>"},
+{n:"そらとぶ クジラが やってきた！",g:"<svg class=\"art\" viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\"> <defs><linearGradient id=\"wb\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"> <stop offset=\"0%\" stop-color=\"#5aa9e6\"/><stop offset=\"70%\" stop-color=\"#2a6fb0\"/><stop offset=\"100%\" stop-color=\"#1c4a79\"/></linearGradient></defs> <g class=\"pop\"> <path d=\"M70,158 C70,110 128,84 196,84 C270,84 322,112 336,140 C322,176 262,196 194,196 C124,196 70,178 70,158 Z\" fill=\"url(#wb)\"/> <path d=\"M336,140 C352,118 372,104 392,100 C384,124 384,152 392,176 C370,172 350,160 336,146 Z\" fill=\"#2a6fb0\"/> <path d=\"M96,168 C130,186 176,196 194,196 C136,198 96,186 78,172 Z\" fill=\"#cfe8fb\" opacity=\".55\"/> <path d=\"M120,176 C160,204 214,206 246,190 C210,204 152,202 120,176 Z\" fill=\"#cfe8fb\" opacity=\".5\"/> <path d=\"M186,150 C204,150 220,158 226,170 C210,176 190,172 178,160 Z\" fill=\"#1c4a79\" opacity=\".55\"/> <circle cx=\"118\" cy=\"132\" r=\"8\" fill=\"#fff\"/><circle cx=\"121\" cy=\"133\" r=\"4\" fill=\"#12324f\"/> <path d=\"M92,152 C104,158 118,160 130,158\" fill=\"none\" stroke=\"#12324f\" stroke-width=\"3\" stroke-linecap=\"round\"/> <g><path d=\"M168,80 C168,58 156,44 150,30 C168,40 188,58 190,80 Z\" fill=\"#bfe3fb\" opacity=\".9\"/> <circle cx=\"152\" cy=\"26\" r=\"7\" fill=\"#bfe3fb\" opacity=\".8\"/> <circle cx=\"176\" cy=\"20\" r=\"5\" fill=\"#bfe3fb\" opacity=\".7\"/></g> </g></svg>"},
+{n:"ロケットが とびたった！",g:"<svg class=\"art\" viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\"> <defs><linearGradient id=\"rb\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"> <stop offset=\"0%\" stop-color=\"#ffffff\"/><stop offset=\"60%\" stop-color=\"#dfe6ee\"/><stop offset=\"100%\" stop-color=\"#a9b6c6\"/></linearGradient> <linearGradient id=\"rf\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"> <stop offset=\"0%\" stop-color=\"#ffd66b\"/><stop offset=\"60%\" stop-color=\"#f08a2a\"/><stop offset=\"100%\" stop-color=\"#e2431f\" stop-opacity=\".2\"/></linearGradient></defs> <g class=\"pop\"> <path d=\"M60,196 C88,178 118,166 150,160 C120,182 96,204 78,228 Z\" fill=\"url(#rf)\"/> <path d=\"M44,168 C78,160 108,152 136,142 C104,156 76,174 54,194 Z\" fill=\"url(#rf)\" opacity=\".8\"/> <path d=\"M170,150 C150,132 138,110 138,86 C158,96 178,110 192,128 Z\" fill=\"#e2564a\"/> <path d=\"M206,190 C186,192 166,186 152,172 C170,166 190,166 206,172 Z\" fill=\"#e2564a\"/> <path d=\"M150,178 C176,120 232,72 316,54 C306,140 258,192 198,214 C182,206 164,194 150,178 Z\" fill=\"url(#rb)\" stroke=\"#8fa0b4\" stroke-width=\"3\"/> <path d=\"M316,54 C336,52 352,58 358,70 C346,78 330,82 314,80 Z\" fill=\"#e2564a\"/> <circle cx=\"248\" cy=\"128\" r=\"22\" fill=\"#5aa9e6\" stroke=\"#8fa0b4\" stroke-width=\"4\"/> <path d=\"M236,118 C242,112 252,110 260,114 C250,114 242,116 236,122 Z\" fill=\"#fff\" opacity=\".8\"/> </g></svg>"}
+];
+/* 玉が全部そろったときの お祝い（毎回ちがうものが出る） */
 function celebrate(n){
+ var k=P();
+ var ci=(k.celeIdx||0)%CELE.length;
+ k.celeIdx=ci+1;save();
+ document.getElementById("cele-art").innerHTML=CELE[ci].g;
+ document.getElementById("cele-t").textContent=CELE[ci].n;
  var sky="";
  for(var i=0;i<26;i++){
   sky+='<span class="spark" style="left:'+(Math.random()*98).toFixed(1)+'%;top:'+(Math.random()*92).toFixed(1)+
@@ -1842,14 +1813,15 @@ function celebrate(n){
   ob+=orbSVG(j+1,true,false).replace('class="orb"','style="animation-delay:'+(2.3+j*0.12).toFixed(2)+'s"');
  document.getElementById("cele-orbs").innerHTML=ob;
  document.getElementById("cele").classList.remove("hide");
- celeSound();
+ celeSound(ci);
 }
-function celeSound(){
+function celeSound(ci){
  if(!S.sound)return;
  try{
-  /* 龍のうなり */
-  tone({f:70,f2:120,dur:1.6,vol:.16,wave:"sawtooth",atk:.2});
-  tone({f:140,f2:210,dur:1.4,vol:.08,wave:"triangle",atk:.25,at:.1});
+  /* 出てくるものに合わせた 低音 */
+  var base=[70,180,60,110][ci||0];
+  tone({f:base,f2:base*1.7,dur:1.5,vol:.15,wave:(ci===1?"triangle":"sawtooth"),atk:.2});
+  tone({f:base*2,f2:base*3,dur:1.3,vol:.07,wave:"triangle",atk:.25,at:.1});
   /* 上がっていく きらめき */
   [[523.3,1.9],[659.3,2.02],[784,2.14],[1046.5,2.26],[1318.5,2.4]].forEach(function(v){
    tone({f:v[0],at:v[1],dur:.5,vol:.18,wave:"triangle"});
@@ -2884,17 +2856,34 @@ function startVoice(padId,cb){
  if(rec){try{rec.stop();}catch(e){}rec=null;return;}
  recBtn=document.getElementById("mic-"+padId);
  rec=new SR();
- rec.lang="ja-JP";rec.interimResults=false;rec.maxAlternatives=3;
+ rec.lang="ja-JP";
+ /* 途中経過も受け取り、数字だと分かった時点ですぐ確定する（待ち時間を短くするため） */
+ rec.interimResults=true;
+ rec.maxAlternatives=1;
+ rec.continuous=false;
+ var done=false;
  if(recBtn)recBtn.classList.add("rec");
  rec.onresult=function(e){
-  for(var i=0;i<e.results[0].length;i++){
-   var v=parseSpeech(e.results[0][i].transcript);
-   if(v!==null){cb(v);return;}
+  if(done)return;
+  for(var i=e.resultIndex;i<e.results.length;i++){
+   for(var j=0;j<e.results[i].length;j++){
+    var v=parseSpeech(e.results[i][j].transcript);
+    if(v!==null){
+     done=true;
+     cb(v);
+     try{rec.stop();}catch(err){}
+     try{rec.abort();}catch(err){}
+     return;
+    }
+   }
   }
-  alert("すうじが ききとれませんでした。");
  };
  rec.onerror=function(){};
- rec.onend=function(){if(recBtn)recBtn.classList.remove("rec");rec=null;};
+ rec.onend=function(){
+  if(recBtn)recBtn.classList.remove("rec");
+  rec=null;
+  if(!done)setTimeout(function(){},0);
+ };
  try{rec.start();}catch(e){rec=null;if(recBtn)recBtn.classList.remove("rec");}
 }
 
