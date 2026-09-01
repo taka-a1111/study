@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01u / kumon_math_ver4.6 -->
+<!-- BUILD_TAG: 2026-09-01v / kumon_math_ver4.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -155,7 +155,7 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .pg{display:flex;gap:3px;margin-bottom:10px}
 .pg i{flex:1;height:4px;border-radius:2px;background:#e4e8e2}
 .pg i.o{background:var(--mid)}.pg i.x{background:var(--aka)}
-.pp{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--ai);border-radius:8px;flex:1;min-height:200px;display:flex;flex-direction:column;justify-content:center;padding:18px 14px;position:relative}
+.pp{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--ai);border-radius:8px;flex:1;min-height:200px;display:flex;flex-direction:column;justify-content:center;padding:24px 14px;position:relative}
 .qp{text-align:center;font-family:var(--num);font-size:40px;font-weight:600;line-height:1.35;word-break:break-word}
 .qp .op{color:var(--sumi);padding:0 5px}
 .qp .sm{font-size:29px}
@@ -185,18 +185,34 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .fs{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
 .fs .b{width:66px;height:3px;background:var(--ink)}
 .scr{position:absolute;inset:0;width:100%;height:100%;z-index:3;touch-action:none;pointer-events:none}
+body.pen .pad{display:none}
+body.pen .pp{min-height:60dvh}
+body.pen .sl{z-index:2}
+body.pen .qp{opacity:.92}
+.pennote{position:absolute;left:12px;top:10px;font-size:12px;color:var(--ai);background:var(--ai-s);
+  border-radius:8px;padding:4px 9px;z-index:7}
+/* ひっ算は くり上がりを 書きこめるよう 上下に 余白をとる */
+.qp .vc{padding-top:30px}
+.qp:has(.vc){padding-bottom:6px}
+.qp:has(.vc)+.sl{margin-top:30px}
+.qp:has(.dg)+.sl{margin-top:22px}
 .scr.on{pointer-events:auto}
 .tools{position:absolute;right:9px;bottom:9px;display:flex;gap:6px;z-index:7}
 .tools button{width:42px;height:42px;border-radius:11px;background:var(--surf);border:1px solid var(--line);
   font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .tools button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
 .ib.act{background:var(--ai);color:#fff;border-color:var(--ai)}
-.fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.94);border-radius:6px;z-index:5}
-.fb .m{font-size:74px;line-height:1;font-weight:700}
-.fb.ok .m{color:var(--mid)}
-.fb.ng .m{color:var(--aka)}
-.fb .t{font-size:15px;color:var(--sumi)}
-.fb .a{font-family:var(--num);font-size:26px;font-weight:700}
+.fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:rgba(255,255,255,.62);border-radius:6px;z-index:8;animation:pop .18s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+.fb svg{position:absolute;inset:0;width:100%;height:100%}
+.fb.ok svg{stroke:var(--mid)}
+.fb.ng svg{stroke:var(--aka)}
+.fb .ans{position:relative;z-index:2;background:#fff;border-radius:14px;padding:10px 18px;
+  box-shadow:0 2px 10px rgba(0,0,0,.12);text-align:center}
+.fb .ans .t{font-size:14px;color:var(--sumi)}
+.fb .ans .a{font-family:var(--num);font-size:30px;font-weight:700;color:var(--aka);line-height:1.2}
+@media (prefers-reduced-motion:reduce){.fb{animation:none}}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pad button{height:58px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:27px;font-weight:600}
 .pad button:active{background:var(--ai-s)}
@@ -298,7 +314,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.6 / 2026-09-01u</div>
+  <div class="tiny">まいにち計算 ver4.7 / 2026-09-01v</div>
 </section>
 
 <!-- こども追加 -->
@@ -346,7 +362,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01u</div>
+  <div class="tiny">BUILD 2026-09-01v</div>
 </section>
 
 <!-- れいだい -->
@@ -376,6 +392,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="pp" id="sh-pp">
     <canvas class="scr" id="scr"></canvas>
     <div class="qp" id="qp"></div><div class="sl" id="qs"></div>
+    <div class="pennote hide" id="pennote">かきおわったら ✏️ で もどる</div>
     <div class="tools hide" id="tools">
       <button data-t="pen" class="on" title="ペン">✏️</button>
       <button data-t="era" title="消しゴム">⌫</button>
@@ -523,7 +540,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.6 / BUILD 2026-09-01u</div>
+  <div class="tiny">kumon_math ver4.7 / BUILD 2026-09-01v</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -583,7 +600,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01u";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01v";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1568,7 +1585,7 @@ function startPrint(){
  document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
  document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
  lock=false;
- cvSetup();cvClear();
+ cvSetup();penToggle(false);cvClear();
  draw();tick();
  run.timer=setInterval(tick,1000);
  show("s-sheet");
@@ -1597,6 +1614,7 @@ function draw(){
  bindSlots("qs",function(n){run.box=n;draw();});
  readyBtn();
  cvClear();
+ if(penOn)setTimeout(cvResizeKeep,30);
 }
 function slotHTML(q,inp,box,mark){
  if(q.layout==="frac")
@@ -1691,7 +1709,12 @@ function feedback(right,q,next){
  var ansTxt=q.slots.map(function(s){return s.ans;}).join(q.layout==="frac"?" / ":(q.layout==="rem"?" あまり ":" , "));
  var el=document.createElement("div");
  el.className="fb "+(right?"ok":"ng");
- el.innerHTML=right?'<div class="m">○</div>':'<div class="m">×</div><div class="t">こたえは</div><div class="a">'+ansTxt+'</div>';
+ var sv='<svg viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke">';
+ sv+=right
+  ? '<ellipse cx="50" cy="50" rx="45" ry="43" vector-effect="non-scaling-stroke"/>'
+  : '<line x1="12" y1="12" x2="88" y2="88" vector-effect="non-scaling-stroke"/><line x1="88" y1="12" x2="12" y2="88" vector-effect="non-scaling-stroke"/>';
+ sv+='</svg>';
+ el.innerHTML=sv+(right?"":'<div class="ans"><div class="t">こたえは</div><div class="a">'+ansTxt+'</div></div>');
  pp.appendChild(el);
  setTimeout(function(){
   if(el.parentNode)el.parentNode.removeChild(el);
@@ -1813,8 +1836,11 @@ function cvSetup(){
   cx.lineTo(p.x,p.y);cx.stroke();
   e.preventDefault();
  });
- ["pointerup","pointercancel","pointerleave"].forEach(function(t){
-  cv.addEventListener(t,function(){drawing=false;});
+ ["pointerup","pointercancel"].forEach(function(t){
+  cv.addEventListener(t,function(e){
+   drawing=false;
+   try{cv.releasePointerCapture(e.pointerId);}catch(err){}
+  });
  });
  window.addEventListener("resize",function(){if(penOn)cvResize();});
 }
@@ -1840,10 +1866,20 @@ function cvClear(){
 }
 function penToggle(on){
  penOn=(on===undefined)?!penOn:on;
- if(penOn)cvResize();
+ document.body.classList.toggle("pen",penOn);
  cv.classList.toggle("on",penOn);
  document.getElementById("tools").classList.toggle("hide",!penOn);
+ document.getElementById("pennote").classList.toggle("hide",!penOn);
  document.getElementById("sh-pen").classList.toggle("act",penOn);
+ /* 用紙の大きさが変わるので、描画内容を保ったまま作り直す */
+ setTimeout(function(){cvResizeKeep();},30);
+}
+function cvResizeKeep(){
+ if(!cv||!cx)return;
+ var old=null;
+ try{if(cv.width&&cv.height)old=cx.getImageData(0,0,cv.width,cv.height);}catch(e){}
+ cvResize();
+ if(old){try{cx.save();cx.setTransform(1,0,0,1,0,0);cx.putImageData(old,0,0);cx.restore();}catch(e){}}
 }
 document.getElementById("sh-pen").addEventListener("click",function(){cvSetup();penToggle();});
 document.getElementById("tools").addEventListener("click",function(e){
