@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01j / kumon_math_ver3.7 -->
+<!-- BUILD_TAG: 2026-09-01k / kumon_math_ver3.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -69,8 +69,10 @@ button{font:inherit;color:inherit;border:none;background:none;padding:0;cursor:p
 
 /* アプリ名（左上） */
 .brand{display:flex;align-items:center;gap:9px;padding:calc(12px + env(safe-area-inset-top)) 0 0}
-.brand img{width:28px;height:28px;border-radius:8px;display:block}
-.brand span{font-size:14.5px;font-weight:700;letter-spacing:.03em}
+.bh{display:flex;align-items:center;gap:10px;padding:4px 6px 4px 0;border-radius:12px}
+.bh:active{background:var(--ai-s)}
+.brand img{width:36px;height:36px;border-radius:10px;display:block}
+.brand span{font-size:16.5px;font-weight:700;letter-spacing:.03em}
 .brand+.who{padding-top:10px}
 .who2{display:flex;align-items:center;gap:8px;margin-left:auto;background:var(--surf);
   border:1px solid var(--line);border-radius:999px;padding:5px 10px 5px 13px;max-width:56%}
@@ -271,12 +273,12 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- こども選択 -->
 <section class="sc full on" id="s-kids">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span></div>
+  <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
   <div class="hd"><h2>だれが やりますか</h2></div>
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.7 / 2026-09-01j</div>
+  <div class="tiny">まいにち計算 ver3.8 / 2026-09-01k</div>
 </section>
 
 <!-- こども追加 -->
@@ -301,7 +303,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- ホーム -->
 <section class="sc" id="s-home">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span>
+  <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button>
     <button class="who2" id="h-switch"><b id="h-name"></b><span class="av" id="h-av">🐰</span><i>▾</i></button>
   </div>
   <div class="hero">
@@ -324,7 +326,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01j</div>
+  <div class="tiny">BUILD 2026-09-01k</div>
 </section>
 
 <!-- れいだい -->
@@ -382,7 +384,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- マップ -->
 <section class="sc" id="s-map">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span></div>
+  <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
   <div class="hd"><h2>教材マップ</h2></div>
   <p class="note">6A から O まで 20教材。学年ではなく 教材で 進みます。タップすると ステップの 中身が 見られます。</p>
   <div id="maplist"></div>
@@ -424,7 +426,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- きろく -->
 <section class="sc" id="s-rec">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span></div>
+  <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
   <div class="hd"><h2>きろく</h2><div class="sp"></div><span class="note" id="rc-who"></span></div>
   <div class="sts">
     <div class="st"><b id="rc-t"></b><span>まい</span></div>
@@ -440,7 +442,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <!-- 保護者 -->
 <section class="sc" id="s-set">
-  <div class="brand"><img src="icon-192.png" alt=""><span>まいにち計算</span></div>
+  <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
   <div class="hd"><h2>保護者メニュー</h2></div>
   <div class="card">
     <h3>学習量</h3>
@@ -483,7 +485,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.7 / BUILD 2026-09-01j</div>
+  <div class="tiny">kumon_math ver3.8 / BUILD 2026-09-01k</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -529,7 +531,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01j";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01k";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1074,6 +1076,12 @@ document.getElementById("nav").addEventListener("click",function(e){
  show(id);
 });
 document.addEventListener("click",function(e){
+ var lg=e.target.closest("[data-home]");
+ if(lg){
+  if(!S.kids.length){renderKids();show("s-kids");return;}
+  if(!document.getElementById("s-home").classList.contains("on")){renderHome();show("s-home");}
+  return;
+ }
  var b=e.target.closest("[data-bk]");if(!b)return;
  if(STACK.length>1){history.back();return;}
  var t=b.getAttribute("data-bk");
