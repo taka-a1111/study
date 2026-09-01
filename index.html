@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01r / kumon_math_ver4.3 -->
+<!-- BUILD_TAG: 2026-09-01s / kumon_math_ver4.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -298,7 +298,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.3 / 2026-09-01r</div>
+  <div class="tiny">まいにち計算 ver4.4 / 2026-09-01s</div>
 </section>
 
 <!-- こども追加 -->
@@ -346,7 +346,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01r</div>
+  <div class="tiny">BUILD 2026-09-01s</div>
 </section>
 
 <!-- れいだい -->
@@ -473,6 +473,11 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <section class="sc" id="s-set">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
   <div class="hd"><h2>保護者メニュー</h2></div>
+  <div class="card hide" id="st-biocard" style="border-color:var(--ai);background:var(--ai-s)">
+    <h3 style="color:var(--ai)">かけ算の かわりに 指紋で ひらけます</h3>
+    <div class="note">この端末に とうろく してある 指紋・顔で、保護者メニューの ロックを 解除できます。1回 とうろく すれば つぎから 指紋だけで ひらけます。</div>
+    <button class="btn" id="st-bioreg" style="margin-top:14px">指紋を とうろくする</button>
+  </div>
   <div class="card">
     <h3>学習量</h3>
     <label class="f"><span>1日のまい数</span><select id="st-daily"><option value="3">3まい</option><option value="5">5まい</option><option value="10">10まい</option></select></label>
@@ -517,7 +522,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.3 / BUILD 2026-09-01r</div>
+  <div class="tiny">kumon_math ver4.4 / BUILD 2026-09-01s</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -577,7 +582,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01r";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01s";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1409,7 +1414,14 @@ document.getElementById("gate-pad").addEventListener("click",function(e){
  if(k==="del"){gateIn=gateIn.slice(0,-1);gateDraw();return;}
  if(k==="ok"){
   if(gateIn===""){return;}
-  if(Number(gateIn)===gateAns){closeGate();if(gateCb)gateCb();return;}
+  if(Number(gateIn)===gateAns){
+   closeGate();
+   if(gateCb)gateCb();
+   if(!waOn())waSupported().then(function(ok){
+    if(ok)document.getElementById("st-biocard").classList.remove("hide");
+   });
+   return;
+  }
   gateTry++;gateIn="";gateDraw();
   if(gateTry>=3){closeGate();renderHome();show("s-home");}
   else alert("ちがいます。のこり "+(3-gateTry)+"かい");
@@ -2124,6 +2136,7 @@ function renderSet(){
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
   document.getElementById("st-biorow").classList.toggle("hide",!ok&&!waOn());
+  document.getElementById("st-biocard").classList.toggle("hide",!(ok&&!waOn()));
  });
  var sl=document.getElementById("st-lv");
  sl.innerHTML=LV.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
@@ -2159,6 +2172,16 @@ document.getElementById("st-qm").addEventListener("change",function(e){P().qmode
 document.getElementById("st-inst").addEventListener("click",function(e){S.instant=!S.instant;e.currentTarget.classList.toggle("on",S.instant);save();});
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
+function bioEnable(cb){
+ waRegister(function(ok){
+  if(ok)alert("とうろく しました。つぎから 指紋で ひらけます。");
+  else alert("とうろく できませんでした。\n\n・端末に 指紋や 顔が 登録されているか\n・画面ロックが 設定されているか\nを かくにん してください。");
+  if(cb)cb(ok);
+ });
+}
+document.getElementById("st-bioreg").addEventListener("click",function(){
+ bioEnable(function(){renderSet();});
+});
 document.getElementById("st-bio").addEventListener("click",function(e){
  var el=e.currentTarget;
  if(waOn()){
@@ -2166,10 +2189,7 @@ document.getElementById("st-bio").addEventListener("click",function(e){
   alert("指紋での ロック解除を やめました。つぎからは かけ算に なります。");
   return;
  }
- waRegister(function(ok){
-  el.classList.toggle("on",ok);
-  alert(ok?"とうろく しました。つぎから 指紋で ひらけます。":"とうろく できませんでした。端末に 指紋や 顔が 登録されているか かくにんしてください。");
- });
+ bioEnable(function(ok){el.classList.toggle("on",ok);renderSet();});
 });
 document.getElementById("st-inst").addEventListener("click",function(){imOpen(false);});
 document.getElementById("st-upd").addEventListener("click",function(){
