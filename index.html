@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01y / kumon_math_ver5.0 -->
+<!-- BUILD_TAG: 2026-09-01z / kumon_math_ver5.1 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -185,7 +185,7 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .fs{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
 .fs .b{width:66px;height:3px;background:var(--ink)}
 .scr{position:absolute;inset:0;width:100%;height:100%;z-index:3;touch-action:none;pointer-events:none}
-body.pen .pad{display:none}
+body.pen .pad,body.pen .inmode,body.pen .hw{display:none}
 body.pen .pp{min-height:62dvh;justify-content:flex-start;padding-top:16px}
 body.pen .sl{z-index:2}
 body.pen .qp{opacity:.95}
@@ -220,6 +220,26 @@ body.pen .pp{background-image:
 .fb .ans .t{font-size:14.5px;color:var(--sumi);white-space:nowrap}
 .fb .ans .a{font-family:var(--num);font-size:30px;font-weight:700;color:var(--aka);line-height:1.15;word-break:break-all}
 @media (prefers-reduced-motion:reduce){.fb{animation:none}}
+/* 手書き入力 */
+.inmode{display:flex;gap:8px;align-items:center;margin-top:10px}
+.inmode button{flex:1;height:36px;border-radius:10px;background:var(--surf);border:1px solid var(--line);
+  font-size:13.5px;color:var(--sumi)}
+.inmode button.on{background:var(--ai);color:#fff;border-color:var(--ai);font-weight:700}
+.hw{margin-top:8px}
+.hw .box{width:100%;height:186px;border:2px dashed var(--line);border-radius:14px;background:var(--surf);
+  position:relative;overflow:hidden}
+.hw canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.hw .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--usu);pointer-events:none}
+.hw .ghost.off{display:none}
+.hw .last{position:absolute;right:10px;top:8px;font-family:var(--num);font-size:13px;color:var(--mid);
+  background:var(--mid-s);border-radius:8px;padding:3px 9px;opacity:0;transition:opacity .2s}
+.hw .last.on{opacity:1}
+.hwrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.hwrow button{height:54px;border-radius:12px;background:var(--surf);border:1px solid var(--line);
+  font-family:var(--num);font-size:22px;font-weight:600}
+.hwrow .fn{font-family:var(--jp);font-size:15px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
+.hwrow .go{background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:16px;font-weight:700}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pad button{height:58px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:27px;font-weight:600}
 .pad button:active{background:var(--ai-s)}
@@ -321,7 +341,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.0 / 2026-09-01y</div>
+  <div class="tiny">まいにち計算 ver5.1 / 2026-09-01z</div>
 </section>
 
 <!-- こども追加 -->
@@ -369,7 +389,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01y</div>
+  <div class="tiny">BUILD 2026-09-01z</div>
 </section>
 
 <!-- れいだい -->
@@ -406,7 +426,22 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button data-t="clr" title="ぜんぶ消す">🗑</button>
     </div>
   </div>
+  <div class="inmode" id="inmode">
+    <button data-m="key" class="on">⌨　キーで こたえる</button>
+    <button data-m="hw">✍　手書きで こたえる</button>
+  </div>
   <div class="pad" id="pad"></div>
+  <div class="hw hide" id="hw">
+    <div class="box"><canvas id="hwcv"></canvas>
+      <div class="ghost" id="hwghost">ここに 1もじずつ 書いてください</div>
+      <div class="last" id="hwlast"></div></div>
+    <div class="hwrow" id="hwrow">
+      <button data-h="ext" id="hwext">−</button>
+      <button class="fn" data-h="del">けす</button>
+      <button class="fn" data-h="clr">かきなおす</button>
+      <button class="go" data-h="go">こたえる</button>
+    </div>
+  </div>
   <div style="height:12px"></div>
 </section>
 
@@ -550,7 +585,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.0 / BUILD 2026-09-01y</div>
+  <div class="tiny">kumon_math ver5.1 / BUILD 2026-09-01z</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -610,7 +645,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01y";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01z";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1658,6 +1693,12 @@ function draw(){
  readyBtn();
  cvClear();
  if(penOn)setTimeout(cvResizeKeep,30);
+ if(hwOn){
+  clearTimeout(hwTimer);hwClearCanvas();
+  var ex=document.getElementById("hwext"),qq=cq();
+  ex.textContent=qq.keys.neg?"−":(qq.keys.dot?".":"");
+  ex.style.visibility=(qq.keys.neg||qq.keys.dot)?"visible":"hidden";
+ }
 }
 function slotHTML(q,inp,box,mark){
  if(q.layout==="frac")
@@ -1858,6 +1899,164 @@ document.getElementById("rs-nx").addEventListener("click",function(){
  startPrint();
 });
 document.getElementById("rs-hm").addEventListener("click",function(){renderHome();show("s-home");});
+
+/* ---- 手書きで 数字を 入力する ---- */
+var DM=null,dmLoading=false,hwOn=false,hwcv=null,hwcx=null,hwDraw=false,hwTimer=null,hwInk=false;
+function loadModel(cb){
+ if(DM){cb(true);return;}
+ if(dmLoading){setTimeout(function(){loadModel(cb);},300);return;}
+ dmLoading=true;
+ fetch("digit_model.json").then(function(r){return r.json();}).then(function(j){
+  function dq(l){
+   var wb=atob(l.w),n=wb.length,wi=new Int8Array(n);
+   for(var i=0;i<n;i++)wi[i]=(wb.charCodeAt(i)<<24)>>24;
+   var w=new Float32Array(n);
+   for(i=0;i<n;i++)w[i]=wi[i]*l.ws;
+   var bb=atob(l.b),m=bb.length,b=new Float32Array(m);
+   for(i=0;i<m;i++)b[i]=(((bb.charCodeAt(i)<<24)>>24))*l.bs;
+   return {w:w,b:b,in:l.shape[0],out:l.shape[1]};
+  }
+  DM={l1:dq(j.layers[0]),l2:dq(j.layers[1]),l3:dq(j.layers[2])};
+  dmLoading=false;cb(true);
+ }).catch(function(){dmLoading=false;cb(false);});
+}
+function dense(x,L,relu){
+ var o=new Float32Array(L.out);
+ for(var j=0;j<L.out;j++){
+  var sum=L.b[j];
+  for(var i=0;i<L.in;i++)sum+=x[i]*L.w[i*L.out+j];
+  o[j]=relu?(sum>0?sum:0):sum;
+ }
+ return o;
+}
+function predictDigit(vec){
+ var h1=dense(vec,DM.l1,true),h2=dense(h1,DM.l2,true),o=dense(h2,DM.l3,false);
+ var mx=-1e9,k=0;
+ for(var i=0;i<10;i++)if(o[i]>mx){mx=o[i];k=i;}
+ var sum=0;for(i=0;i<10;i++)sum+=Math.exp(o[i]-mx);
+ return {d:k,p:1/sum};
+}
+/* 描いた線を MNIST と同じ形（20px に収めて重心を中央に）へ整える */
+function hwToVector(){
+ var w=hwcv.width,h=hwcv.height;
+ var im=hwcx.getImageData(0,0,w,h).data;
+ var minX=w,minY=h,maxX=-1,maxY=-1;
+ var g=new Float32Array(w*h);
+ for(var y=0;y<h;y++)for(var x=0;x<w;x++){
+  var a=im[(y*w+x)*4+3]/255;
+  g[y*w+x]=a;
+  if(a>0.25){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y;}
+ }
+ if(maxX<0)return null;
+ var bw=maxX-minX+1,bh=maxY-minY+1;
+ var sc=20/Math.max(bw,bh);
+ var tw=Math.max(1,Math.round(bw*sc)),th=Math.max(1,Math.round(bh*sc));
+ var small=new Float32Array(tw*th);
+ for(var ty=0;ty<th;ty++)for(var tx=0;tx<tw;tx++){
+  var x0=minX+Math.floor(tx/sc),x1=minX+Math.ceil((tx+1)/sc),y0=minY+Math.floor(ty/sc),y1=minY+Math.ceil((ty+1)/sc);
+  var s=0,c=0;
+  for(var yy=y0;yy<Math.min(y1,h);yy++)for(var xx=x0;xx<Math.min(x1,w);xx++){s+=g[yy*w+xx];c++;}
+  small[ty*tw+tx]=c?s/c:0;
+ }
+ var sx=0,sy=0,st=0;
+ for(ty=0;ty<th;ty++)for(tx=0;tx<tw;tx++){var v=small[ty*tw+tx];sx+=tx*v;sy+=ty*v;st+=v;}
+ if(st<=0)return null;
+ var cx=sx/st,cy=sy/st;
+ var ox=Math.round(14-cx),oy=Math.round(14-cy);
+ var out=new Float32Array(784);
+ for(ty=0;ty<th;ty++)for(tx=0;tx<tw;tx++){
+  var px=tx+ox,py=ty+oy;
+  if(px>=0&&px<28&&py>=0&&py<28)out[py*28+px]=small[ty*tw+tx];
+ }
+ return out;
+}
+function hwSetup(){
+ hwcv=document.getElementById("hwcv");
+ if(hwcv.__ready)return;
+ hwcx=hwcv.getContext("2d",{willReadFrequently:true});
+ hwcv.__ready=true;
+ hwcv.addEventListener("pointerdown",function(e){
+  hwDraw=true;hwInk=true;
+  clearTimeout(hwTimer);
+  document.getElementById("hwghost").classList.add("off");
+  try{hwcv.setPointerCapture(e.pointerId);}catch(err){}
+  var p=hwPos(e);hwStyle();hwcx.beginPath();hwcx.moveTo(p.x,p.y);hwcx.lineTo(p.x+.1,p.y);hwcx.stroke();
+  e.preventDefault();
+ });
+ hwcv.addEventListener("pointermove",function(e){
+  if(!hwDraw)return;
+  var p=hwPos(e);hwStyle();hwcx.lineTo(p.x,p.y);hwcx.stroke();e.preventDefault();
+ });
+ ["pointerup","pointercancel"].forEach(function(t){
+  hwcv.addEventListener(t,function(e){
+   if(!hwDraw)return;
+   hwDraw=false;
+   try{hwcv.releasePointerCapture(e.pointerId);}catch(err){}
+   clearTimeout(hwTimer);
+   hwTimer=setTimeout(hwRecognize,620);
+  });
+ });
+}
+function hwPos(e){var r=hwcv.getBoundingClientRect();return {x:(e.clientX-r.left)*hwcv.width/r.width,y:(e.clientY-r.top)*hwcv.height/r.height};}
+function hwStyle(){hwcx.lineCap="round";hwcx.lineJoin="round";hwcx.globalCompositeOperation="source-over";hwcx.strokeStyle="#1a1a1a";hwcx.lineWidth=Math.max(10,hwcv.width*0.032);}
+function hwResize(){
+ var r=hwcv.getBoundingClientRect();
+ if(!r.width)return;
+ hwcv.width=Math.round(r.width);hwcv.height=Math.round(r.height);
+}
+function hwClearCanvas(){
+ if(!hwcx)return;
+ hwcx.clearRect(0,0,hwcv.width,hwcv.height);
+ hwInk=false;
+ document.getElementById("hwghost").classList.remove("off");
+}
+function hwRecognize(){
+ if(!hwInk)return;
+ var vec=hwToVector();
+ hwClearCanvas();
+ if(!vec)return;
+ if(!DM)return;
+ var r=predictDigit(vec);
+ var lab=document.getElementById("hwlast");
+ lab.textContent=(r.p<0.55?"？ ":"")+r.d;
+ lab.classList.add("on");
+ setTimeout(function(){lab.classList.remove("on");},1200);
+ onKey(String(r.d));
+}
+function hwToggle(on){
+ hwOn=on;
+ document.getElementById("hw").classList.toggle("hide",!on);
+ document.getElementById("pad").classList.toggle("hide",on);
+ var bs=document.getElementById("inmode").querySelectorAll("[data-m]");
+ for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-m")===(on?"hw":"key"));
+ if(on){
+  hwSetup();
+  setTimeout(function(){hwResize();hwClearCanvas();},30);
+  var q=cq(),ext=document.getElementById("hwext");
+  ext.textContent=q.keys.neg?"−":(q.keys.dot?".":"");
+  ext.style.visibility=(q.keys.neg||q.keys.dot)?"visible":"hidden";
+  if(!DM){
+   document.getElementById("hwghost").textContent="よみこみ中…";
+   loadModel(function(ok){
+    document.getElementById("hwghost").textContent=ok?"ここに 1もじずつ 書いてください":"よみこめませんでした。キーで 入力してください";
+    if(!ok)hwToggle(false);
+   });
+  }
+ }
+}
+document.getElementById("inmode").addEventListener("click",function(e){
+ var b=e.target.closest("[data-m]");if(!b)return;
+ hwToggle(b.getAttribute("data-m")==="hw");
+});
+document.getElementById("hwrow").addEventListener("click",function(e){
+ var b=e.target.closest("[data-h]");if(!b)return;
+ var k=b.getAttribute("data-h");
+ if(k==="clr"){clearTimeout(hwTimer);hwClearCanvas();return;}
+ if(k==="del"){onKey("del");return;}
+ if(k==="go"){clearTimeout(hwTimer);if(hwInk)hwRecognize();setTimeout(function(){onKey("go");},hwInk?60:0);return;}
+ if(k==="ext"){var q=cq();onKey(q.keys.neg?"neg":"dot");return;}
+});
+window.addEventListener("resize",function(){if(hwOn)setTimeout(function(){hwResize();hwClearCanvas();},50);});
 
 /* ---- 手書きメモ ---- */
 var cv=null,cx=null,penOn=false,penMode="pen",drawing=false;
