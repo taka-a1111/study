@@ -1,13 +1,13 @@
 {
   "name": "まいにち計算",
   "short_name": "まいにち計算",
-  "description": "スモールステップと標準完成時間で進める算数の自学自習アプリ",
+  "description": "公文式の学習法にもとづく算数・数学の自学自習アプリ（6A〜I教材）",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#e9ede7",
-  "theme_color": "#23478f",
+  "background_color": "#eceee9",
+  "theme_color": "#1f4b8e",
   "lang": "ja",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
