@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03b / kumon_math_ver7.7 -->
+<!-- BUILD_TAG: 2026-09-03c / kumon_math_ver7.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -404,9 +404,12 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 /* 学習モード */
 .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
-.modes button{padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--surf);
-  font-size:12.5px;line-height:1.3}
-.modes button b{display:block;font-size:15px}
+.modes button{padding:9px 4px 8px;border-radius:12px;border:1px solid var(--line);background:var(--surf);
+  font-size:11px;line-height:1.25;color:var(--sumi)}
+.modes button svg{width:30px;height:30px;display:block;margin:0 auto 3px;color:var(--ai)}
+.modes button b{display:block;font-size:14px;color:var(--ink)}
+.modes button.on{color:#fff}
+.modes button.on svg,.modes button.on b{color:#fff}
 .modes button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
 .mcard{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
 .mcard .t{font-size:12px;color:var(--sumi);letter-spacing:.08em}
@@ -444,6 +447,18 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 @keyframes away{0%{opacity:1;transform:none}100%{opacity:0;transform:translate(120px,-60px) scale(.5)}}
 .catchbox h4{margin:8px 0 2px;font-size:22px}
 
+/* なぞときの ロック */
+.hintcards{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+.hc{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surf)}
+.hc span{display:block;padding:7px 10px;font-size:13.5px;background:var(--yam-s)}
+.hc svg{display:block}
+.lkrow{display:flex;gap:10px;justify-content:center;margin:12px 0 6px}
+.lkrow.ng{animation:lkng .45s}
+@keyframes lkng{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.lkd{width:52px;height:64px;border:2px solid var(--line);border-radius:12px;background:var(--soft);
+  display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:32px;font-weight:700}
+.lkd.act{border-color:var(--ai);background:var(--ai-s)}
+
 /* ずかん・ガチャ */
 .zhead{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 10px}
 .zhead b{font-family:var(--num);font-size:22px}
@@ -454,6 +469,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .zcell .cnt{font-family:var(--num);font-size:9.5px;color:var(--usu)}
 .zcell.new{border-color:var(--yam);border-width:2px}
+.zcell.evo{border-color:#ffc84a;background:#fffaf0}
 .zcell.locked{background:var(--soft)}
 .zcell.locked .q{font-family:var(--num);font-size:26px;color:#c6cec6;padding:14px 0 10px}
 .zfilter{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
@@ -506,7 +522,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.7 / 2026-09-03b</div>
+  <div class="tiny">まいにち計算 ver7.8 / 2026-09-03c</div>
 </section>
 
 <!-- こども追加 -->
@@ -553,9 +569,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="btn y" id="h-praise-ok">ありがとう</button>
   </div>
   <div class="modes" id="modes">
-    <button data-m="print"><b>プリント</b>これまでどおり</button>
-    <button data-m="board"><b>すごろく</b>マスを すすむ</button>
-    <button data-m="story"><b>ぼうけん</b>なぞとき</button>
+    <button data-m="print"><svg viewBox="0 0 40 40"><rect x="9" y="6" width="22" height="28" rx="3" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M14,14 h12 M14,20 h12 M14,26 h7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><b>プリント</b>これまでどおり</button>
+    <button data-m="board"><svg viewBox="0 0 40 40"><rect x="7" y="7" width="26" height="26" rx="6" fill="#fff" stroke="currentColor" stroke-width="2.4"/><circle cx="15" cy="15" r="2.6" fill="currentColor"/><circle cx="25" cy="15" r="2.6" fill="currentColor"/><circle cx="20" cy="20" r="2.6" fill="currentColor"/><circle cx="15" cy="25" r="2.6" fill="currentColor"/><circle cx="25" cy="25" r="2.6" fill="currentColor"/></svg><b>すごろく</b>マスを すすむ</button>
+    <button data-m="story"><svg viewBox="0 0 40 40"><circle cx="18" cy="17" r="9" fill="#fff" stroke="currentColor" stroke-width="2.6"/><path d="M25,24 L33,33" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M18,12 v6 M18,21 v1.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>ぼうけん</b>なぞとき</button>
   </div>
   <div class="mcard hide" id="mcard"></div>
   <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
@@ -567,7 +583,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03b</div>
+  <div class="tiny">BUILD 2026-09-03c</div>
 </section>
 
 <!-- れいだい -->
@@ -668,8 +684,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <section class="sc full" id="s-board">
   <div class="hd"><button class="bk" data-bk="s-home">←</button><h2 id="bd-h">すごろく</h2></div>
   <div class="note" id="bd-note"></div>
-  <div class="board card" id="bd-map" style="margin-top:10px;padding:10px"></div>
-  <div class="note" style="margin-top:10px">★ たまボーナス　🎮 ミニゲーム　🎁 キャラ　🏁 ゴール</div>
+  <div class="board" id="bd-map" style="margin-top:10px"></div>
+  <div class="note" style="margin-top:10px">★ ボーナス　？ はてな　🎮 ミニゲーム　🎁 レアキャラ　🏁 ゴール</div>
   <div class="sp"></div>
   <button class="btn" id="bd-go" style="margin-top:14px">プリントを といて すすむ</button>
   <div class="tiny">&nbsp;</div>
@@ -928,7 +944,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.7 / BUILD 2026-09-03b</div>
+  <div class="tiny">kumon_math ver7.8 / BUILD 2026-09-03c</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1038,7 +1054,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03b";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03c";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2267,13 +2283,28 @@ function cacc(t,c,d,l){
  if(t===5)return '<circle cx="40" cy="52" r="10" fill="none" stroke="#333" stroke-width="2.6"/><circle cx="62" cy="52" r="10" fill="none" stroke="#333" stroke-width="2.6"/><path d="M50,52 L52,52" stroke="#333" stroke-width="2.6"/>';
  return "";
 }
-function charSVG(id,cls){
+/* しんか：おなじ キャラを 2ひき あつめると しんか、5ひきで さいしゅう しんか */
+function evoStage(n){n=n||0;return n>=5?2:(n>=2?1:0);}
+var EVOP=["","つよ","キング"];
+function evoName(id,st){return (EVOP[st]||"")+cname(id);}
+function charSVG(id,cls,st){
+ st=st||0;
  var sp=id%10,p=Math.floor(id/10)%12,pal=CPAL[p];
  var ey=(id*7)%4,ac=(id*3)%6,r=crar(id);
+ var c=pal[0],d=pal[1],l=pal[2];
+ if(st===1){c=pal[2];l="#ffffff";}
  var aura=r>=2?'<circle cx="50" cy="50" r="47" fill="none" stroke="'+RARC[r]+'" stroke-width="2.5" opacity=".55"/>':"";
  var spark=r===3?'<path d="M84,18 l2.6,6 l6,2.6 l-6,2.6 l-2.6,6 l-2.6,-6 l-6,-2.6 l6,-2.6 Z" fill="'+RARC[3]+'"/>':"";
+ var evo="";
+ if(st>=1)evo+='<circle cx="50" cy="52" r="44" fill="none" stroke="#ffd873" stroke-width="2" opacity=".75"/>';
+ if(st>=2){
+  evo+='<path d="M30,20 L38,32 L50,16 L62,32 L70,20 L70,36 L30,36 Z" fill="#ffc84a" stroke="#b9760c" stroke-width="2"/>'+
+   '<circle cx="50" cy="14" r="3" fill="#e2564a"/>'+
+   '<path d="M12,64 l2.4,5.4 l5.4,2.4 l-5.4,2.4 l-2.4,5.4 l-2.4,-5.4 l-5.4,-2.4 l5.4,-2.4 Z" fill="#ffe9a8"/>'+
+   '<path d="M88,58 l2,4.6 l4.6,2 l-4.6,2 l-2,4.6 l-2,-4.6 l-4.6,-2 l4.6,-2 Z" fill="#ffe9a8"/>';
+ }
  return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+
-   aura+cbody(sp,pal[0],pal[1],pal[2])+ceyes(ey,pal[1])+cacc(ac,pal[0],pal[1],pal[2])+spark+'</svg>';
+   aura+cbody(sp,c,d,l)+ceyes(ey,d)+cacc(ac,c,d,l)+spark+evo+'</svg>';
 }
 
 /* ===== ぼうけんの 絵（部品を 組み合わせて 場面を つくる） ===== */
@@ -2321,123 +2352,91 @@ var ART={
  guard:function(x,y){return '<circle cx="'+x+'" cy="'+(y-22)+'" r="8" fill="#ffd9b3"/><rect x="'+(x-9)+'" y="'+(y-32)+'" width="18" height="8" rx="3" fill="#8c86b8"/><rect x="'+(x-8)+'" y="'+(y-14)+'" width="16" height="20" rx="3" fill="#6b5aa8"/><rect x="'+(x+10)+'" y="'+(y-40)+'" width="3" height="46" fill="#c9c9c9"/>';},
  flower:function(x,y,c){return '<circle cx="'+x+'" cy="'+y+'" r="5" fill="'+c+'"/><circle cx="'+(x-5)+'" cy="'+y+'" r="3.5" fill="'+c+'"/><circle cx="'+(x+5)+'" cy="'+y+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y-5)+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y+5)+'" r="3.5" fill="'+c+'"/><circle cx="'+x+'" cy="'+y+'" r="2" fill="#ffe27a"/>';},
  dark:function(){return '<rect width="300" height="160" fill="#101426" opacity=".6"/>';},
+ fish:function(x,y){return '<ellipse cx="'+x+'" cy="'+y+'" rx="9" ry="5.5" fill="#f0862a"/><path d="M'+(x-9)+','+y+' L'+(x-16)+','+(y-5)+' L'+(x-16)+','+(y+5)+' Z" fill="#f0862a"/><circle cx="'+(x+4)+'" cy="'+(y-1.5)+'" r="1.6" fill="#fff"/>';},
+ bird:function(x,y){return '<path d="M'+(x-11)+','+y+' Q'+(x-5)+','+(y-8)+' '+x+','+y+' Q'+(x+5)+','+(y-8)+' '+(x+11)+','+y+'" stroke="#3a3a4a" stroke-width="3" fill="none" stroke-linecap="round"/>';},
+ icicle:function(x,y){return '<path d="M'+(x-5)+','+y+' L'+(x+5)+','+y+' L'+x+','+(y+22)+' Z" fill="#cfefff" stroke="#9fd4ff" stroke-width="1.5"/>';},
+ flag:function(x,y){return '<rect x="'+(x-1.5)+'" y="'+y+'" width="3" height="26" fill="#7a6a5a"/><path d="M'+(x+1.5)+','+y+' L'+(x+22)+','+(y+7)+' L'+(x+1.5)+','+(y+14)+' Z" fill="#e2564a"/>';},
  wind:function(){return '<path d="M20,40 q20,-8 40,0 q20,8 40,0 M60,60 q20,-8 40,0 q20,8 40,0" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>';}
 };
 function scene(bg,parts){
  return '<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;border-radius:12px">'+ART.bg(bg)+parts.join("")+'</svg>';
 }
 var A=ART;
-/* 各章：場面の絵 5つ ＋ 選択肢の絵 3つ */
-var STORY_ART=[
- {bg:"forest",sc:[
-   [A.tree(50),A.tree(250,"#2f8a3a"),A.kid(140,124),A.scroll(190,116)],
-   [A.tree(40),A.tree(100,"#2f8a3a"),A.tree(260),A.kid(170,124),A.gull(120,50),A.gull(200,40)],
-   [A.tree(40),A.rock(200),A.glow(230,104),A.kid(120,124)],
-   [A.tree(260),A.kid(120,124),A.tanuki(170,124)],
-   [A.tree(30),A.tree(270,"#2f8a3a"),A.sign(150,3),A.kid(90,124),A.tanuki(220,124)]],
-  opt:[
-   [A.tree(150,"#3f9a4a"),A.flower(80,110,"#5aa9e6"),A.flower(220,112,"#5aa9e6"),A.flower(120,120,"#5aa9e6")],
-   [A.tree(90,"#e2564a"),A.lake(200),A.star(150,30,8),A.star(180,22,7),A.star(210,34,8)],
-   [A.dark(),A.tree(150,"#1e3a24"),A.star(230,30,7)]],
-  end:[A.tree(40),A.box(150,116),A.glow(150,102),A.kid(90,124),A.tanuki(210,124)]},
- {bg:"mountain",sc:[
-   [A.board(80),A.kid(160,140),A.tanuki(210,140)],
-   [A.wind(),A.kid(150,140),A.tanuki(200,140)],
-   [A.lake(150),A.key(150,124),A.kid(70,140)],
-   [A.lake(200),A.kid(80,140),A.tanuki(150,144)],
-   [A.cave(60,1),A.cave(150,2),A.cave(240,3),A.kid(150,150)]],
-  opt:[[A.cave(150,3)],[A.cave(150,1)],[A.cave(150,2)]],
-  end:[A.dark(),A.key(150,90),A.glow(150,90),A.kid(90,140),A.tanuki(210,140)]},
- {bg:"beach",sc:[
-   [A.lighthouse(240,false),A.kid(80,150),A.man(140,150)],
-   [A.boat(70),A.man(70,116),A.kid(200,150)],
-   [A.shell(90,150,"#f7c6d0",7),A.shell(150,152,"#fff",9),A.shell(220,150,"#7a6a5a",8),A.kid(40,150)],
-   [A.gull(100,40),A.gull(150,30),A.gull(200,44),A.kid(150,150)],
-   [A.shell(70,150,"#f7c6d0",7),A.shell(150,152,"#333",9),A.shell(230,150,"#fff",12),A.kid(150,120)]],
-  opt:[[A.shell(150,120,"#f7c6d0",12)],[A.shell(150,120,"#333",16)],[A.shell(150,120,"#fff",22),A.gull(120,60),A.gull(180,66)]],
-  end:[A.lighthouse(150,true),A.kid(80,150),A.man(220,150)]},
- {bg:"sky",sc:[
-   [A.boat(150),A.cloud(60,60,26),A.kid(150,108),A.man(120,108)],
-   [A.cloud(80,70,30),A.cloud(220,50,24),A.kid(150,140),A.tanuki(200,140)],
-   [A.door(70,"plain"),A.door(150,"plain"),A.door(230,"plain"),A.kid(150,152)],
-   [A.door(70,"hot"),A.door(150,"cool"),A.door(230,"none"),A.tanuki(190,146)],
-   [A.wind(),A.door(70,"hot"),A.door(150,"cool"),A.door(230,"none"),A.kid(110,152)]],
-  opt:[[A.door(150,"hot")],[A.door(150,"cool")],[A.door(150,"none")]],
-  end:[A.dark(),A.door(150,"cool"),A.star(60,40,8),A.star(240,30,10),A.star(200,70,6),A.kid(90,152)]},
- {bg:"desert",sc:[
-   [A.star(40,30,6),A.star(120,20,8),A.star(200,40,5),A.star(260,24,9),A.kid(150,124)],
-   [A.star(60,30,6),A.star(240,26,7),A.camel(150,124),A.kid(80,124)],
-   [A.star(150,26,12,"#ff8a7a"),A.star(60,40,6),A.star(240,44,6),A.hill(150,70),A.kid(150,120)],
-   [A.star(50,24,6),A.star(110,36,5),A.star(170,20,7),A.star(230,40,6),A.tanuki(150,124)],
-   [A.hill(60,40),A.hill(150,40),A.hill(240,40),A.cactus(60,112),A.cactus(50,116),A.cactus(70,118),A.cactus(150,112),A.star(150,26,12,"#ff8a7a"),A.star(60,30,7,"#8fd0ff"),A.kid(150,150)]],
-  opt:[[A.hill(150,60),A.cactus(120,110),A.cactus(150,106),A.cactus(180,112),A.star(150,26,11,"#8fd0ff")],
-       [A.hill(150,60),A.cactus(150,108),A.star(150,26,13,"#ff8a7a")],
-       [A.hill(150,60),A.dark()]],
-  end:[A.hill(150,60),A.scroll(150,100),A.glow(150,100),A.kid(80,124),A.tanuki(220,124)]},
- {bg:"castle",sc:[
-   [A.castle(150),A.kid(150,150)],
-   [A.castle(150),A.guard(190,150),A.kid(110,150)],
-   [A.castle(150),A.tanuki(80,150),A.camel(230,150),A.man(150,150)],
-   [A.castle(150),A.win(120,84),A.win(180,84),A.kid(150,150)],
-   [A.castle(150),A.guard(190,150),A.kid(110,150),A.tanuki(70,150)]],
-  opt:[[A.castle(150),A.dark()],[A.castle(150),A.win(120,84),A.win(180,84),A.star(150,30,10,"#ffe27a")],[A.castle(150),A.dark(),A.star(240,30,6)]],
-  end:[A.castle(150),A.win(120,84),A.win(180,84),A.star(150,26,12,"#ffe27a"),A.kid(110,150),A.tanuki(70,150),A.guard(190,150)]}
-];
-function storyArt(ch,sc){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.sc[sc]);}
-function storyOptArt(ch,i){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.opt[i]).replace('style="width:100%;height:auto;display:block;border-radius:12px"','style="width:110px;height:auto;display:block;border-radius:10px;flex:0 0 auto"');}
 function storyEndArt(ch){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.end);}
 
-/* ===== ぼうけん（なぞとき）のデータ ===== */
+/* ===== ぼうけん：かずを かぞえて 3けたの ばんごうを 見つける なぞとき ===== */
+var A=ART;
+function rep(fn,n,x0,gap,y){var s="";for(var i=0;i<n;i++)s+=fn(x0+i*gap,y);return s;}
 var STORY=[
-{t:"ふしぎな もりの いりぐち",sc:[
- ["きみは ちいさな たんけんか。もりの いりぐちで ふるい ちずを ひろった。","ちずには「あかい きの そば」と かいてある"],
- ["もりの なかは しずか。とりの こえが きこえる。",null],
- ["おおきな いわの うしろに、なにかが ひかっている。","いわに「みずの おとが する ほうへ」と ほってある"],
- ["こだぬきが あらわれて いった。『ぼくも いっしょに いく！』",null],
- ["みちが 3つに わかれている。ちずを もういちど みよう。","ちずの すみに「☆が 3つ」の しるし"]],
- q:"どの みちを すすむ？",opt:["あおい はなが さいている みち","あかい きが あって、みずの おとが して、☆が 3つ ある みち","くらくて ☆が 1つしか ない みち"],ans:1,
- end:"みちの さきに ちいさな たからばこ！ なかには ひかる たまが はいっていた。"},
-{t:"やまの どうくつ",sc:[
- ["たんけんかと こだぬきは やまを のぼる。ふるい かんばんを みつけた。","かんばん「どうくつの かぎは つめたい ばしょに」"],
- ["かぜが つよい。ぼうしを おさえて あるく。",null],
- ["こおりの いけが ある。なかに なにか みえる。","いけの そこに かぎの かたちが みえる"],
- ["こだぬきが いけの ふちで すべって ころんだ。だいじょうぶ？",null],
- ["どうくつの いりぐちが 3つ。どれが ほんもの？","ほんものの いりぐちには つららが ある"]],
- q:"どの いりぐちに はいる？",opt:["あたたかい かぜが ふく いりぐち","つららが たれさがった つめたい いりぐち","くさで ふさがった いりぐち"],ans:1,
- end:"どうくつの おくで、こおりの かぎを てにいれた！"},
-{t:"うみべの まち",sc:[
- ["どうくつを ぬけると うみが みえた。まちの ひとが こまっている。","「とうだいの あかりが きえた」と ひとが いう"],
- ["ふねの おじさんが いった。『あかりには おおきな かいがらが いる』","かいがらは しろくて おおきい"],
- ["はまべを あるく。かいがらが たくさん おちている。",null],
- ["かもめが ないている。しろい つばさが きれい。",null],
- ["かいがらを 3つ ひろった。どれが あかりの かいがら？","おじさん「なみの おとが きこえる かいがらだよ」"]],
- q:"どの かいがらを とうだいへ もっていく？",opt:["ちいさくて ピンクの かいがら","くろくて おもい かいがら","しろくて おおきくて、なみの おとが する かいがら"],ans:2,
- end:"とうだいが ぱっと ついた！ まちの ひとが おおよろこび。"},
-{t:"そらの しま",sc:[
- ["おれいに、ふねで そらの しまへ つれていって もらえることに。","そらの しまには「かぜの とびら」が ある"],
- ["くもの うえを あるく。ふわふわ している。",null],
- ["とびらが みっつ ならんでいる。ぜんぶ おなじ かたち。","かぜの とびらは あけると すずしい"],
- ["こだぬきが とびらを たたいてみた。ひとつだけ おとが ちがう。","ほんものは たたくと たかい おと"],
- ["かぜが つよくなってきた。いそいで えらぼう。",null]],
- q:"どの とびらを あける？",opt:["あけると あつい、たたくと ひくい おとの とびら","あけると すずしい、たたくと たかい おとの とびら","あけると なにも ない とびら"],ans:1,
- end:"とびらの むこうに、ほしぞらが ひろがっていた。"},
-{t:"ほしの さばく",sc:[
- ["とびらの むこうは よるの さばく。ほしが いっぱい。","ほしの ちずは「いちばん あかるい ほしの した」"],
- ["らくだが あらわれた。『のって いくかい？』",null],
- ["すなの おかを こえる。つめたい かぜ。","いちばん あかるい ほしは あかい いろ"],
- ["こだぬきが ほしを かぞえている。『いち、に、さん…』",null],
- ["さばくの さきに 3つの おか。どの おかに ちずが？","ちずの おかには サボテンが ひとつ"]],
- q:"どの おかへ いく？",opt:["あおい ほしの した、サボテンが 3つの おか","あかい あかるい ほしの した、サボテンが ひとつの おか","ほしが みえない おか"],ans:1,
- end:"すなの なかから、ほしの ちずを ほりだした！"},
-{t:"ゆめの おしろ",sc:[
- ["ちずの さきに おしろが。とびらは しまっている。","おしろの あいことばは「ありがとう」"],
- ["もんばんが いう。『あいことばと、なかまの かずを こたえよ』",null],
- ["これまでの たびを おもいだす。こだぬき、らくだ、ふねの おじさん…","たびで であった なかまは 3"],
- ["おしろの まどから ひかりが もれている。",null],
- ["もんばんが まっている。さあ、こたえよう。",null]],
- q:"なんて こたえる？",opt:["『こんにちは』、なかまは 2","『ありがとう』、なかまは 3","『さようなら』、なかまは 5"],ans:1,
- end:"とびらが ひらいた！ おしろの なかには、きみの がんばりを たたえる おうさまが まっていた。"}
+{t:"ふしぎな もりの とびら",bg:"forest",
+ lock:"もりの とびらの ばんごう",ans:"352",
+ sc:[
+  {tx:"きみは たんけんか。もりの おくに、ばんごうの ついた とびらを 見つけた。",art:function(){return [A.tree(50),A.tree(250),A.kid(150,150),A.door(150,"plain")].join("");},hint:null},
+  {tx:"とびらの よこの かんばん。「あかい きの かず が 1つめ」",art:function(){return [A.board(60),A.tree(150,"#e2564a"),A.tree(200,"#e2564a"),A.tree(250,"#e2564a"),A.kid(60,150)].join("");},hint:"1つめ ＝ あかい きの かず"},
+  {tx:"こだぬきが あらわれた。「いけの さかなを かぞえると いいよ」",art:function(){return [A.lake(160),rep(function(x,y){return A.fish(x,y);},5,90,34,128),A.kid(40,150),A.tanuki(250,150)].join("");},hint:"2つめ ＝ いけの さかなの かず"},
+  {tx:"きの うえで とりが ないている。「3つめは わたしたちの かず よ」",art:function(){return [A.tree(80),A.tree(220),rep(function(x,y){return A.bird(x,y);},2,110,80,50),A.kid(150,150)].join("");},hint:"3つめ ＝ とりの かず"},
+  {tx:"3つの かずが そろった。とびらの ばんごうを 入れよう。",art:function(){return [A.door(150,"plain"),A.kid(90,150),A.tanuki(210,150),A.glow(150,70)].join("");},hint:null}],
+ end:"とびらが ひらいた！ おくには ひかる たまが あった。",
+ endArt:function(){return [A.door(150,"cool"),A.glow(150,96),A.box(150,120),A.kid(80,150),A.tanuki(220,150)].join("");}},
+
+{t:"やまの こおりの どうくつ",bg:"mountain",
+ lock:"どうくつの かぎの ばんごう",ans:"426",
+ sc:[
+  {tx:"やまを のぼると、かぎの かかった どうくつが あった。",art:function(){return [A.cave(150,2),A.kid(80,150),A.tanuki(220,150)].join("");},hint:null},
+  {tx:"どうくつの つららを かぞえる。「1つめは この かず」",art:function(){return [A.cave(150,0),rep(function(x,y){return A.icicle(x,y);},4,118,22,92),A.kid(60,150)].join("");},hint:"1つめ ＝ つららの かず"},
+  {tx:"みちに おおきな いわが ころがっている。",art:function(){return [A.rock(100),A.rock(200),A.kid(150,150),A.tanuki(60,150)].join("");},hint:"2つめ ＝ いわの かず"},
+  {tx:"そらを 見あげると、とりの むれ。「3つめは あの かず」",art:function(){return [rep(function(x,y){return A.bird(x,y);},6,50,42,44),A.kid(150,150)].join("");},hint:"3つめ ＝ とりの かず"},
+  {tx:"かぎあなに ばんごうを 入れよう。",art:function(){return [A.cave(150,2),A.key(120,110),A.kid(90,150),A.tanuki(210,150)].join("");},hint:null}],
+ end:"かぎが まわった！ どうくつの おくで こおりの けっしょうを てにいれた。",
+ endArt:function(){return [A.cave(150,2),A.glow(150,105),A.key(150,70),A.kid(80,150),A.tanuki(220,150)].join("");}},
+
+{t:"うみべの とうだい",bg:"beach",
+ lock:"とうだいの スイッチの ばんごう",ans:"531",
+ sc:[
+  {tx:"とうだいの あかりが きえている。まちの ひとが こまっていた。",art:function(){return [A.lighthouse(230,false),A.kid(80,150),A.man(140,150)].join("");},hint:null},
+  {tx:"はまべの かいがらを かぞえる。「1つめは この かず だよ」",art:function(){return [rep(function(x,y){return A.shell(x,y,"#fff",8);},5,60,48,148),A.man(250,150),A.kid(30,150)].join("");},hint:"1つめ ＝ かいがらの かず"},
+  {tx:"かもめが とんでいる。「2つめは かもめの かず」",art:function(){return [rep(function(x,y){return A.gull(x,y);},3,90,60,44),A.kid(150,150)].join("");},hint:"2つめ ＝ かもめの かず"},
+  {tx:"みなとに ふねが とまっている。",art:function(){return [A.boat(150),A.kid(60,150),A.man(240,150)].join("");},hint:"3つめ ＝ ふねの かず"},
+  {tx:"とうだいの スイッチに ばんごうを 入れよう。",art:function(){return [A.lighthouse(150,false),A.kid(80,150),A.man(220,150)].join("");},hint:null}],
+ end:"とうだいが ぱっと ついた！ まちの ひとが おおよろこび。",
+ endArt:function(){return [A.lighthouse(150,true),A.kid(70,150),A.man(230,150),A.gull(60,40),A.gull(240,36)].join("");}},
+
+{t:"そらの しまの かぜの とびら",bg:"sky",
+ lock:"かぜの とびらの ばんごう",ans:"437",
+ sc:[
+  {tx:"ふねで そらの しまへ。3つの とびらが ならんでいる。",art:function(){return [A.door(70,"plain"),A.door(150,"plain"),A.door(230,"plain"),A.kid(150,152)].join("");},hint:null},
+  {tx:"くもを かぞえる。「1つめは くもの かず」",art:function(){return [A.cloud(50,50,20),A.cloud(115,40,18),A.cloud(190,54,22),A.cloud(255,42,17),A.kid(150,152)].join("");},hint:"1つめ ＝ くもの かず"},
+  {tx:"とびらは ぜんぶで いくつ？",art:function(){return [A.door(70,"hot"),A.door(150,"cool"),A.door(230,"none"),A.tanuki(190,150)].join("");},hint:"2つめ ＝ とびらの かず"},
+  {tx:"よるに なった。ほしが 見える。「3つめは ほしの かず」",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},7,40,36,40),A.kid(150,152)].join("");},hint:"3つめ ＝ ほしの かず"},
+  {tx:"すずしい かぜの とびらに ばんごうを 入れよう。",art:function(){return [A.wind(),A.door(150,"cool"),A.kid(90,152)].join("");},hint:null}],
+ end:"とびらが ひらき、むこうに ほしぞらが ひろがった。",
+ endArt:function(){return [A.dark(),A.door(150,"cool"),A.star(60,40,9,"#fff"),A.star(240,34,10,"#fff"),A.star(200,74,6,"#fff"),A.kid(90,152)].join("");}},
+
+{t:"ほしの さばくの いせき",bg:"desert",
+ lock:"いせきの とびらの ばんごう",ans:"681",
+ sc:[
+  {tx:"よるの さばく。すなの なかに、ふるい いせきが あった。",art:function(){return [A.hill(150,70),A.door(150,"plain"),A.star(50,30,7,"#fff"),A.star(250,26,8,"#fff"),A.kid(80,150)].join("");},hint:null},
+  {tx:"サボテンを かぞえる。「1つめは この かず」",art:function(){return [rep(function(x,y){return A.cactus(x,y);},6,50,44,120),A.kid(150,150)].join("");},hint:"1つめ ＝ サボテンの かず"},
+  {tx:"そらを 見あげる。ほしが かがやいている。",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},8,30,34,38),A.kid(150,150)].join("");},hint:"2つめ ＝ ほしの かず"},
+  {tx:"らくだが ゆっくり あるいてきた。",art:function(){return [A.camel(160,130),A.kid(60,150),A.star(240,30,7,"#fff")].join("");},hint:"3つめ ＝ らくだの かず"},
+  {tx:"いせきの とびらに ばんごうを 入れよう。",art:function(){return [A.hill(150,70),A.door(150,"plain"),A.kid(90,150),A.camel(230,140)].join("");},hint:null}],
+ end:"とびらが ひらき、なかから ほしの ちずが 出てきた。",
+ endArt:function(){return [A.hill(150,70),A.door(150,"cool"),A.scroll(150,100),A.glow(150,100),A.kid(80,150),A.tanuki(220,150)].join("");}},
+
+{t:"ゆめの おしろ",bg:"castle",
+ lock:"おしろの もんの ばんごう",ans:"423",
+ sc:[
+  {tx:"たびの さいご。おおきな おしろの もんの まえに ついた。",art:function(){return [A.castle(150),A.kid(150,150)].join("");},hint:null},
+  {tx:"おしろの まどを かぞえる。「1つめは まどの かず」",art:function(){return [A.castle(150),A.win(110,84),A.win(140,84),A.win(170,84),A.win(200,84),A.kid(150,150)].join("");},hint:"1つめ ＝ まどの かず"},
+  {tx:"とうの うえに はたが たっている。",art:function(){return [A.castle(150),A.flag(100,34),A.flag(200,34),A.kid(150,150)].join("");},hint:"2つめ ＝ はたの かず"},
+  {tx:"もんばんが 3にん ならんでいる。「3つめは わたしたちの かず だ」",art:function(){return [A.castle(150),A.guard(100,150),A.guard(150,150),A.guard(200,150),A.kid(50,150)].join("");},hint:"3つめ ＝ もんばんの かず"},
+  {tx:"さあ、さいごの ばんごうを 入れよう。",art:function(){return [A.castle(150),A.guard(190,150),A.kid(110,150),A.tanuki(70,150)].join("");},hint:null}],
+ end:"もんが ひらいた！ おうさまが きみの がんばりを たたえてくれた。",
+ endArt:function(){return [A.castle(150),A.win(110,84),A.win(140,84),A.win(170,84),A.win(200,84),A.star(150,26,13,"#ffe27a"),A.kid(110,150),A.tanuki(70,150),A.guard(190,150)].join("");}}
 ];
+function storyArt(ch,sc){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[sc].art()]);}
+function storyEndArt(ch){var c=STORY[ch%STORY.length];return scene(c.bg,[c.endArt()]);}
+
 /* ===== すごろく ===== */
 var BOARD_N=30;
 function tileType(i){
@@ -2445,9 +2444,10 @@ function tileType(i){
  if(i%10===9)return "gift";
  if(i%7===6)return "game";
  if(i%5===4)return "star";
+ if(i%6===2)return "hatena";
  return "";
 }
-var TILE_IC={goal:"🏁",gift:"🎁",game:"🎮",star:"★"};
+var TILE_IC={goal:"🏁",gift:"🎁",game:"🎮",star:"★",hatena:"？"};
 
 /* ===== ガチャ ===== */
 var CHAR_N=120;
@@ -2547,7 +2547,7 @@ function stampSVG(idx,filled,isNew,big){
   ids.sort(function(a,b){return a-b;});
   if(!ids.length)return orbSVG(n,filled,isNew);
   var cid=ids[idx%ids.length];
-  var svg=charSVG(cid,"");
+  var svg=charSVG(cid,"",evoStage(k.chars[cid].n));
   if(!filled)svg=svg.replace(/fill="#[0-9a-fA-F]{3,6}"/g,'fill="#dfe3dc"').replace(/stroke="#[0-9a-fA-F]{3,6}"/g,'stroke="#c9d0c8"');
   return svg.replace('<svg class=""','<svg '+cls+' style="'+(big?"width:44px;height:44px":"width:36px;height:36px")+'"');
  }
@@ -2702,7 +2702,8 @@ function startPrint(){
  var eb=document.getElementById("sh-enc");
  if(run.enc!==null){
   var er=crar(run.enc);
-  eb.innerHTML=charSVG(run.enc,"")+'<div><b>'+cname(run.enc)+' が あらわれた！</b><span>なおして 100てんに すると ゲット</span></div>'+
+  var estg=evoStage((k.chars&&k.chars[run.enc]&&k.chars[run.enc].n)||0);
+  eb.innerHTML=charSVG(run.enc,"",estg)+'<div><b>'+evoName(run.enc,estg)+' が あらわれた！</b><span>なおして 100てんに すると ゲット</span></div>'+
    '<span class="rtag rt" style="background:'+RARC[er]+'">'+RARN[er]+'</span>';
   eb.classList.remove("hide");
   if(S.sound)setTimeout(function(){try{tone({f:1046,dur:.12,vol:.12,wave:"triangle"});tone({f:1318,dur:.18,vol:.12,wave:"triangle",at:.12});}catch(e){}},200);
@@ -3038,9 +3039,14 @@ function showResult(){
   pendingEv=function(){
    var ci=cinfo(encE.id),r=crar(encE.id);
    if(encE.got){
-    evShow(cname(encE.id)+" を ゲット！",
-     '<div class="catchbox">'+charSVG(encE.id,"")+'<span class="rtag" style="background:'+RARC[r]+'">'+RARN[r]+'</span>'+
-     '<div class="note" style="margin-top:8px">'+(encE.had?"もう1ぴき！ いま "+k.chars[encE.id].n+"ひき":"はじめて！ ずかんに とうろく")+'<br>とくぎ：'+ci[2]+'</div></div>',
+    var nn=k.chars[encE.id].n,ns=evoStage(nn),os=evoStage(nn-1),evoNow=(ns>os);
+    evShow(evoNow?"しんか した！":(evoName(encE.id,ns)+" を ゲット！"),
+     '<div class="catchbox">'+charSVG(encE.id,"",ns)+'<span class="rtag" style="background:'+RARC[r]+'">'+RARN[r]+'</span>'+
+     '<div class="note" style="margin-top:8px">'+
+     (evoNow?("<b>"+evoName(encE.id,os)+" → "+evoName(encE.id,ns)+"</b><br>"):"")+
+     (encE.had?"いま "+nn+"ひき":"はじめて！ ずかんに とうろく")+
+     (ns<2?("<br>あと "+((ns===0?2:5)-nn)+"ひきで しんか"):"")+
+     '<br>とくぎ：'+ci[2]+'</div></div>',
      null,function(){if(prevEv)prevEv();});
     if(S.sound)setTimeout(function(){beep(r>=2?"clear":"ok");},300);
    }else{
@@ -3969,8 +3975,8 @@ function renderMode(k){
   c.innerHTML='<div class="sart">'+storyArt(st.ch%STORY.length,Math.max(0,Math.min(st.sc,5)-1))+'</div>'+
    '<div class="t">ぼうけん　だい '+(st.ch%STORY.length+1)+' しょう'+(st.loop?"（"+(st.loop+1)+"しゅうめ）":"")+'</div>'+
    '<div class="v">'+ch.t+'</div>'+
-   '<div class="d">'+(st.sc>=5?"なぞときの じかん！ ヒントを よんで こたえよう。":"プリントを おえると つづきが よめます。ヒント "+st.hints.length+"こ")+'</div>'+
-   '<button class="btn l" id="mc-open" style="margin-top:12px">'+(st.sc>=5?"なぞを とく":"おはなしを よむ")+'</button>';
+   '<div class="d">'+(st.sc>=5?"なぞときの じかん！ ヒントの かずを ならべて ばんごうを 入れよう。":"プリントを おえると つづきが よめます。ヒント "+st.hints.length+"／3")+'</div>'+
+   '<button class="btn l" id="mc-open" style="margin-top:12px">'+(st.sc>=5?"ばんごうを 入れる":"おはなしを よむ")+'</button>';
   document.getElementById("mc-open").onclick=function(){if(st.sc>=5)storyRiddle();else{renderStory();show("s-story");}};
  }
 }
@@ -3982,31 +3988,64 @@ document.getElementById("bd-go").addEventListener("click",function(){document.ge
 document.getElementById("st-go").addEventListener("click",function(){document.getElementById("go-start").click();});
 
 /* ---- すごろくの マップ ---- */
+var WORLDS=[
+ {n:"みどりの まきば",sky:"#bfe3ff",gr:"#7cc26b",gr2:"#5fa851",road:"#e8dcc0",deco:"tree"},
+ {n:"あおい うみべ",sky:"#8fd0ff",gr:"#f2dfb0",gr2:"#e0c98e",road:"#fff3d6",deco:"shell"},
+ {n:"しろい ゆきやま",sky:"#dbeeff",gr:"#f2f7fb",gr2:"#dbe6ef",road:"#ffffff",deco:"ice"},
+ {n:"よるの ほしぞら",sky:"#1b2450",gr:"#2b3566",gr2:"#212a52",road:"#4a5590",deco:"star"},
+ {n:"きんの さばく",sky:"#ffd9a0",gr:"#e6bb72",gr2:"#cfa257",road:"#fff0cf",deco:"cactus"}
+];
 function renderBoard(){
- var k=P(),b=k.board;
- document.getElementById("bd-h").textContent="すごろく　ワールド "+(b.world+1);
- document.getElementById("bd-note").textContent="いま "+(b.pos+1)+" マスめ。プリント 1まい で 1マス すすむよ。";
- var cols=5,W=300,cell=W/cols,rows=Math.ceil(BOARD_N/cols),H=rows*cell;
+ var k=P(),b=k.board,W=WORLDS[b.world%WORLDS.length];
+ document.getElementById("bd-h").textContent="すごろく";
+ document.getElementById("bd-note").innerHTML='<b style="color:var(--ink)">ワールド '+(b.world+1)+'　'+W.n+'</b><br>'+
+  'いま '+(b.pos+1)+' / '+BOARD_N+' マス。プリント 1まいで 1マス すすむ。';
+ var cols=5,cw=58,ch=52,padX=16,padY=20;
+ var rows=Math.ceil(BOARD_N/cols);
+ var VW=padX*2+cols*cw, VH=padY*2+rows*ch;
  var pts=[];
  for(var i=0;i<BOARD_N;i++){
-  var r=Math.floor(i/cols),cidx=i%cols;
-  if(r%2===1)cidx=cols-1-cidx;
-  pts.push([cidx*cell+cell/2,H-(r*cell+cell/2)]);
+  var r=Math.floor(i/cols),c=i%cols;
+  if(r%2===1)c=cols-1-c;
+  pts.push([padX+c*cw+cw/2, VH-padY-(r*ch+ch/2)]);
  }
- var line='<polyline points="'+pts.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" ")+'" fill="none" stroke="#dfe3dc" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>';
+ var g='<defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+W.sky+'"/><stop offset="1" stop-color="'+W.gr+'"/></linearGradient></defs>'+
+  '<rect width="'+VW+'" height="'+VH+'" fill="url(#bsky)"/>';
+ /* かざり */
+ var deco="";
+ for(var d=0;d<10;d++){
+  var dx=(d*97)%VW, dy=18+((d*61)%(VH-40));
+  if(W.deco==="tree")deco+='<g opacity=".5" transform="translate('+dx+','+(dy-70)+') scale(.5)">'+ART.tree(0,W.gr2)+'</g>';
+  if(W.deco==="star")deco+=ART.star(dx,dy,4+(d%3),"#ffffff").replace("<path",'<path opacity=".55"');
+  if(W.deco==="ice")deco+='<circle cx="'+dx+'" cy="'+dy+'" r="'+(2+d%3)+'" fill="#fff" opacity=".7"/>';
+  if(W.deco==="shell")deco+='<g opacity=".5">'+ART.shell(dx,dy,"#fff",5)+'</g>';
+  if(W.deco==="cactus")deco+='<g opacity=".45" transform="translate('+dx+','+dy+') scale(.5)">'+ART.cactus(0,0)+'</g>';
+ }
+ g+=deco;
+ /* みち */
+ var road='<polyline points="'+pts.map(function(p){return p[0]+","+p[1];}).join(" ")+'" fill="none" stroke="'+W.road+'" stroke-width="24" stroke-linejoin="round" stroke-linecap="round"/>'+
+  '<polyline points="'+pts.map(function(p){return p[0]+","+p[1];}).join(" ")+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5 7" opacity=".7"/>';
+ g+=road;
+ /* マス */
  var tiles=pts.map(function(p,i){
   var t=tileType(i),done=i<b.pos,cur=i===b.pos;
-  var fill=cur?"#2557c7":(done?"#17916b":(t?"#fff3cf":"#fff"));
-  var stroke=cur?"#2557c7":(done?"#17916b":(t?"#d0871c":"#c9d0c8"));
-  var lab=t?TILE_IC[t]:String(i+1);
-  return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="20" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.5"/>'+
-   '<text x="'+p[0]+'" y="'+(p[1]+(t?6:5))+'" text-anchor="middle" font-size="'+(t?15:12)+'" fill="'+(cur||done?"#fff":"#5a6672")+'" font-weight="700">'+lab+'</text>';
+  var fill=cur?"#2557c7":(done?"#17916b":(t?"#fff6e0":"#ffffff"));
+  var stroke=cur?"#1b3f96":(done?"#0e6f4c":(t?"#d0871c":"#c9d0c8"));
+  var txt=cur||done?"#fff":"#5a6672";
+  var s2='<g><rect x="'+(p[0]-15)+'" y="'+(p[1]-15)+'" width="30" height="30" rx="9" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.4"/>';
+  if(t)s2+='<text x="'+p[0]+'" y="'+(p[1]+6)+'" text-anchor="middle" font-size="16">'+TILE_IC[t]+'</text>';
+  else s2+='<text x="'+p[0]+'" y="'+(p[1]+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+txt+'">'+(i+1)+'</text>';
+  return s2+'</g>';
  }).join("");
+ g+=tiles;
+ /* じぶんの こま */
  var cp=pts[b.pos];
- var mark='<text x="'+cp[0]+'" y="'+(cp[1]-24)+'" text-anchor="middle" font-size="22">'+k.icon+'</text>';
- document.getElementById("bd-map").innerHTML='<svg viewBox="-4 -30 '+(W+8)+' '+(H+40)+'">'+line+tiles+mark+'</svg>';
+ g+='<g><ellipse cx="'+cp[0]+'" cy="'+(cp[1]+16)+'" rx="12" ry="4" fill="#000" opacity=".18"/>'+
+  '<circle cx="'+cp[0]+'" cy="'+(cp[1]-24)+'" r="15" fill="#fff" stroke="#2557c7" stroke-width="2.5"/>'+
+  '<text x="'+cp[0]+'" y="'+(cp[1]-18)+'" text-anchor="middle" font-size="17">'+k.icon+'</text>'+
+  '<path d="M'+(cp[0]-5)+','+(cp[1]-11)+' L'+cp[0]+','+(cp[1]-4)+' L'+(cp[0]+5)+','+(cp[1]-11)+' Z" fill="#2557c7"/></g>';
+ document.getElementById("bd-map").innerHTML='<svg viewBox="0 0 '+VW+' '+VH+'" style="width:100%;height:auto;border-radius:12px">'+g+'</svg>';
 }
-
 /* ---- ぼうけんの おはなし ---- */
 function renderStory(){
  var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
@@ -4014,11 +4053,11 @@ function renderStory(){
  document.getElementById("st-ch").textContent=ch.t;
  var sc="",chI2=st.ch%STORY.length;
  if(st.sc>0)sc+='<div class="sart">'+storyArt(chI2,Math.min(st.sc,5)-1)+'</div>';
- for(var i=0;i<Math.min(st.sc,5);i++)sc+='<div class="scene">'+ch.sc[i][0]+'</div>';
+ for(var i=0;i<Math.min(st.sc,5);i++)sc+='<div class="scene">'+ch.sc[i].tx+'</div>';
  if(!sc)sc='<div class="sart">'+storyArt(chI2,0)+'</div><div class="note">プリントを 1まい おえると、おはなしが はじまります。</div>';
  document.getElementById("st-scenes").innerHTML=sc;
  document.getElementById("st-hints").innerHTML=st.hints.length?st.hints.map(function(h){return "<li>"+h+"</li>";}).join(""):'<li style="background:var(--soft)">まだ ありません</li>';
- document.getElementById("st-go").textContent=st.sc>=5?"なぞを とく":"プリントを といて つづきを よむ";
+ document.getElementById("st-go").textContent=st.sc>=5?"ばんごうを 入れる":"プリントを といて つづきを よむ";
  document.getElementById("st-go").onclick=function(){if(st.sc>=5)storyRiddle();else document.getElementById("go-start").click();};
 }
 
@@ -4073,6 +4112,16 @@ function modeAfterPrint(k){
    pendingEv=function(){evShow("★ たまボーナス","<div class='note'>ボーナスマスに とまった！<br>おまけの たまを 1つ もらった。</div>",null,null);};
   }else if(t==="game"){
    pendingEv=function(){evShow("🎮 ミニゲーム","<div class='note'>ミニゲームの マスだ！ 5もん ぜんぶ 正解で、つぎの プリントに レアな キャラが あらわれる。</div>",null,function(){startGame();},"あそぶ");};
+  }else if(t==="hatena"){
+   var roll=Math.floor(Math.random()*3);
+   if(roll===0){k.encNext=1;save();
+    pendingEv=function(){evShow("？ はてなマス","<div class='note'>あたり！ つぎの プリントで レアが 出やすく なる。</div>",null,null);};
+   }else if(roll===1){
+    b.pos=Math.min(BOARD_N-1,b.pos+1);save();
+    pendingEv=function(){evShow("？ はてなマス","<div class='note'>1マス すすんだ！</div>",null,function(){renderBoard();});};
+   }else{
+    pendingEv=function(){evShow("？ はてなマス","<div class='note'>なにも おきなかった…。つぎに 期待！</div>",null,null);};
+   }
   }else if(t==="gift"){
    k.encNext=2;save();
    pendingEv=function(){evShow("🎁 プレゼント","<div class='note'>つぎの プリントで、レアな キャラが かならず あらわれる！</div>",null,null);};
@@ -4081,36 +4130,65 @@ function modeAfterPrint(k){
   var st=k.story,ch=STORY[st.ch%STORY.length];
   if(st.sc>=5)return;
   var scene=ch.sc[st.sc];st.sc++;
-  if(scene[1]&&st.hints.indexOf(scene[1])<0)st.hints.push(scene[1]);
+  if(scene.hint&&st.hints.indexOf(scene.hint)<0)st.hints.push(scene.hint);
   save();
   var scIdx=st.sc-1,chIdx=st.ch%STORY.length;
   pendingEv=function(){
    evShow("だい "+(chIdx+1)+" しょう　"+ch.t,
-    '<div class="sart">'+storyArt(chIdx,scIdx)+'</div><div class="scene">'+scene[0]+'</div>'+(scene[1]?'<ul class="hintlist"><li>'+scene[1]+'</li></ul>':''),
+    '<div class="sart">'+storyArt(chIdx,scIdx)+'</div><div class="scene">'+scene.tx+'</div>'+(scene.hint?'<ul class="hintlist"><li>'+scene.hint+'</li></ul>':''),
     null,function(){if(st.sc>=5)storyRiddle();},st.sc>=5?"なぞを とく":"つぎへ");
   };
  }
 }
+var lockIn="",lockCh=0;
+function lockDraw(){
+ var d=document.getElementById("lk-d");
+ if(!d)return;
+ d.innerHTML=[0,1,2].map(function(i){
+  return '<span class="lkd'+(i===lockIn.length?" act":"")+'">'+(lockIn[i]||"")+'</span>';
+ }).join("");
+}
 function storyRiddle(){
  var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
- var chI=st.ch%STORY.length;
- evShow("なぞとき："+ch.q,
-  '<ul class="hintlist">'+st.hints.map(function(h){return "<li>"+h+"</li>";}).join("")+'</ul>',
-  ch.opt.map(function(o,i){return storyOptArt(chI,i)+'<span>'+o+'</span>';}),function(i){
-   evHide();
-   if(i===ch.ans){
-    k.encNext=2;
-    st.ch++;st.sc=0;st.hints=[];
-    if(st.ch%STORY.length===0)st.loop++;
+ lockCh=st.ch%STORY.length;lockIn="";
+ var body='<div class="sart">'+storyArt(lockCh,4)+'</div>'+
+  '<div class="note" style="margin-top:8px">'+ch.lock+'</div>'+
+  '<div class="lkrow" id="lk-d"></div>'+
+  '<div class="hintcards">'+ch.sc.map(function(sc,i){
+    return sc.hint?('<div class="hc">'+storyArt(lockCh,i).replace('style="width:100%;height:auto;display:block;border-radius:12px"','style="width:100%;height:auto;display:block"')+
+      '<span>'+sc.hint+'</span></div>'):"";
+   }).join("")+'</div>'+
+  '<div class="gpad" id="lk-pad">'+
+   [1,2,3,4,5,6,7,8,9].map(function(n){return '<button data-l="'+n+'">'+n+'</button>';}).join("")+
+   '<button class="fn" data-l="del">けす</button><button data-l="0">0</button>'+
+   '<button class="ok" data-l="ok">あける</button></div>';
+ evShow("なぞとき", body, null, null, "あとで");
+ lockDraw();
+ document.getElementById("lk-pad").onclick=function(e){
+  var b=e.target.closest("[data-l]");if(!b)return;
+  var v=b.getAttribute("data-l");
+  if(v==="del"){lockIn=lockIn.slice(0,-1);lockDraw();return;}
+  if(v==="ok"){
+   if(lockIn.length<3)return;
+   if(lockIn===ch.ans){
+    var kk=P(),s2=kk.story;
+    kk.encNext=2;
+    s2.ch++;s2.sc=0;s2.hints=[];
+    if(s2.ch%STORY.length===0)s2.loop++;
     save();beep("clear");
-    evShow("せいかい！",'<div class="sart">'+storyEndArt(chI)+'</div><div class="scene">'+ch.end+'</div><div class="note" style="margin-top:8px">つぎの プリントで、レアな キャラが かならず あらわれる！</div>',null,null);
+    evShow("あいた！",'<div class="sart">'+storyEndArt(lockCh)+'</div><div class="scene">'+ch.end+'</div>'+
+     '<div class="note" style="margin-top:8px">つぎの プリントで、レアな キャラが かならず あらわれる！</div>',null,null);
    }else{
     beep("ng");
-    evShow("うーん…","<div class='note'>ちがうみたい。ヒントを もういちど よんで かんがえよう。</div>",null,function(){storyRiddle();},"もういちど");
+    var dd=document.getElementById("lk-d");
+    if(dd){dd.classList.add("ng");setTimeout(function(){dd.classList.remove("ng");},450);}
+    lockIn="";lockDraw();
    }
-  });
+   return;
+  }
+  if(lockIn.length<3){lockIn+=v;lockDraw();}
+ };
 }
-
 /* ---- ミニゲーム（3たく バブル） ---- */
 var gm=null;
 function startGame(){
@@ -4203,8 +4281,9 @@ function renderZukan(){
   if(zFilter!=="all"&&String(r)!==zFilter)continue;
   var own=k.chars&&k.chars[i];
   if(own){
-   h+='<button class="zcell" data-c="'+i+'">'+charSVG(i,"")+
-     '<div class="nm">'+cname(i)+'</div>'+
+   var stg=evoStage(own.n);
+   h+='<button class="zcell'+(stg?" evo":"")+'" data-c="'+i+'">'+charSVG(i,"",stg)+
+     '<div class="nm">'+evoName(i,stg)+'</div>'+
      '<div class="cnt" style="color:'+RARC[r]+'">'+RARN[r]+(own.n>1?" ×"+own.n:"")+'</div></button>';
   }else{
    h+='<div class="zcell locked"><div class="q">？</div><div class="nm">No.'+("00"+(i+1)).slice(-3)+'</div>'+
@@ -4217,16 +4296,19 @@ document.getElementById("z-grid").addEventListener("click",function(e){
  var b=e.target.closest("[data-c]");if(!b)return;
  var id=Number(b.getAttribute("data-c")),k=P(),r=crar(id);
  var ci=cinfo(id),SPN=["スライム","ネコ","トリ","サカナ","ドラゴン","ロボ","ホシ","キノコ","オバケ","クモ"];
- document.getElementById("zd-art").innerHTML=charSVG(id,"");
+ var stg=evoStage(k.chars[id].n);
+ document.getElementById("zd-art").innerHTML=charSVG(id,"",stg);
  document.getElementById("zd-no").textContent="No."+("00"+(id+1)).slice(-3);
- document.getElementById("zd-name").textContent=ci[0];
+ document.getElementById("zd-name").textContent=evoName(id,stg);
  document.getElementById("zd-rar").innerHTML='<span class="rtag" style="background:'+RARC[r]+'">'+RARN[r]+'</span>';
  document.getElementById("zd-desc").textContent=ci[1];
  document.getElementById("zd-sp").textContent=SPN[id%10];
  document.getElementById("zd-wz").textContent=ci[2];
  document.getElementById("zd-sk").textContent=ci[3];
  var o=k.chars[id];
- document.getElementById("zd-got").textContent=o.d+" に なかまに なった"+(o.n>1?("　×"+o.n+"ひき"):"");
+ var need=stg===0?(2-o.n):(stg===1?(5-o.n):0);
+ document.getElementById("zd-got").textContent=o.d+" に なかまに なった"+(o.n>1?("　×"+o.n+"ひき"):"")+
+  (need>0?("　あと "+need+"ひきで しんか！"):(stg===2?"　さいしゅう しんか！":""));
  document.getElementById("zd").classList.remove("hide");
 });
 document.getElementById("zd-close").addEventListener("click",function(){
