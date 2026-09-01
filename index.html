@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01f / kumon_math_ver3.3 -->
+<!-- BUILD_TAG: 2026-09-01g / kumon_math_ver3.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -11,6 +11,14 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>まいにち計算</title>
+<script>
+/* インストールイベントは本体スクリプトの実行前に飛んでくることがあるため、ここで先に捕まえる */
+window.__bip=null;
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();window.__bip=e;
+  if(window.__onBip)window.__onBip();
+});
+</script>
 <style>
 :root{
   --ink:#151b22; --sumi:#5a6672; --usu:#9aa4ae;
@@ -253,7 +261,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.3 / 2026-09-01f</div>
+  <div class="tiny">まいにち計算 ver3.4 / 2026-09-01g</div>
 </section>
 
 <!-- こども追加 -->
@@ -299,7 +307,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01f</div>
+  <div class="tiny">BUILD 2026-09-01g</div>
 </section>
 
 <!-- れいだい -->
@@ -455,7 +463,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.3 / BUILD 2026-09-01f</div>
+  <div class="tiny">kumon_math ver3.4 / BUILD 2026-09-01g</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -469,7 +477,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <h3>ホーム画面に 入れる</h3>
   <div class="note" id="ht-lead"></div>
   <ol class="steps" id="ht-steps" style="padding-left:20px;margin:14px 0 0"></ol>
-  <button class="btn" id="ht-cl" style="margin-top:16px">とじる</button>
+  <button class="btn hide" id="ht-go" style="margin-top:14px">この画面から 入れる</button>
+  <button class="btn q" id="ht-cl" style="margin-top:6px">とじる</button>
 </div></div>
 
 <div class="mask hide" id="gate"><div class="dlg">
@@ -489,7 +498,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01f";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01g";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1416,7 +1425,8 @@ document.getElementById("rs-hm").addEventListener("click",function(){renderHome(
 /* ============================================================
    7.5 アプリのインストール・共有
    ============================================================ */
-var deferredPrompt=null;
+var deferredPrompt=window.__bip||null;
+window.__onBip=function(){deferredPrompt=window.__bip;updateInstallUI();};
 function isStandalone(){
  return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
 }
@@ -1428,18 +1438,24 @@ function updateInstallUI(){
  var b=document.getElementById("st-inst");
  if(b)b.classList.toggle("hide",isStandalone());
 }
-window.addEventListener("beforeinstallprompt",function(e){
- e.preventDefault();deferredPrompt=e;updateInstallUI();
-});
 window.addEventListener("appinstalled",function(){
  deferredPrompt=null;updateInstallUI();
  alert("ホーム画面に ついかしました。つぎからは アイコンから ひらけます。");
 });
 function doInstall(){
- if(deferredPrompt){
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(function(){deferredPrompt=null;updateInstallUI();});
-  return;
+ if(isStandalone()){alert("すでに アプリとして ひらいています。");return;}
+ var d=deferredPrompt||window.__bip;
+ if(d){
+  try{
+   d.prompt();
+   if(d.userChoice&&d.userChoice.then){
+    d.userChoice.then(function(c){
+     deferredPrompt=null;window.__bip=null;updateInstallUI();
+     if(c&&c.outcome==="dismissed")openHowto();
+    });
+   }
+   return;
+  }catch(e){}
  }
  openHowto();
 }
@@ -1454,8 +1470,12 @@ function openHowto(){
  }
  document.getElementById("ht-lead").textContent=lead;
  document.getElementById("ht-steps").innerHTML=steps.map(function(x){return "<li>"+x+"</li>";}).join("");
+ document.getElementById("ht-go").classList.toggle("hide",!(deferredPrompt||window.__bip));
  document.getElementById("howto").classList.remove("hide");
 }
+document.getElementById("ht-go").addEventListener("click",function(){
+ document.getElementById("howto").classList.add("hide");doInstall();
+});
 document.getElementById("ht-cl").addEventListener("click",function(){document.getElementById("howto").classList.add("hide");});
 document.getElementById("inst-go").addEventListener("click",doInstall);
 document.getElementById("inst-cl").addEventListener("click",function(){
