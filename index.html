@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02m / kumon_math_ver6.3 -->
+<!-- BUILD_TAG: 2026-09-02n / kumon_math_ver6.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.3 / 2026-09-02m</div>
+  <div class="tiny">まいにち計算 ver6.4 / 2026-09-02n</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02m</div>
+  <div class="tiny">BUILD 2026-09-02n</div>
 </section>
 
 <!-- れいだい -->
@@ -523,8 +523,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <div class="last" id="hwlast"></div></div>
     <div class="hwrow" id="hwrow">
       <button data-h="ext" id="hwext">−</button>
-      <button class="fn" data-h="del">けす</button>
-      <button class="fn" data-h="clr">かきなおす</button>
+      <button class="fn" data-h="undo">1つ もどす</button>
+      <button class="fn" data-h="clr">ぜんぶ けす</button>
       <button class="go" data-h="go">こたえる</button>
     </div>
   </div>
@@ -737,7 +737,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.3 / BUILD 2026-09-02m</div>
+  <div class="tiny">kumon_math ver6.4 / BUILD 2026-09-02n</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -808,7 +808,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02m";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02n";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2357,6 +2357,21 @@ function hwBoxToVector(M,b){
  }
  return out;
 }
+var hwStrokes=[],hwCur=null;
+function hwRedraw(){
+ if(!hwcx)return;
+ hwcx.clearRect(0,0,hwcv.width,hwcv.height);
+ hwStyle();
+ hwStrokes.forEach(function(st){
+  if(!st.length)return;
+  hwcx.beginPath();hwcx.moveTo(st[0].x,st[0].y);
+  if(st.length===1)hwcx.lineTo(st[0].x+0.1,st[0].y);
+  for(var i=1;i<st.length;i++)hwcx.lineTo(st[i].x,st[i].y);
+  hwcx.stroke();
+ });
+ hwInk=hwStrokes.length>0;
+ document.getElementById("hwghost").classList.toggle("off",hwInk);
+}
 function hwSetup(){
  hwcv=document.getElementById("hwcv");
  if(hwcv.__ready)return;
@@ -2367,12 +2382,16 @@ function hwSetup(){
   clearTimeout(hwTimer);
   document.getElementById("hwghost").classList.add("off");
   try{hwcv.setPointerCapture(e.pointerId);}catch(err){}
-  var p=hwPos(e);hwStyle();hwcx.beginPath();hwcx.moveTo(p.x,p.y);hwcx.lineTo(p.x+.1,p.y);hwcx.stroke();
+  var p=hwPos(e);
+  hwCur=[{x:p.x,y:p.y}];hwStrokes.push(hwCur);
+  hwStyle();hwcx.beginPath();hwcx.moveTo(p.x,p.y);hwcx.lineTo(p.x+.1,p.y);hwcx.stroke();
   e.preventDefault();
  });
  hwcv.addEventListener("pointermove",function(e){
   if(!hwDraw)return;
-  var p=hwPos(e);hwStyle();hwcx.lineTo(p.x,p.y);hwcx.stroke();e.preventDefault();
+  var p=hwPos(e);
+  if(hwCur)hwCur.push({x:p.x,y:p.y});
+  hwStyle();hwcx.lineTo(p.x,p.y);hwcx.stroke();e.preventDefault();
  });
  ["pointerup","pointercancel"].forEach(function(t){
   hwcv.addEventListener(t,function(e){
@@ -2380,7 +2399,7 @@ function hwSetup(){
    hwDraw=false;
    try{hwcv.releasePointerCapture(e.pointerId);}catch(err){}
    clearTimeout(hwTimer);
-   hwTimer=setTimeout(hwRecognize,850);
+   hwTimer=setTimeout(hwRecognize,240);
   });
  });
 }
@@ -2392,42 +2411,47 @@ function hwResize(){
  hwcv.width=Math.round(r.width);hwcv.height=Math.round(r.height);
 }
 function hwClearCanvas(){
+ hwStrokes=[];hwCur=null;
  if(!hwcx)return;
  hwcx.clearRect(0,0,hwcv.width,hwcv.height);
  hwInk=false;
- document.getElementById("hwghost").classList.remove("off");
+ var g=document.getElementById("hwghost");
+ if(g)g.classList.remove("off");
 }
 function hwRecognize(){
  if(!hwInk||!DM)return;
  var M=hwInkMask();
- hwClearCanvas();
  if(!M)return;
  var boxes=hwMergeBoxes(hwComponents(M),M.w,M.h);
  if(!boxes.length)return;
- var q=cq(),txt="";
+ var isTest=!document.getElementById("s-sheet").classList.contains("on");
+ var q=isTest?test.qs[test.n]:cq();
+ var txt="",low=false;
  boxes.forEach(function(b){
   var bw=b.x1-b.x0+1,bh=b.y1-b.y0+1;
-  /* 横に長い線は マイナス、小さくて下のほうの点は 小数点とみなす */
   if(q.keys.neg&&bw/bh>2.4&&bh<M.h*0.22){txt+="-";return;}
   if(q.keys.dot&&bw<M.h*0.22&&bh<M.h*0.22&&b.y0>M.h*0.55){txt+=".";return;}
   var v=hwBoxToVector(M,b);
   if(!v)return;
   var r=predictDigit(v);
-  txt+=(r.p<0.5?"?":"")+r.d;
+  if(r.p<0.5)low=true;
+  txt+=r.d;
  });
- if(!txt)return;
+ if(!txt||txt==="-"||txt===".")return;
  var lab=document.getElementById("hwlast");
- lab.textContent=txt;
+ lab.textContent=(low?"？ ":"")+txt;
  lab.classList.add("on");
- setTimeout(function(){lab.classList.remove("on");},1400);
- for(var i=0;i<txt.length;i++){
-  var c=txt[i];
-  if(c==="?")continue;
-  if(c==="-")onKey("neg");
-  else if(c===".")onKey("dot");
-  else onKey(c);
+ clearTimeout(window.__hwLabT);
+ window.__hwLabT=setTimeout(function(){lab.classList.remove("on");},1400);
+ /* 書いてある内容を そのまま 反映する（書き足せば すぐ 変わる） */
+ if(isTest){
+  if(!test)return;
+  test.inp[test.box]=txt;drawT();
+ }else{
+  if(!run||lock)return;
+  run.inp[run.box]=txt;draw();
  }
- maybeAutoSubmit(false);
+ maybeAutoSubmit(isTest);
 }
 function hwToggle(on){
  hwOn=on;
@@ -2457,10 +2481,29 @@ document.getElementById("inmode").addEventListener("click",function(e){
 document.getElementById("hwrow").addEventListener("click",function(e){
  var b=e.target.closest("[data-h]");if(!b)return;
  var k=b.getAttribute("data-h");
- if(k==="clr"){clearTimeout(hwTimer);hwClearCanvas();return;}
- if(k==="del"){onKey("del");return;}
- if(k==="go"){clearTimeout(hwTimer);if(hwInk)hwRecognize();setTimeout(function(){onKey("go");},hwInk?60:0);return;}
- if(k==="ext"){var q=cq();onKey(q.keys.neg?"neg":"dot");return;}
+ var isTest=!document.getElementById("s-sheet").classList.contains("on");
+ if(k==="clr"){
+  clearTimeout(hwTimer);hwClearCanvas();
+  if(isTest){if(test){test.inp[test.box]="";drawT();}}
+  else if(run){run.inp[run.box]="";draw();}
+  return;
+ }
+ if(k==="undo"){
+  clearTimeout(hwTimer);
+  hwStrokes.pop();hwRedraw();
+  if(!hwStrokes.length){
+   if(isTest){if(test){test.inp[test.box]="";drawT();}}
+   else if(run){run.inp[run.box]="";draw();}
+  }else hwRecognize();
+  return;
+ }
+ if(k==="go"){clearTimeout(hwTimer);if(hwInk)hwRecognize();setTimeout(function(){isTest?onTK("go"):onKey("go");},hwInk?80:0);return;}
+ if(k==="ext"){
+  var q=isTest?test.qs[test.n]:cq();
+  var kk=q.keys.neg?"neg":"dot";
+  isTest?onTK(kk):onKey(kk);
+  return;
+ }
 });
 window.addEventListener("resize",function(){if(hwOn)setTimeout(function(){hwResize();hwClearCanvas();},50);});
 
