@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02t / kumon_math_ver6.9 -->
+<!-- BUILD_TAG: 2026-09-02u / kumon_math_ver7.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -425,7 +425,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.9 / 2026-09-02t</div>
+  <div class="tiny">まいにち計算 ver7.0 / 2026-09-02u</div>
 </section>
 
 <!-- こども追加 -->
@@ -479,7 +479,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02t</div>
+  <div class="tiny">BUILD 2026-09-02u</div>
 </section>
 
 <!-- れいだい -->
@@ -773,7 +773,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.9 / BUILD 2026-09-02t</div>
+  <div class="tiny">kumon_math ver7.0 / BUILD 2026-09-02u</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -855,7 +855,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02t";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02u";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2141,12 +2141,13 @@ function onKey(k){
  if(k==="del"){run.inp[run.box]=run.inp[run.box].slice(0,-1);draw();return;}
  if(k==="go"){submit();return;}
  if(k==="mic"){voiceToggle("pad");return;}
- if(k==="neg"){run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];draw();return;}
+ if(k==="neg"){run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];draw();maybeAutoSubmit(false);return;}
  if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
  if(run.inp[run.box].replace("-","").length>=6)return;
  run.inp[run.box]+=k;
  if(q.slots.length>1&&run.box===0&&run.inp[1]===""&&run.inp[0].replace("-","").length>=String(Math.abs(q.slots[0].ans)).length)run.box=1;
  draw();
+ maybeAutoSubmit(false);
 }
 /* 手書き・音声で 入れた答えが 合っていたら、こたえるを 押さずに 進む */
 var autoBusy=false;
@@ -3152,13 +3153,14 @@ function parseSpeech(txt){
 }
 function voiceApply(v){
  var isTest=voiceTarget==="t-pad";
- var h=isTest?onTKey:onKey;
- if(v==="DEL"){h("del");return;}
- for(var i=0;i<v.length;i++){
-  var c=v[i];
-  if(c==="-")h("neg");
-  else if(c===".")h("dot");
-  else h(c);
+ if(v==="DEL"){isTest?onTKey("del"):onKey("del");return;}
+ /* 声で言い直したときに 数字が くっつかないよう、いつも 置きかえる */
+ if(isTest){
+  if(!test||document.getElementById("t-run").classList.contains("hide"))return;
+  test.inp[test.box]=v;drawT();
+ }else{
+  if(!run||lock||!document.getElementById("s-sheet").classList.contains("on"))return;
+  run.inp[run.box]=v;draw();
  }
  if(S.sound){try{tone({f:1000,dur:.05,vol:.06,wave:"sine"});}catch(e){}}
  maybeAutoSubmit(isTest);
@@ -3172,20 +3174,24 @@ function voiceStart(){
  try{
   rec=new SR();
   rec.lang="ja-JP";rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
-  var used={};
+  var lastIdx=-1,lastVal=null;
   rec.onresult=function(e){
    for(var i=e.resultIndex;i<e.results.length;i++){
-    var r=e.results[i];
-    var v=parseSpeech(r[0].transcript);
+    var v=parseSpeech(e.results[i][0].transcript);
     if(v===null)continue;
-    var key=i+"_"+v;
-    if(used[key])continue;
-    /* 途中経過で入れたものが 確定でも来るため、同じ結果は 1回だけ使う */
-    used[key]=1;
+    /* 同じ発話（同じ index）で 同じ内容なら、途中経過と確定で 二重に 入れない */
+    if(i===lastIdx&&v===lastVal)continue;
+    lastIdx=i;lastVal=v;
     voiceApply(v);
    }
   };
-  rec.onerror=function(){};
+  rec.onerror=function(ev){
+   var t=ev&&ev.error;
+   if(t==="not-allowed"||t==="service-not-allowed"){
+    voiceStop();
+    alert("マイクが つかえません。ブラウザの マイクの きょかを かくにんしてください。");
+   }
+  };
   rec.onend=function(){
    rec=null;
    if(voiceOn){
@@ -3620,6 +3626,7 @@ function onTK(k){
  test.inp[test.box]+=k;
  if(q.slots.length>1&&test.box===0&&test.inp[1]==="")test.box=1;
  drawT();
+ maybeAutoSubmit(true);
 }
 function tAns(ok){
  beep(ok?"ok":"ng");
