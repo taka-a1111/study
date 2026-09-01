@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02n / kumon_math_ver6.4 -->
+<!-- BUILD_TAG: 2026-09-02p / kumon_math_ver6.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -421,7 +421,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver6.4 / 2026-09-02n</div>
+  <div class="tiny">まいにち計算 ver6.5 / 2026-09-02p</div>
 </section>
 
 <!-- こども追加 -->
@@ -475,7 +475,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02n</div>
+  <div class="tiny">BUILD 2026-09-02p</div>
 </section>
 
 <!-- れいだい -->
@@ -737,7 +737,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver6.4 / BUILD 2026-09-02n</div>
+  <div class="tiny">kumon_math ver6.5 / BUILD 2026-09-02p</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -808,7 +808,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02n";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02p";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1924,7 +1924,7 @@ function startPrint(){
  var full=run.std[1]*1.25;
  document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
  document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
- lock=false;
+ lock=false;hwQKey="";
  cvSetup();penToggle(false);cvClear();
  draw();tick();
  run.timer=setInterval(tick,1000);
@@ -1957,7 +1957,8 @@ function draw(){
  cvClear();
  if(penOn)setTimeout(cvResizeKeep,30);
  if(hwOn){
-  clearTimeout(hwTimer);hwClearCanvas();
+  var qk=(run.fixing?"f"+run.fixQ[0]:"q"+run.i);
+  if(qk!==hwQKey){hwQKey=qk;clearTimeout(hwTimer);hwClearCanvas();}
   var ex=document.getElementById("hwext"),qq=cq();
   ex.textContent=qq.keys.neg?"−":(qq.keys.dot?".":"");
   ex.style.visibility=(qq.keys.neg||qq.keys.dot)?"visible":"hidden";
@@ -2028,7 +2029,11 @@ function maybeAutoSubmit(isTest){
   });
   if(ta&&tr){
    autoBusy=true;
-   setTimeout(function(){autoBusy=false;onTK("go");},260);
+   setTimeout(function(){
+    autoBusy=false;
+    clearTimeout(hwTimer);hwClearCanvas();hwQKey="";
+    onTK("go");
+   },260);
   }
   return;
  }
@@ -2040,7 +2045,11 @@ function maybeAutoSubmit(isTest){
  });
  if(all&&right){
   autoBusy=true;
-  setTimeout(function(){autoBusy=false;submit();},260);
+  setTimeout(function(){
+   autoBusy=false;
+   clearTimeout(hwTimer);hwClearCanvas();hwQKey="";
+   submit();
+  },260);
  }
 }
 function same(inp,ans){
@@ -2357,7 +2366,7 @@ function hwBoxToVector(M,b){
  }
  return out;
 }
-var hwStrokes=[],hwCur=null;
+var hwStrokes=[],hwCur=null,hwQKey="";
 function hwRedraw(){
  if(!hwcx)return;
  hwcx.clearRect(0,0,hwcv.width,hwcv.height);
@@ -3365,6 +3374,13 @@ function drawT(){
  document.getElementById("tqp").innerHTML=q.prompt;
  document.getElementById("tqs").innerHTML=slotHTML(q,test.inp,test.box,null);
  buildPad("t-pad",onTK,q.keys);
+ if(hwOn){
+  var tk="t"+test.n;
+  if(tk!==hwQKey){hwQKey=tk;clearTimeout(hwTimer);hwClearCanvas();}
+  var tex=document.getElementById("hwext");
+  tex.textContent=q.keys.neg?"−":(q.keys.dot?".":"");
+  tex.style.visibility=(q.keys.neg||q.keys.dot)?"visible":"hidden";
+ }
  if(voiceOn&&voiceTarget==="t-pad")voiceMark(true);
  bindSlots("tqs",function(n){test.box=n;drawT();});
 }
