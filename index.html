@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01m / kumon_math_ver3.9 -->
+<!-- BUILD_TAG: 2026-09-01n / kumon_math_ver4.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -160,16 +160,16 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .qp .op{color:var(--sumi);padding:0 5px}
 .qp .sm{font-size:24px}
 .qp .jp{font-family:var(--jp);font-size:16px;font-weight:400;color:var(--sumi);display:block;margin-bottom:10px}
-.vc{display:inline-block;text-align:right;min-width:160px;font-size:36px}
+.vc{display:inline-block;text-align:right;min-width:150px;font-size:36px}
 .vc .op{float:left;padding:0}
-.vc .rl{height:3px;background:var(--ink);margin-top:7px}
+.vc .rl{display:block;height:3px;background:var(--ink);margin-top:8px;border-radius:2px}
 .dg{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:240px;margin:0 auto}
 .dg i{width:25px;height:25px;border-radius:50%;background:var(--ai)}
 .fc{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;font-size:.7em;margin:0 4px}
 .fc .n{border-bottom:2.5px solid var(--ink);padding:0 8px 2px}
 .fc .d{padding:2px 8px 0}
 .bl{display:inline-block;min-width:48px;border-bottom:3px solid var(--ai);color:var(--ai)}
-.sl{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.sl{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:6}
 .sll{font-size:13.5px;color:var(--sumi)}
 .bx{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:62px;padding:0 12px;border:2px solid var(--line);border-radius:12px;background:var(--soft);font-family:var(--num);font-size:32px;font-weight:700}
 .bx.s{min-width:74px;height:54px;font-size:26px}
@@ -181,6 +181,13 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .cap{font-size:10.5px;color:var(--usu);text-align:center}
 .fs{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
 .fs .b{width:66px;height:3px;background:var(--ink)}
+.scr{position:absolute;inset:0;width:100%;height:100%;z-index:3;touch-action:none;pointer-events:none}
+.scr.on{pointer-events:auto}
+.tools{position:absolute;right:9px;bottom:9px;display:flex;gap:6px;z-index:7}
+.tools button{width:42px;height:42px;border-radius:11px;background:var(--surf);border:1px solid var(--line);
+  font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tools button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
+.ib.act{background:var(--ai);color:#fff;border-color:var(--ai)}
 .fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.94);border-radius:6px;z-index:5}
 .fb .m{font-size:74px;line-height:1;font-weight:700}
 .fb.ok .m{color:var(--mid)}
@@ -208,7 +215,7 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .mrow .fm .dg i{width:9px;height:9px}
 .mrow .fm .bl{min-width:26px;border-width:2px}
 .mrow .fm .vc{font-size:15px;min-width:auto;display:inline-block}
-.mrow .fm .vc .rl{margin-top:2px}
+.mrow .fm .vc .rl{display:block;height:2px;margin-top:2px}
 .mrow .fm .fc{font-size:.65em}
 .mrow .yr{font-family:var(--num);font-size:16px;font-weight:700;white-space:nowrap}
 .mrow.x .yr{color:var(--aka);text-decoration:line-through;font-weight:400;font-size:14px}
@@ -278,7 +285,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.9 / 2026-09-01m</div>
+  <div class="tiny">まいにち計算 ver4.0 / 2026-09-01n</div>
 </section>
 
 <!-- こども追加 -->
@@ -326,7 +333,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01m</div>
+  <div class="tiny">BUILD 2026-09-01n</div>
 </section>
 
 <!-- れいだい -->
@@ -347,12 +354,21 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="stop">
     <div class="l"><b id="sh-id"></b><span id="sh-p"></span></div>
     <div class="r"><span class="tm num" id="sh-t">0:00</span>
+      <button class="ib" id="sh-pen">✏️</button>
       <button class="ib" id="sh-ex">例</button><button class="ib" id="sh-q">×</button></div>
   </div>
   <div class="gg" id="sh-g"><b></b><i id="tk1"></i><i id="tk2"></i></div>
   <div class="gl"><span id="sh-n"></span><span id="sh-s"></span></div>
   <div class="pg" id="sh-pg"></div>
-  <div class="pp" id="sh-pp"><div class="qp" id="qp"></div><div class="sl" id="qs"></div></div>
+  <div class="pp" id="sh-pp">
+    <canvas class="scr" id="scr"></canvas>
+    <div class="qp" id="qp"></div><div class="sl" id="qs"></div>
+    <div class="tools hide" id="tools">
+      <button data-t="pen" class="on" title="ペン">✏️</button>
+      <button data-t="era" title="消しゴム">⌫</button>
+      <button data-t="clr" title="ぜんぶ消す">🗑</button>
+    </div>
+  </div>
   <div class="pad" id="pad"></div>
   <div style="height:12px"></div>
 </section>
@@ -485,7 +501,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.9 / BUILD 2026-09-01m</div>
+  <div class="tiny">kumon_math ver4.0 / BUILD 2026-09-01n</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -531,7 +547,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01m";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01n";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1244,6 +1260,7 @@ function startPrint(){
  document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
  document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
  lock=false;
+ cvSetup();cvClear();
  draw();tick();
  run.timer=setInterval(tick,1000);
  show("s-sheet");
@@ -1271,6 +1288,7 @@ function draw(){
  buildPad("pad",onKey,q.keys);
  bindSlots("qs",function(n){run.box=n;draw();});
  readyBtn();
+ cvClear();
 }
 function slotHTML(q,inp,box,mark){
  if(q.layout==="frac")
@@ -1466,6 +1484,68 @@ document.getElementById("rs-nx").addEventListener("click",function(){
  startPrint();
 });
 document.getElementById("rs-hm").addEventListener("click",function(){renderHome();show("s-home");});
+
+/* ---- 手書きメモ ---- */
+var cv=null,cx=null,penOn=false,penMode="pen",drawing=false;
+function cvSetup(){
+ cv=document.getElementById("scr");
+ if(!cv||cv.__ready)return;
+ cx=cv.getContext("2d");
+ cv.__ready=true;
+ cv.addEventListener("pointerdown",function(e){
+  drawing=true;
+  try{cv.setPointerCapture(e.pointerId);}catch(err){}
+  var p=cvPos(e);cvStyle();
+  cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x+0.1,p.y);cx.stroke();
+  e.preventDefault();
+ });
+ cv.addEventListener("pointermove",function(e){
+  if(!drawing)return;
+  var p=cvPos(e);cvStyle();
+  cx.lineTo(p.x,p.y);cx.stroke();
+  e.preventDefault();
+ });
+ ["pointerup","pointercancel","pointerleave"].forEach(function(t){
+  cv.addEventListener(t,function(){drawing=false;});
+ });
+ window.addEventListener("resize",function(){if(penOn)cvResize();});
+}
+function cvPos(e){
+ var r=cv.getBoundingClientRect();
+ return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+function cvStyle(){
+ cx.lineCap="round";cx.lineJoin="round";
+ if(penMode==="era"){cx.globalCompositeOperation="destination-out";cx.lineWidth=26;}
+ else{cx.globalCompositeOperation="source-over";cx.strokeStyle="#2557c7";cx.lineWidth=3;}
+}
+function cvResize(){
+ if(!cv)return;
+ var r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ if(!r.width||!r.height)return;
+ cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);
+ cx.setTransform(dpr,0,0,dpr,0,0);
+}
+function cvClear(){
+ if(!cv||!cx)return;
+ cx.save();cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);cx.restore();
+}
+function penToggle(on){
+ penOn=(on===undefined)?!penOn:on;
+ if(penOn)cvResize();
+ cv.classList.toggle("on",penOn);
+ document.getElementById("tools").classList.toggle("hide",!penOn);
+ document.getElementById("sh-pen").classList.toggle("act",penOn);
+}
+document.getElementById("sh-pen").addEventListener("click",function(){cvSetup();penToggle();});
+document.getElementById("tools").addEventListener("click",function(e){
+ var b=e.target.closest("[data-t]");if(!b)return;
+ var t=b.getAttribute("data-t");
+ if(t==="clr"){cvClear();return;}
+ penMode=t;
+ var bs=this.querySelectorAll("[data-t]");
+ for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-t")===penMode);
+});
 
 /* ============================================================
    7.5 アプリのインストール・共有
