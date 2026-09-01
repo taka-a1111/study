@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01v / kumon_math_ver4.7 -->
+<!-- BUILD_TAG: 2026-09-01w / kumon_math_ver4.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -186,11 +186,17 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .fs .b{width:66px;height:3px;background:var(--ink)}
 .scr{position:absolute;inset:0;width:100%;height:100%;z-index:3;touch-action:none;pointer-events:none}
 body.pen .pad{display:none}
-body.pen .pp{min-height:60dvh}
+body.pen .pp{min-height:62dvh;justify-content:flex-start;padding-top:16px}
 body.pen .sl{z-index:2}
-body.pen .qp{opacity:.92}
-.pennote{position:absolute;left:12px;top:10px;font-size:12px;color:var(--ai);background:var(--ai-s);
-  border-radius:8px;padding:4px 9px;z-index:7}
+body.pen .qp{opacity:.95}
+body.pen .qp .vc{padding-top:34px}
+/* 書きこみスペースであることが分かるよう うっすら方眼を敷く */
+body.pen .pp{background-image:
+  repeating-linear-gradient(to bottom,transparent 0 31px,#eef1ee 31px 32px),
+  repeating-linear-gradient(to right,transparent 0 31px,#eef1ee 31px 32px)}
+.pennote{position:absolute;right:12px;top:10px;font-size:12px;color:var(--ai);background:var(--ai-s);
+  border-radius:8px;padding:5px 10px;z-index:7;transition:opacity .5s}
+.pennote.fade{opacity:0;pointer-events:none}
 /* ひっ算は くり上がりを 書きこめるよう 上下に 余白をとる */
 .qp .vc{padding-top:30px}
 .qp:has(.vc){padding-bottom:6px}
@@ -314,7 +320,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.7 / 2026-09-01v</div>
+  <div class="tiny">まいにち計算 ver4.8 / 2026-09-01w</div>
 </section>
 
 <!-- こども追加 -->
@@ -362,7 +368,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01v</div>
+  <div class="tiny">BUILD 2026-09-01w</div>
 </section>
 
 <!-- れいだい -->
@@ -540,7 +546,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.7 / BUILD 2026-09-01v</div>
+  <div class="tiny">kumon_math ver4.8 / BUILD 2026-09-01w</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -600,7 +606,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01v";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01w";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1869,7 +1875,10 @@ function penToggle(on){
  document.body.classList.toggle("pen",penOn);
  cv.classList.toggle("on",penOn);
  document.getElementById("tools").classList.toggle("hide",!penOn);
- document.getElementById("pennote").classList.toggle("hide",!penOn);
+ var pn=document.getElementById("pennote");
+ pn.classList.toggle("hide",!penOn);
+ pn.classList.remove("fade");
+ if(penOn){clearTimeout(window.__pnT);window.__pnT=setTimeout(function(){pn.classList.add("fade");},3500);}
  document.getElementById("sh-pen").classList.toggle("act",penOn);
  /* 用紙の大きさが変わるので、描画内容を保ったまま作り直す */
  setTimeout(function(){cvResizeKeep();},30);
