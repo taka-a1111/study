@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01z / kumon_math_ver5.1 -->
+<!-- BUILD_TAG: 2026-09-02a / kumon_math_ver5.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -341,7 +341,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver5.1 / 2026-09-01z</div>
+  <div class="tiny">まいにち計算 ver5.2 / 2026-09-02a</div>
 </section>
 
 <!-- こども追加 -->
@@ -389,7 +389,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01z</div>
+  <div class="tiny">BUILD 2026-09-02a</div>
 </section>
 
 <!-- れいだい -->
@@ -567,6 +567,27 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="btn l" id="st-addkid" style="margin-top:10px">＋ 学習者を ついか</button>
   </div>
   <div class="card">
+    <h3>クラウド同期（家族で共有）</h3>
+    <div id="sy-out">
+      <div class="note">メールと パスワードで ログインすると、学習の記録が クラウドに 保存され、ご夫婦の 端末で 同じ 進度を 見られます。</div>
+      <label class="f"><span>メールアドレス</span><input type="text" id="sy-mail" inputmode="email" autocomplete="username" placeholder="you@example.com"></label>
+      <label class="f"><span>パスワード（6文字以上）</span><input type="password" id="sy-pass" autocomplete="current-password" placeholder="パスワード"></label>
+      <div class="stk" style="margin-top:14px">
+        <button class="btn" id="sy-login">ログイン</button>
+        <button class="btn l" id="sy-signup">はじめて（アカウントを作る）</button>
+      </div>
+    </div>
+    <div id="sy-in" class="hide">
+      <div class="row"><span id="sy-who"></span><span class="r" id="sy-at"></span></div>
+      <div class="stk" style="margin-top:12px">
+        <button class="btn o" id="sy-now">いま すぐ 同期する</button>
+        <button class="btn l" id="sy-pull">クラウドの 記録を 取りこむ</button>
+        <button class="btn q" id="sy-out2">ログアウト</button>
+      </div>
+      <div class="note" style="padding-top:8px">プリントを 1枚 おえるたびに 自動で 保存され、アプリを ひらくたびに 取りこみます。</div>
+    </div>
+  </div>
+  <div class="card">
     <h3>アプリ・共有</h3>
     <div class="note" style="padding-bottom:10px">バージョン <b id="st-ver" style="font-weight:700"></b></div>
     <div class="stk">
@@ -585,7 +606,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver5.1 / BUILD 2026-09-01z</div>
+  <div class="tiny">kumon_math ver5.2 / BUILD 2026-09-02a</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -645,7 +666,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01z";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02a";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1891,6 +1912,7 @@ function showResult(){
  nb.textContent=adv?"つぎの プリントへ":"もういちど やる";
  nb.className="btn"+(adv?" g":" y");
  if(clear)beep("clear");
+ if(auth)syncPush(function(ok){if(ok)markSynced();});
  show("s-res");
 }
 document.getElementById("rs-nx").addEventListener("click",function(){
@@ -2273,6 +2295,152 @@ function shareApp(){
 }
 
 /* ============================================================
+   7.8 クラウド同期（Supabase）
+   ============================================================ */
+var SB_URL="https://fgbqheodukryhcmrjucn.supabase.co";
+var SB_KEY="sb_publishable_gGLBPr0f3AqjdvNlgJk5dA_pBQjWfHP";
+var AUTH_KEY="kumon_auth";
+var auth=null,syncing=false;
+try{auth=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");}catch(e){auth=null;}
+function saveAuth(){try{auth?localStorage.setItem(AUTH_KEY,JSON.stringify(auth)):localStorage.removeItem(AUTH_KEY);}catch(e){}}
+function sbFetch(path,opt){
+ opt=opt||{};
+ var h=opt.headers||{};
+ h["apikey"]=SB_KEY;
+ h["Content-Type"]="application/json";
+ if(opt.auth!==false&&auth&&auth.access_token)h["Authorization"]="Bearer "+auth.access_token;
+ return fetch(SB_URL+path,{method:opt.method||"GET",headers:h,body:opt.body});
+}
+function sbRefresh(){
+ if(!auth||!auth.refresh_token)return Promise.reject();
+ return sbFetch("/auth/v1/token?grant_type=refresh_token",{method:"POST",auth:false,
+  body:JSON.stringify({refresh_token:auth.refresh_token})})
+  .then(function(r){return r.json();})
+  .then(function(j){
+   if(!j.access_token)throw 0;
+   auth={access_token:j.access_token,refresh_token:j.refresh_token,email:(j.user&&j.user.email)||auth.email,uid:(j.user&&j.user.id)||auth.uid};
+   saveAuth();return true;
+  });
+}
+function sbAuth(mode,mail,pass){
+ var path=mode==="signup"?"/auth/v1/signup":"/auth/v1/token?grant_type=password";
+ return sbFetch(path,{method:"POST",auth:false,body:JSON.stringify({email:mail,password:pass})})
+  .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+  .then(function(x){
+   var j=x.j;
+   if(j.access_token){
+    auth={access_token:j.access_token,refresh_token:j.refresh_token,email:(j.user&&j.user.email)||mail,uid:j.user&&j.user.id};
+    saveAuth();return {ok:true};
+   }
+   if(mode==="signup"&&x.ok&&j.id)return {ok:false,msg:"かくにんメールを 送りました。メールの リンクを ひらいてから ログインしてください。"};
+   return {ok:false,msg:(j.error_description||j.msg||j.message||"うまくいきませんでした。")};
+  });
+}
+/* 端末とクラウドのデータを統合する（履歴は合わせ、進度は新しいほうを採用） */
+function mergeState(local,remote){
+ if(!remote||!remote.kids)return local;
+ var out=JSON.parse(JSON.stringify(local));
+ var byId={};
+ out.kids.forEach(function(k,i){byId[k.id]=i;});
+ remote.kids.forEach(function(rk){
+  if(!(rk.id in byId)){out.kids.push(rk);return;}
+  var lk=out.kids[byId[rk.id]];
+  var seen={},h=[];
+  (lk.history||[]).concat(rk.history||[]).forEach(function(x){
+   var key=x.ts+"_"+x.id;
+   if(!seen[key]){seen[key]=1;h.push(x);}
+  });
+  h.sort(function(a,b){return a.ts-b.ts;});
+  var lLast=lk.history&&lk.history.length?lk.history[lk.history.length-1].ts:0;
+  var rLast=rk.history&&rk.history.length?rk.history[rk.history.length-1].ts:0;
+  var src=rLast>lLast?rk:lk;
+  lk.history=h.slice(-900);
+  lk.stepIdx=src.stepIdx;lk.printNo=src.printNo;lk.printRepeat=src.printRepeat;
+  lk.name=src.name;lk.icon=src.icon;lk.daily=src.daily;lk.qmode=src.qmode;
+  for(var k in (rk.seenEx||{}))lk.seenEx[k]=true;
+ });
+ return out;
+}
+function syncPull(cb){
+ if(!auth){cb&&cb(false);return;}
+ sbFetch("/rest/v1/kumon_state?select=payload,updated_at&user_id=eq."+auth.uid)
+  .then(function(r){
+   if(r.status===401)return sbRefresh().then(function(){return sbFetch("/rest/v1/kumon_state?select=payload,updated_at&user_id=eq."+auth.uid);});
+   return r;
+  })
+  .then(function(r){return r.json();})
+  .then(function(rows){
+   if(rows&&rows.length&&rows[0].payload&&rows[0].payload.kids){
+    S=mergeState(S,rows[0].payload);
+    if(S.cur>=S.kids.length)S.cur=0;
+    save();
+   }
+   cb&&cb(true);
+  }).catch(function(){cb&&cb(false);});
+}
+function syncPush(cb){
+ if(!auth||syncing){cb&&cb(false);return;}
+ syncing=true;
+ var body=JSON.stringify({user_id:auth.uid,payload:S,device:(navigator.userAgent||"").slice(0,60)});
+ var opt={method:"POST",body:body,headers:{Prefer:"resolution=merge-duplicates"}};
+ sbFetch("/rest/v1/kumon_state?on_conflict=user_id",opt)
+  .then(function(r){
+   if(r.status===401)return sbRefresh().then(function(){return sbFetch("/rest/v1/kumon_state?on_conflict=user_id",opt);});
+   return r;
+  })
+  .then(function(r){syncing=false;cb&&cb(r.ok);})
+  .catch(function(){syncing=false;cb&&cb(false);});
+}
+function syncNow(cb){
+ syncPull(function(){syncPush(function(ok){renderSyncUI();cb&&cb(ok);});});
+}
+function renderSyncUI(){
+ var inEl=document.getElementById("sy-in"),outEl=document.getElementById("sy-out");
+ if(!inEl)return;
+ inEl.classList.toggle("hide",!auth);
+ outEl.classList.toggle("hide",!!auth);
+ if(auth){
+  document.getElementById("sy-who").textContent=auth.email||"ログイン中";
+  var t=Number(localStorage.getItem("kumon_synced")||0);
+  document.getElementById("sy-at").textContent=t?("さいご "+new Date(t).toLocaleString("ja-JP",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"})):"みどうき";
+ }
+}
+function markSynced(){try{localStorage.setItem("kumon_synced",String(Date.now()));}catch(e){}}
+document.getElementById("sy-login").addEventListener("click",function(){
+ var m=document.getElementById("sy-mail").value.trim(),p=document.getElementById("sy-pass").value;
+ if(!m||!p){alert("メールと パスワードを 入れてください。");return;}
+ this.textContent="ログイン中…";
+ var btn=this;
+ sbAuth("login",m,p).then(function(r){
+  btn.textContent="ログイン";
+  if(!r.ok){alert(r.msg);return;}
+  syncNow(function(){markSynced();renderSyncUI();renderHome();alert("ログインしました。記録を 同期しました。");});
+ });
+});
+document.getElementById("sy-signup").addEventListener("click",function(){
+ var m=document.getElementById("sy-mail").value.trim(),p=document.getElementById("sy-pass").value;
+ if(!m||p.length<6){alert("メールと 6文字以上の パスワードを 入れてください。");return;}
+ var btn=this;btn.textContent="つくっています…";
+ sbAuth("signup",m,p).then(function(r){
+  btn.textContent="はじめて（アカウントを作る）";
+  if(!r.ok){alert(r.msg);return;}
+  syncPush(function(){markSynced();renderSyncUI();alert("アカウントを 作りました。もう 1台でも 同じ メールと パスワードで ログインしてください。");});
+ });
+});
+document.getElementById("sy-now").addEventListener("click",function(){
+ var b=this;b.textContent="同期中…";
+ syncNow(function(ok){b.textContent="いま すぐ 同期する";if(ok)markSynced();renderSyncUI();renderHome();alert(ok?"同期しました。":"同期できませんでした。つうしんを かくにんしてください。");});
+});
+document.getElementById("sy-pull").addEventListener("click",function(){
+ var b=this;b.textContent="取りこみ中…";
+ syncPull(function(ok){b.textContent="クラウドの 記録を 取りこむ";renderSyncUI();renderHome();alert(ok?"取りこみました。":"取りこめませんでした。");});
+});
+document.getElementById("sy-out2").addEventListener("click",function(){
+ if(!confirm("ログアウトします。この端末の 記録は のこります。"))return;
+ auth=null;saveAuth();renderSyncUI();
+});
+
+/* ============================================================
    8. 音声入力
    ============================================================ */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
@@ -2415,6 +2583,7 @@ function renderSet(){
  document.getElementById("st-voice").classList.toggle("on",!!S.voice);
  document.getElementById("st-who").textContent=k.name;
  document.getElementById("st-ver").textContent=BUILD+(newBuild?"（あたらしい版あり）":"");
+ renderSyncUI();
  document.getElementById("st-bio").classList.toggle("on",waOn());
  waSupported().then(function(ok){
   document.getElementById("st-biorow").classList.toggle("hide",!ok&&!waOn());
@@ -2645,6 +2814,7 @@ if("serviceWorker" in navigator){
 }
 checkUpdate();
 document.addEventListener("visibilitychange",function(){if(!document.hidden)checkUpdate();});
+if(auth)syncPull(function(ok){if(ok){markSynced();renderHome();}});
 setTimeout(autoInstallPrompt,1400);
 window.__onBip=function(){
  deferredPrompt=window.__bip;updateInstallUI();
