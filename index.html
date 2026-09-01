@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01k / kumon_math_ver3.8 -->
+<!-- BUILD_TAG: 2026-09-01m / kumon_math_ver3.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -278,7 +278,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver3.8 / 2026-09-01k</div>
+  <div class="tiny">まいにち計算 ver3.9 / 2026-09-01m</div>
 </section>
 
 <!-- こども追加 -->
@@ -326,7 +326,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01k</div>
+  <div class="tiny">BUILD 2026-09-01m</div>
 </section>
 
 <!-- れいだい -->
@@ -485,7 +485,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver3.8 / BUILD 2026-09-01k</div>
+  <div class="tiny">kumon_math ver3.9 / BUILD 2026-09-01m</div>
 </section>
 
 <nav class="nav off" id="nav"><div class="nav-in">
@@ -498,7 +498,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <div class="mask hide" id="im"><div class="dlg" style="text-align:center">
   <img src="icon-192.png" width="76" height="76" alt="" style="border-radius:20px;margin:2px auto 10px;display:block">
   <h3 style="font-size:19px">アプリを 入れますか</h3>
-  <div class="note" style="margin-top:6px">ホーム画面の アイコンから すぐ ひらけます。電波がなくても 学習できます。</div>
+  <div class="note" id="im-note" style="margin-top:6px">ホーム画面の アイコンから すぐ ひらけます。電波がなくても 学習できます。</div>
   <ol class="steps hide" id="im-steps" style="padding-left:20px;margin:16px 0 0;text-align:left"></ol>
   <div class="stk" style="margin-top:18px">
     <button class="btn" id="im-go">インストール</button>
@@ -531,7 +531,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01k";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01m";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1504,26 +1504,62 @@ function doInstall(){
  }
  openHowto();
 }
-var IM_MAX=3;
-function imOpen(auto){
+var IM_MAX=3,imPoll=null;
+function imRender(){
  var d=deferredPrompt||window.__bip;
- var box=document.getElementById("im"),steps=document.getElementById("im-steps"),go=document.getElementById("im-go");
+ var steps=document.getElementById("im-steps"),go=document.getElementById("im-go"),note=document.getElementById("im-note");
  if(d){
+  /* ワンタップでインストールできる状態 */
   steps.classList.add("hide");
+  note.textContent="ホーム画面の アイコンから すぐ ひらけます。電波がなくても 学習できます。";
   go.classList.remove("hide");
   go.textContent="インストール";
- }else{
-  var list=isIOS()
-   ?["画面下の <b>共有</b>（□に↑のマーク）を おす","<b>ホーム画面に追加</b> を えらぶ","右上の <b>追加</b> を おす"]
-   :["右上の <b>⋮</b>（メニュー）を おす","<b>アプリをインストール</b> または <b>ホーム画面に追加</b> を えらぶ","<b>インストール</b> を おす"];
-  steps.innerHTML=list.map(function(x){return "<li>"+x+"</li>";}).join("");
-  steps.classList.remove("hide");
-  go.classList.add("hide");
+  return true;
  }
- document.getElementById("im-later").textContent=auto?"あとで":"とじる";
- box.classList.remove("hide");
+ go.classList.add("hide");
+ var list=isIOS()
+  ?["画面下の <b>共有</b>（□に↑のマーク）を おす","<b>ホーム画面に追加</b> を えらぶ","右上の <b>追加</b> を おす"]
+  :["右上の <b>⋮</b>（メニュー）を おす","<b>アプリをインストール</b> または <b>ホーム画面に追加</b> を えらぶ","<b>インストール</b> を おす"];
+ steps.innerHTML=list.map(function(x){return "<li>"+x+"</li>";}).join("");
+ steps.classList.remove("hide");
+ note.textContent="じゅんびを かくにん しています…";
+ return false;
 }
-function imClose(){document.getElementById("im").classList.add("hide");}
+function imOpen(auto){
+ document.getElementById("im-later").textContent=auto?"あとで":"とじる";
+ document.getElementById("im").classList.remove("hide");
+ var ready=imRender();
+ if(imPoll){clearInterval(imPoll);imPoll=null;}
+ if(ready)return;
+ /* インストール可能になるのを少し待つ（イベントが遅れて届くことがある） */
+ var tries=0;
+ imPoll=setInterval(function(){
+  tries++;
+  if(document.getElementById("im").classList.contains("hide")||imRender()||tries>24){
+   clearInterval(imPoll);imPoll=null;
+  }
+ },500);
+ /* すでにインストール済みかを確認する */
+ if(navigator.getInstalledRelatedApps){
+  navigator.getInstalledRelatedApps().then(function(apps){
+   if(apps&&apps.length){
+    document.getElementById("im-steps").classList.add("hide");
+    document.getElementById("im-go").classList.add("hide");
+    document.getElementById("im-note").textContent="すでに アプリが 入っています。ホーム画面の アイコンから ひらいてください。";
+    localStorage.setItem("inst_off","1");updateInstallUI();
+   }else{
+    if(!(deferredPrompt||window.__bip))
+     document.getElementById("im-note").textContent="この ブラウザでは 下の 手順で 追加してください。";
+   }
+  }).catch(function(){});
+ }else{
+  setTimeout(function(){
+   if(!(deferredPrompt||window.__bip))
+    document.getElementById("im-note").textContent="この ブラウザでは 下の 手順で 追加してください。";
+  },2500);
+ }
+}
+function imClose(){document.getElementById("im").classList.add("hide");if(imPoll){clearInterval(imPoll);imPoll=null;}}
 document.getElementById("im-go").addEventListener("click",function(){imClose();doInstall();});
 document.getElementById("im-later").addEventListener("click",imClose);
 /* 初回にひらいたとき、自動で案内を出す */
@@ -1880,7 +1916,7 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)chec
 setTimeout(autoInstallPrompt,1400);
 window.__onBip=function(){
  deferredPrompt=window.__bip;updateInstallUI();
- if(!document.getElementById("im").classList.contains("hide"))imOpen(true);
+ if(!document.getElementById("im").classList.contains("hide"))imRender();
  else setTimeout(autoInstallPrompt,300);
 };
 </script>
