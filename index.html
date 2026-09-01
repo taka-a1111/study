@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-01n / kumon_math_ver4.0 -->
+<!-- BUILD_TAG: 2026-09-01q / kumon_math_ver4.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -159,6 +159,9 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .qp{text-align:center;font-family:var(--num);font-size:38px;font-weight:600;line-height:1.35;word-break:break-word}
 .qp .op{color:var(--sumi);padding:0 5px}
 .qp .sm{font-size:24px}
+.qp sup{font-size:.55em;vertical-align:super}
+.qp sub{font-size:.55em;vertical-align:sub}
+.qp .fc{font-size:.6em}
 .qp .jp{font-family:var(--jp);font-size:16px;font-weight:400;color:var(--sumi);display:block;margin-bottom:10px}
 .vc{display:inline-block;text-align:right;min-width:150px;font-size:36px}
 .vc .op{float:left;padding:0}
@@ -247,6 +250,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .tg.on{background:var(--mid)}.tg.on b{left:24px}
 .dgr{color:var(--aka)}
 
+/* 更新の案内 */
+.upd{position:fixed;left:0;right:0;top:0;z-index:70;background:var(--ai);color:#fff;
+  display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.upd.hide{display:none}
+.upd span{flex:1;font-size:13.5px;line-height:1.5}
+.upd button{background:#fff;color:var(--ai);border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;flex:0 0 auto}
+.upd .x{background:none;color:#fff;font-weight:400;padding:8px;font-size:16px}
+
 /* インストール案内 */
 .inst{display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid var(--line);
   border-radius:14px;padding:13px 14px;margin-top:14px}
@@ -285,7 +296,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="kidlist"></div>
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver4.0 / 2026-09-01n</div>
+  <div class="tiny">まいにち計算 ver4.2 / 2026-09-01q</div>
 </section>
 
 <!-- こども追加 -->
@@ -333,7 +344,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-01n</div>
+  <div class="tiny">BUILD 2026-09-01q</div>
 </section>
 
 <!-- れいだい -->
@@ -486,7 +497,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   </div>
   <div class="card">
     <h3>アプリ・共有</h3>
+    <div class="note" style="padding-bottom:10px">バージョン <b id="st-ver" style="font-weight:700"></b></div>
     <div class="stk">
+      <button class="btn o" id="st-upd">さいしんに 更新する</button>
       <button class="btn o" id="st-inst">アプリとして 入れる</button>
       <button class="btn l" id="st-share">リンクを 共有する</button>
     </div>
@@ -501,8 +514,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver4.0 / BUILD 2026-09-01n</div>
+  <div class="tiny">kumon_math ver4.2 / BUILD 2026-09-01q</div>
 </section>
+
+<div class="upd hide" id="upd">
+  <span>あたらしい バージョンが あります</span>
+  <button id="upd-go">更新する</button>
+  <button class="x" id="upd-x">×</button>
+</div>
 
 <nav class="nav off" id="nav"><div class="nav-in">
   <button data-nv="s-home"><span class="i">▤</span>がくしゅう</button>
@@ -547,7 +566,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-01n";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-01q";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -731,16 +750,57 @@ var LV=[
  ["41-50","二次方程式 の1",{t:"quad",easy:true},{std:[190,360]}],
  ["51-60","二次方程式 の2",{t:"quad"},{std:[195,370]}],
  ["61-70","Iの まとめ",{t:"mix",list:[{t:"factor"},{t:"sqrt"},{t:"quad"}]},{std:[195,370]}]
+]},
+{lv:"J",grade:"高1（数Ⅰ）",title:"因数分解の応用・無理式・二次関数",aim:"数Ⅰ相当。たすき掛けの因数分解、無理数の計算、二次関数と二次不等式を、計算に絞って扱います。",q:8,std:[190,360],sec:[
+ ["1-10","式の展開（2つの1次式）",{t:"jexp"},{q:10,std:[175,330]}],
+ ["11-20","たすき掛けの 因数分解 の1",{t:"jfact",easy:true}],
+ ["21-30","たすき掛けの 因数分解 の2",{t:"jfact"}],
+ ["31-40","無理数の 計算",{t:"jsurd"}],
+ ["41-50","分母の 有理化",{t:"jration"},{q:10,std:[170,320]}],
+ ["51-60","二次関数の 頂点",{t:"jvertex"}],
+ ["61-70","判別式",{t:"jdisc"},{q:10,std:[170,320]}],
+ ["71-80","二次不等式・絶対値",{t:"mix",list:[{t:"jineq"},{t:"jabs"}]}]
+]},
+{lv:"K",grade:"高2（数Ⅱ）",title:"指数・対数・三角比・数列",aim:"指数と対数の計算、三角比の値、数列の一般項と和を扱います。",q:10,std:[175,330],sec:[
+ ["1-10","指数の 方程式",{t:"kpow"}],
+ ["11-20","分数の 指数",{t:"kroot"}],
+ ["21-30","対数の 値",{t:"klog"}],
+ ["31-40","対数の 性質",{t:"klogsum"}],
+ ["41-50","三角比の 角",{t:"ktri"}],
+ ["51-60","等差数列の 一般項",{t:"kseqn"}],
+ ["61-70","等差数列の 和",{t:"kseqs"},{q:8,std:[190,360]}],
+ ["71-80","等比数列の 一般項",{t:"kgeo"}]
+]},
+{lv:"L",grade:"高2（数Ⅱ）",title:"微分・積分の 基礎",aim:"多項式関数の微分係数と定積分を扱い、微分・積分の計算に慣れます。",q:8,std:[190,360],sec:[
+ ["1-10","微分係数（2次関数）",{t:"ldiff2"},{q:10,std:[175,330]}],
+ ["11-20","微分係数（3次関数）",{t:"ldiff3"}],
+ ["21-30","接線の かたむき",{t:"ltan"}],
+ ["31-40","定積分 の1",{t:"lint1"}],
+ ["41-50","定積分 の2",{t:"lint2"}],
+ ["51-60","定積分 の3",{t:"lint3"},{q:6,std:[205,390]}]
+]},
+{lv:"M",grade:"高3（数Ⅲ）",title:"複素数・極限",aim:"複素数の計算と、関数の極限値を扱います。",q:8,std:[185,350],sec:[
+ ["1-10","複素数の かけ算",{t:"mmul"}],
+ ["11-20","複素数の 絶対値",{t:"mabs"},{q:10,std:[170,320]}],
+ ["21-30","共役複素数",{t:"mconj"},{q:10,std:[170,320]}],
+ ["31-40","極限（無限大）",{t:"mlim"}],
+ ["41-50","極限（不定形）",{t:"mlim2"}]
+]},
+{lv:"N",grade:"高3（数Ⅲ）",title:"微分法",aim:"積の微分、合成関数、指数・対数・三角関数の微分を扱います。",q:8,std:[195,370],sec:[
+ ["1-10","積の 微分",{t:"nprod"}],
+ ["11-20","合成関数の 微分",{t:"nchain"}],
+ ["21-30","指数関数の 微分",{t:"nexp"},{q:10,std:[175,330]}],
+ ["31-40","対数関数の 微分",{t:"nlog"},{q:10,std:[175,330]}],
+ ["41-50","三角関数の 微分",{t:"ntri"},{q:10,std:[175,330]}]
+]},
+{lv:"O",grade:"高3（数Ⅲ）",title:"積分法",aim:"定積分の計算を扱います。高校教材の最終レベルです。",q:6,std:[205,390],sec:[
+ ["1-10","定積分（べき乗）",{t:"opow"},{q:8,std:[190,360]}],
+ ["11-20","定積分（1次式）",{t:"olin"},{q:8,std:[190,360]}],
+ ["21-30","定積分（2次式）",{t:"oquad"}],
+ ["31-40","Oの まとめ",{t:"mix",list:[{t:"opow"},{t:"olin"},{t:"oquad"}]}]
 ]}
 ];
-var FUT=[
-{lv:"J",grade:"高1（数Ⅰ）",title:"因数分解の応用・無理式・高次方程式",aim:"数Ⅰ相当。因数分解の発展、無理式の計算、高次方程式、不等式などを扱います。"},
-{lv:"K",grade:"高（数Ⅱ）",title:"指数・対数・三角関数・数列",aim:"指数関数、対数関数、三角関数、数列の計算を扱います。"},
-{lv:"L",grade:"高（数Ⅱ）",title:"微分・積分の基礎",aim:"多項式関数の微分・積分の基礎を扱います。"},
-{lv:"M",grade:"高（数Ⅲ）",title:"複素数平面・極限",aim:"三角関数の応用、複素数平面、極限などを扱います。"},
-{lv:"N",grade:"高（数Ⅲ）",title:"微分法",aim:"さまざまな関数の微分法を扱います。"},
-{lv:"O",grade:"高（数Ⅲ）",title:"積分法",aim:"積分法を扱い、高校数学の最終教材となります。この先に大学教養課程相当の研究コースが続きます。"}
-];
+var FUT=[];
 var STEPS=[];
 LV.forEach(function(L,li){L.sec.forEach(function(s,si){
   var o=s[3]||{};
@@ -750,7 +810,7 @@ LV.forEach(function(L,li){L.sec.forEach(function(s,si){
 function idxOf(id){for(var i=0;i<STEPS.length;i++)if(STEPS[i].id===id)return i;return 0;}
 function firstOf(li){for(var i=0;i<STEPS.length;i++)if(STEPS[i].li===li)return i;return 0;}
 var GRADES=[["年少","6A 1-10"],["年中","5A 1-10"],["年長","4A 1-10"],["小1","3A 1-10"],["小2","A 1-10"],
-["小3","B 1-10"],["小4","C 1-10"],["小5","D 1-10"],["小6","E 1-10"],["中1","F 1-10"],["中2","G 1-10"],["中3以上","H 1-10"]];
+["小3","B 1-10"],["小4","C 1-10"],["小5","D 1-10"],["小6","E 1-10"],["中1","F 1-10"],["中2","G 1-10"],["中3","H 1-10"],["高校生","I 1-10"]];
 
 /* ============================================================
    2. 問題生成
@@ -950,6 +1010,158 @@ function tryQ(g){
    if(n>400)return null;
    return Q('<span class="jp">かんたんな形に</span>√'+n+'<span class="op">＝</span><span class="jp" style="margin:10px 0 0">□√□</span>',
      [{ans:k,cap:"外"},{ans:m,cap:"中"}],{},"two");
+
+ case "jexp":
+   a=ri(1,4);b=ri(-6,6);c=ri(1,4);d=ri(-6,6);
+   if(!b||!d)return null;
+   return Q('<span class="sm">('+tm(a,"x")+sg(b)+Math.abs(b)+')('+tm(c,"x")+sg(d)+Math.abs(d)+')</span>'+
+     '<span class="jp" style="margin:10px 0 0">＝ '+(a*c)+'x² ＋ □x ＋ □</span>',
+     [{ans:a*d+b*c,cap:"xの係数"},{ans:b*d,cap:"定数"}],{neg:true},"two");
+ case "jfact":
+   a=ri(2,4);p=g.easy?ri(1,6):ri(-6,6);q=g.easy?ri(1,6):ri(-6,6);
+   if(!p||!q)return null;
+   return Q('<span class="sm">'+a+'x²'+sg(a*q+p)+Math.abs(a*q+p)+'x'+sg(p*q)+Math.abs(p*q)+'</span>'+
+     '<span class="jp" style="margin:10px 0 0">＝ ('+a+'x ＋ □)(x ＋ □)</span>',
+     [{ans:p,cap:"1つめ"},{ans:q,cap:"2つめ"}],{neg:true},"two");
+ case "jsurd":
+   m=[2,3,5,6,7][ri(0,4)];n=ri(1,5);
+   return Q('<span class="sm">(√'+m+' ＋ '+n+')²</span>'+
+     '<span class="jp" style="margin:10px 0 0">＝ □ ＋ □√'+m+'</span>',
+     [{ans:m+n*n,cap:"整数"},{ans:2*n,cap:"√の係数"}],{},"two");
+ case "jration":
+   m=[2,3,5,6,7][ri(0,4)];k=ri(1,6);
+   return Q('<span class="jp">分母を 有理化</span>'+fr(m*k,"√"+m)+
+     '<span class="jp" style="margin:10px 0 0">＝ □√'+m+'</span>',S1(k));
+ case "jvertex":
+   b=2*ri(-5,5);c=ri(-9,9);
+   if(!b)return null;
+   return Q('<span class="jp">y = '+poly2(b,c)+' の 頂点</span>'+
+     '<span class="sm">( □ , □ )</span>',
+     [{ans:-b/2,cap:"x"},{ans:c-b*b/4,cap:"y"}],{neg:true},"two");
+ case "jdisc":
+   b=ri(-9,9);c=ri(-9,9);
+   if(!b||!c)return null;
+   return Q('<span class="jp">'+poly2(b,c)+' の 判別式 D</span>D<span class="op">＝</span>',S1(b*b-4*c),{neg:true});
+ case "jineq":
+   p=ri(-7,6);q=p+ri(1,6);
+   return Q('<span class="sm">'+poly2(-(p+q),p*q)+' ＜ 0</span>'+
+     '<span class="jp" style="margin:10px 0 0">□ ＜ x ＜ □</span>',
+     [{ans:p,cap:"左"},{ans:q,cap:"右"}],{neg:true},"two");
+ case "jabs":
+   a=ri(-6,8);b=ri(1,9);
+   return Q('<span class="sm">| x '+(a<0?"＋":"−")+' '+Math.abs(a)+' | ＝ '+b+'</span>'+
+     '<span class="jp" style="margin:10px 0 0">x = □, □　小さい順</span>',
+     [{ans:a-b,cap:"小"},{ans:a+b,cap:"大"}],{neg:true},"two");
+ case "kpow":
+   b=[2,3,5][ri(0,2)];n=ri(2,5);
+   return Q('<span class="sm">'+b+'<sup>x</sup> ＝ '+Math.pow(b,n)+'</span><span class="jp" style="margin:10px 0 0">x =</span>',S1(n));
+ case "kroot":
+   b=[2,3][ri(0,1)];n=ri(2,3);m=ri(1,3);
+   if(m>=n*2)return null;
+   return Q('<span class="sm">'+Math.pow(b,n)+'<sup>'+m+'/'+n+'</sup></span><span class="op">＝</span>',S1(Math.pow(b,m)));
+ case "klog":
+   b=[2,3,5][ri(0,2)];n=ri(1,5);
+   return Q('<span class="sm">log<sub>'+b+'</sub> '+Math.pow(b,n)+'</span><span class="op">＝</span>',S1(n));
+ case "klogsum":
+   b=[2,3][ri(0,1)];n=ri(1,4);m=ri(1,4);
+   return Q('<span class="sm">log<sub>'+b+'</sub> '+Math.pow(b,n)+' ＋ log<sub>'+b+'</sub> '+Math.pow(b,m)+'</span><span class="op">＝</span>',S1(n+m));
+ case "ktri":
+   var tb=[["sin","1/2",30],["sin","√2/2",45],["sin","√3/2",60],["cos","1/2",60],["cos","√2/2",45],["cos","√3/2",30],["tan","1",45],["tan","√3",60],["tan","1/√3",30]];
+   k=tb[ri(0,tb.length-1)];
+   return Q('<span class="jp">0°〜90° で</span><span class="sm">'+k[0]+' θ ＝ '+k[1]+'</span>'+
+     '<span class="jp" style="margin:10px 0 0">θ = □ °</span>',S1(k[2]));
+ case "kseqn":
+   a=ri(1,9);d=ri(1,9);n=ri(3,12);
+   return Q('<span class="jp">初項 '+a+'、公差 '+d+' の 等差数列</span><span class="sm">第 '+n+' 項</span><span class="op">＝</span>',S1(a+(n-1)*d));
+ case "kseqs":
+   a=ri(1,9);d=ri(1,6);n=ri(3,10);
+   return Q('<span class="jp">初項 '+a+'、公差 '+d+' の 等差数列</span><span class="sm">第'+n+'項までの 和</span><span class="op">＝</span>',
+     S1(n*(2*a+(n-1)*d)/2));
+ case "kgeo":
+   a=ri(1,5);r=ri(2,3);n=ri(2,5);
+   return Q('<span class="jp">初項 '+a+'、公比 '+r+' の 等比数列</span><span class="sm">第 '+n+' 項</span><span class="op">＝</span>',
+     S1(a*Math.pow(r,n-1)));
+ case "ldiff2":
+   a=ri(1,5);b=ri(-9,9);k=ri(-4,6);
+   if(!b)return null;
+   return Q('<span class="jp">f(x) = '+tm(a,"x²")+sg(b)+tm(Math.abs(b),"x")+'</span><span class="sm">f\u2032('+k+')</span><span class="op">＝</span>',
+     S1(2*a*k+b),{neg:true});
+ case "ldiff3":
+   a=ri(-4,5);k=ri(-3,4);
+   if(!a)return null;
+   return Q('<span class="jp">f(x) = x³ '+sg(a)+Math.abs(a)+'x²</span><span class="sm">f\u2032('+k+')</span><span class="op">＝</span>',
+     S1(3*k*k+2*a*k),{neg:true});
+ case "ltan":
+   a=ri(1,4);b=ri(-8,8);k=ri(-4,5);
+   if(!b)return null;
+   return Q('<span class="jp">y = '+tm(a,"x²")+sg(b)+tm(Math.abs(b),"x")+' の x = '+k+' での</span><span class="sm">接線の かたむき</span><span class="op">＝</span>',
+     S1(2*a*k+b),{neg:true});
+ case "lint1":
+   a=ri(1,4);b=ri(-6,6);p=ri(-3,2);q=p+ri(1,4);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>'+p+'</sub><sup>'+q+'</sup> ( '+tm(2*a,"x")+sg(b)+Math.abs(b)+' ) dx</span><span class="op">＝</span>',
+     S1(a*(q*q-p*p)+b*(q-p)),{neg:true});
+ case "lint2":
+   q=ri(1,5);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>0</sub><sup>'+q+'</sup> 3x² dx</span><span class="op">＝</span>',S1(q*q*q));
+ case "lint3":
+   p=ri(-2,1);q=p+ri(1,4);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>'+p+'</sub><sup>'+q+'</sup> (3x² ＋ 2x) dx</span><span class="op">＝</span>',
+     S1((q*q*q-p*p*p)+(q*q-p*p)),{neg:true});
+ case "mmul":
+   a=ri(-6,7);b=ri(1,6);c=ri(-6,7);d=ri(1,6);
+   if(!a||!c)return null;
+   return Q('<span class="sm">('+a+sg(b)+b+'i)('+c+sg(d)+d+'i)</span>'+
+     '<span class="jp" style="margin:10px 0 0">＝ □ ＋ □ i</span>',
+     [{ans:a*c-b*d,cap:"実部"},{ans:a*d+b*c,cap:"虚部"}],{neg:true},"two");
+ case "mabs":
+   var tp=[[3,4,5],[6,8,10],[5,12,13],[8,15,17],[7,24,25],[9,12,15],[20,21,29]];
+   k=tp[ri(0,tp.length-1)];
+   if(Math.random()<.5)k=[k[1],k[0],k[2]];
+   return Q('<span class="sm">| '+k[0]+' ＋ '+k[1]+'i |</span><span class="op">＝</span>',S1(k[2]));
+ case "mconj":
+   a=ri(1,9);b=ri(1,9);
+   return Q('<span class="sm">('+a+' ＋ '+b+'i)('+a+' − '+b+'i)</span><span class="op">＝</span>',S1(a*a+b*b));
+ case "mlim":
+   c=ri(1,5);k=ri(1,6);b=ri(-6,6);d=ri(1,9);
+   if(!b)return null;
+   return Q('<span class="jp">x → ∞ のとき</span>'+fr(tm(c*k,"x²")+sg(b)+tm(Math.abs(b),"x"),tm(c,"x²")+" ＋ "+d)+
+     '<span class="op">→</span>',S1(k));
+ case "mlim2":
+   a=ri(1,8);
+   return Q('<span class="jp">x → '+a+' のとき</span>'+fr("x² − "+(a*a),"x − "+a)+'<span class="op">→</span>',S1(2*a));
+ case "nprod":
+   a=ri(1,6);k=ri(-3,4);
+   return Q('<span class="jp">f(x) = x²(x ＋ '+a+')</span><span class="sm">f\u2032('+k+')</span><span class="op">＝</span>',
+     S1(3*k*k+2*a*k),{neg:true});
+ case "nchain":
+   a=ri(1,4);b=ri(-5,5);n=ri(2,3);k=ri(-2,3);
+   if(!b)return null;
+   res=n*a*Math.pow(a*k+b,n-1);
+   if(Math.abs(res)>9999)return null;
+   return Q('<span class="jp">f(x) = ('+tm(a,"x")+sg(b)+Math.abs(b)+')<sup>'+n+'</sup></span><span class="sm">f\u2032('+k+')</span><span class="op">＝</span>',
+     S1(res),{neg:true});
+ case "nexp":
+   a=ri(-6,7);
+   if(!a)return null;
+   return Q('<span class="jp">f(x) = e<sup>'+tm(a,"x")+'</sup></span><span class="sm">f\u2032(0)</span><span class="op">＝</span>',S1(a),{neg:true});
+ case "nlog":
+   k=ri(1,6);a=k*ri(1,5);
+   return Q('<span class="jp">f(x) = '+a+' log x</span><span class="sm">f\u2032('+k+')</span><span class="op">＝</span>',S1(a/k));
+ case "ntri":
+   a=ri(1,8);
+   return Q('<span class="jp">f(x) = sin '+a+'x</span><span class="sm">f\u2032(0)</span><span class="op">＝</span>',S1(a));
+ case "opow":
+   n=ri(2,4);b=ri(1,4);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>0</sub><sup>'+b+'</sup> '+n+'x<sup>'+(n-1)+'</sup> dx</span><span class="op">＝</span>',
+     S1(Math.pow(b,n)));
+ case "olin":
+   c=ri(-6,6);p=ri(-3,2);q=p+ri(1,4);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>'+p+'</sub><sup>'+q+'</sup> (2x'+sg(c)+Math.abs(c)+') dx</span><span class="op">＝</span>',
+     S1((q*q-p*p)+c*(q-p)),{neg:true});
+ case "oquad":
+   p=ri(-2,1);q=p+ri(1,3);a=ri(1,3);
+   return Q('<span class="jp">つぎの 定積分</span><span class="sm">∫<sub>'+p+'</sub><sup>'+q+'</sup> '+(3*a)+'x² dx</span><span class="op">＝</span>',
+     S1(a*(q*q*q-p*p*p)),{neg:true});
  case "quad":
    p=g.easy?ri(1,7):ri(-7,7);q=g.easy?ri(1,7):ri(-7,7);
    if(p>=q)return null;
@@ -1825,6 +2037,7 @@ function renderSet(){
  document.getElementById("st-snd").classList.toggle("on",!!S.sound);
  document.getElementById("st-voice").classList.toggle("on",!!S.voice);
  document.getElementById("st-who").textContent=k.name;
+ document.getElementById("st-ver").textContent=BUILD+(newBuild?"（あたらしい版あり）":"");
  var sl=document.getElementById("st-lv");
  sl.innerHTML=LV.map(function(L,i){return '<option value="'+i+'">'+L.lv+'　'+L.title+'</option>';}).join("");
  sl.value=String(STEPS[k.stepIdx].li);
@@ -1860,6 +2073,10 @@ document.getElementById("st-inst").addEventListener("click",function(e){S.instan
 document.getElementById("st-snd").addEventListener("click",function(e){S.sound=!S.sound;e.currentTarget.classList.toggle("on",S.sound);save();});
 document.getElementById("st-voice").addEventListener("click",function(e){S.voice=!S.voice;e.currentTarget.classList.toggle("on",S.voice);save();});
 document.getElementById("st-inst").addEventListener("click",function(){imOpen(false);});
+document.getElementById("st-upd").addEventListener("click",function(){
+ if(newBuild){applyUpdate();return;}
+ checkUpdate(false);
+});
 document.getElementById("st-share").addEventListener("click",shareApp);
 document.getElementById("st-ex").addEventListener("click",function(){
  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
@@ -1963,21 +2180,53 @@ document.addEventListener("keydown",function(e){
 });
 try{history.replaceState({sc:"root"},"");}catch(e){}
 if(S.kids.length){renderHome();show("s-home");}else{renderKids();show("s-kids");}
-/* 自動アップデート：新しいビルドが出ていたらキャッシュを捨てて読み込み直す */
-function checkUpdate(){
+/* 更新：新しいビルドがあれば上部にボタンを出す（学習中は邪魔しない） */
+var newBuild=null;
+function applyUpdate(){
+ var go=document.getElementById("upd-go");
+ go.textContent="更新中…";
+ var done=function(){
+  var u=location.pathname+"?v="+(newBuild||Date.now());
+  location.replace(u);
+ };
+ var jobs=[];
+ if(window.caches)jobs.push(caches.keys().then(function(ks){
+  return Promise.all(ks.map(function(x){return caches.delete(x);}));
+ }));
+ if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations)
+  jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){
+   return Promise.all(rs.map(function(r){return r.unregister();}));
+  }));
+ Promise.all(jobs).then(done,done);
+ setTimeout(done,2500);
+}
+function showUpdateBar(){
+ document.getElementById("upd").classList.remove("hide");
+}
+function checkUpdate(silent){
  if(!navigator.onLine)return;
  fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){
-  if(!j||!j.build||j.build===BUILD)return;
+  if(!j||!j.build)return;
+  if(j.build===BUILD){
+   newBuild=null;
+   document.getElementById("upd").classList.add("hide");
+   if(silent===false)alert("さいしんの バージョンです。（"+BUILD+"）");
+   return;
+  }
+  newBuild=j.build;
+  showUpdateBar();
+  /* プリント中でなければ自動で更新する */
+  var busy=document.getElementById("s-sheet").classList.contains("on")||
+           document.getElementById("s-mark").classList.contains("on");
   var k="updated_"+j.build;
-  if(sessionStorage.getItem(k))return;
-  sessionStorage.setItem(k,"1");
-  var done=function(){location.reload();};
-  if(window.caches)caches.keys().then(function(ks){
-   return Promise.all(ks.map(function(x){return caches.delete(x);}));
-  }).then(done,done);
-  else done();
- }).catch(function(){});
+  if(!busy&&!sessionStorage.getItem(k)){
+   sessionStorage.setItem(k,"1");
+   applyUpdate();
+  }
+ }).catch(function(){if(silent===false)alert("かくにん できませんでした。つうしん を たしかめてください。");});
 }
+document.getElementById("upd-go").addEventListener("click",applyUpdate);
+document.getElementById("upd-x").addEventListener("click",function(){document.getElementById("upd").classList.add("hide");});
 var swRefreshing=false;
 if("serviceWorker" in navigator){
  navigator.serviceWorker.addEventListener("controllerchange",function(){
