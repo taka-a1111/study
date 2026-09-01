@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-02x / kumon_math_ver7.3 -->
+<!-- BUILD_TAG: 2026-09-02y / kumon_math_ver7.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -424,6 +424,20 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .gbar{height:8px;background:#e4e8e2;border-radius:4px;overflow:hidden;margin-top:12px}
 .gbar b{display:block;height:100%;background:var(--yam);transition:width .2s linear}
 
+/* であい（キャラ出現） */
+.enc{display:flex;align-items:center;gap:10px;background:var(--yam-s);border:1px solid #eddcbf;border-radius:12px;
+  padding:6px 10px;margin-bottom:8px;animation:encin .5s cubic-bezier(.2,1.3,.4,1)}
+.enc svg{width:40px;height:40px;flex:0 0 auto}
+.enc b{font-size:14px;display:block;line-height:1.3}
+.enc span{font-size:11.5px;color:var(--sumi)}
+.enc .rt{margin-left:auto}
+@keyframes encin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.catchbox{text-align:center}
+.catchbox svg{width:150px;height:150px;animation:cshow .7s cubic-bezier(.2,1.4,.4,1)}
+.catchbox.away svg{animation:away .9s ease-in forwards}
+@keyframes away{0%{opacity:1;transform:none}100%{opacity:0;transform:translate(120px,-60px) scale(.5)}}
+.catchbox h4{margin:8px 0 2px;font-size:22px}
+
 /* ずかん・ガチャ */
 .zhead{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 10px}
 .zhead b{font-family:var(--num);font-size:22px}
@@ -486,7 +500,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.3 / 2026-09-02x</div>
+  <div class="tiny">まいにち計算 ver7.4 / 2026-09-02y</div>
 </section>
 
 <!-- こども追加 -->
@@ -547,7 +561,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-02x</div>
+  <div class="tiny">BUILD 2026-09-02y</div>
 </section>
 
 <!-- れいだい -->
@@ -574,6 +588,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="gg" id="sh-g"><b></b><i id="tk1"></i><i id="tk2"></i></div>
   <div class="gl"><span id="sh-n"></span><span id="sh-s"></span></div>
   <div class="pg" id="sh-pg"></div>
+  <div class="enc hide" id="sh-enc"></div>
   <div class="pp" id="sh-pp">
     <canvas class="scr" id="scr"></canvas>
     <div class="qp" id="qp"></div><div class="sl" id="qs"></div>
@@ -907,7 +922,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.3 / BUILD 2026-09-02x</div>
+  <div class="tiny">kumon_math ver7.4 / BUILD 2026-09-02y</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1010,7 +1025,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-02x";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-02y";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1631,7 +1646,7 @@ function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
    best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0,chars:{},gacha:0,pcount:0,
-   mode:"print",board:{world:0,pos:0},story:{ch:0,sc:0,hints:[],loop:0}};
+   mode:"print",board:{world:0,pos:0},story:{ch:0,sc:0,hints:[],loop:0},encNext:null};
 }
 var S=load();
 function load(){
@@ -2317,6 +2332,24 @@ function gachaRoll(){
  return pool[Math.floor(Math.random()*pool.length)];
 }
 function ownedCount(k){var n=0;for(var x in (k.chars||{}))n++;return n;}
+/* であい：boost が 高いほど レアが 出やすい */
+function encRoll(boost){
+ var w=[[60,27,10,3],[30,45,20,5],[0,40,45,15],[0,0,60,40]][Math.min(boost||0,3)];
+ var r=Math.random()*100,tier=0,acc=0;
+ for(var i=0;i<4;i++){acc+=w[i];if(r<acc){tier=i;break;}}
+ var pool=[];
+ for(var j=0;j<CHAR_N;j++)if(crar(j)===tier)pool.push(j);
+ if(!pool.length)pool=[0];
+ return pool[Math.floor(Math.random()*pool.length)];
+}
+function encMaybe(k){
+ /* かならず 出る 予約が あれば それを、なければ 35% で 出る */
+ var boost=null;
+ if(k.encNext!==undefined&&k.encNext!==null){boost=k.encNext;k.encNext=null;save();}
+ else if(Math.random()<0.35)boost=0;
+ if(boost===null)return null;
+ return encRoll(boost);
+}
 
 /* 星の数だけ 星が入った 玉。1枚おえるごとに 1つ 手に入る */
 function orbSVG(stars,filled,isNew){
@@ -2447,8 +2480,7 @@ function renderHome(){
  if(pr)document.getElementById("h-praise-m").textContent=pr.text;
  renderMode(k);
  var gb=document.getElementById("go-gacha");
- gb.classList.toggle("hide",!(k.gacha>0));
- if(k.gacha>0)gb.textContent="キャラを もらう！（"+k.gacha+"かい）";
+ gb.classList.add("hide");
  updateInstallUI();
 }
 document.getElementById("h-praise-ok").addEventListener("click",function(){
@@ -2497,6 +2529,15 @@ function startPrint(){
  document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
  document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
  lock=false;hwQKey="";
+ run.enc=encMaybe(k);run.skipped=false;
+ var eb=document.getElementById("sh-enc");
+ if(run.enc!==null){
+  var er=crar(run.enc);
+  eb.innerHTML=charSVG(run.enc,"")+'<div><b>'+cname(run.enc)+' が あらわれた！</b><span>なおして 100てんに すると ゲット</span></div>'+
+   '<span class="rtag rt" style="background:'+RARC[er]+'">'+RARN[er]+'</span>';
+  eb.classList.remove("hide");
+  if(S.sound)setTimeout(function(){try{tone({f:1046,dur:.12,vol:.12,wave:"triangle"});tone({f:1318,dur:.18,vol:.12,wave:"triangle",at:.12});}catch(e){}},200);
+ }else eb.classList.add("hide");
  cvSetup();penToggle(false);cvClear();
  draw();tick();
  run.timer=setInterval(tick,1000);
@@ -2717,7 +2758,7 @@ function endSheet(){
  show("s-mark");
 }
 document.getElementById("mk-skip").addEventListener("click",function(){
- run.fixQ=[];run.fixing=false;showResult();
+ run.fixQ=[];run.fixing=false;run.skipped=true;showResult();
 });
 document.getElementById("mk-go").addEventListener("click",function(){
  if(!run.fixQ.length){showResult();return;}
@@ -2812,9 +2853,35 @@ function showResult(){
  nb.textContent=adv?"つぎの プリントへ":"もういちど やる";
  nb.className="btn"+(adv?" g":" y");
  k.pcount=(k.pcount||0)+1;
- if(adv&&k.pcount%5===0)k.gacha=(k.gacha||0)+1;
  pendingEv=null;
+ var encResult=null;
+ if(run.enc!==null&&run.enc!==undefined){
+  var got=!run.skipped;
+  if(got){
+   if(!k.chars)k.chars={};
+   var had=!!k.chars[run.enc];
+   if(had)k.chars[run.enc].n++;else k.chars[run.enc]={n:1,d:dk()};
+   encResult={id:run.enc,got:true,had:had};
+  }else encResult={id:run.enc,got:false};
+ }
  modeAfterPrint(k);
+ if(encResult){
+  var prevEv=pendingEv,encE=encResult;
+  pendingEv=function(){
+   var ci=cinfo(encE.id),r=crar(encE.id);
+   if(encE.got){
+    evShow(cname(encE.id)+" を ゲット！",
+     '<div class="catchbox">'+charSVG(encE.id,"")+'<span class="rtag" style="background:'+RARC[r]+'">'+RARN[r]+'</span>'+
+     '<div class="note" style="margin-top:8px">'+(encE.had?"もう1ぴき！ いま "+k.chars[encE.id].n+"ひき":"はじめて！ ずかんに とうろく")+'<br>とくぎ：'+ci[2]+'</div></div>',
+     null,function(){if(prevEv)prevEv();});
+    if(S.sound)setTimeout(function(){beep(r>=2?"clear":"ok");},300);
+   }else{
+    evShow("にげられた…",
+     '<div class="catchbox away">'+charSVG(encE.id,"")+'<div class="note" style="margin-top:8px">'+cname(encE.id)+' は にげてしまった。<br>つぎは まちがいを なおして 100てんに しよう。</div></div>',
+     null,function(){if(prevEv)prevEv();});
+   }
+  };
+ }
  var todN=todayN(),dnc=k.daily||5;
  if(todN>=dnc&&k.celebDay!==dk()){
   k.celebDay=dk();save();
@@ -3440,7 +3507,8 @@ function mergeState(local,remote){
   lk.mode=src.mode||lk.mode;
   if(rk.board&&(!lk.board||rk.board.world>lk.board.world||(rk.board.world===lk.board.world&&rk.board.pos>lk.board.pos)))lk.board=rk.board;
   if(rk.story&&(!lk.story||rk.story.ch>lk.story.ch||(rk.story.ch===lk.story.ch&&rk.story.sc>lk.story.sc)))lk.story=rk.story;
-  lk.gacha=Math.max(lk.gacha||0,rk.gacha||0);
+  lk.gacha=0;
+  if(rk.encNext!==null&&rk.encNext!==undefined)lk.encNext=Math.max(lk.encNext||0,rk.encNext);
   for(var k in (rk.seenEx||{}))lk.seenEx[k]=true;
  });
  return out;
@@ -3702,7 +3770,7 @@ function renderMode(k){
   for(var j=b.pos+1;j<BOARD_N;j++){var tt=tileType(j);if(tt){nextEv="あと "+(j-b.pos)+"マスで "+TILE_IC[tt]+" "+({goal:"ゴール",gift:"キャラ",game:"ミニゲーム",star:"たまボーナス"})[tt];break;}}
   c.innerHTML='<div class="t">すごろく　ワールド '+(b.world+1)+'</div>'+
    '<div class="v">'+(b.pos+1)+' / '+BOARD_N+' マス</div>'+
-   '<div class="d">プリントを 1まい おえるごとに 1マス すすみます。'+(nextEv?"<br>"+nextEv:"")+'</div>'+
+   '<div class="d">プリントを 1まい おえるごとに 1マス すすみます。ときどき キャラが あらわれるよ。'+(nextEv?"<br>"+nextEv:"")+'</div>'+
    '<button class="btn l" id="mc-open" style="margin-top:12px">マップを 見る</button>';
   document.getElementById("mc-open").onclick=function(){renderBoard();show("s-board");};
  }else{
@@ -3803,18 +3871,18 @@ function modeAfterPrint(k){
  if(m==="board"){
   var b=k.board;b.pos++;
   if(b.pos>=BOARD_N){
-   b.pos=0;b.world++;k.gacha=(k.gacha||0)+1;save();
-   pendingEv=function(){evShow("🏁 ゴール！","<div class='note'>ワールド "+b.world+" を クリア！<br>キャラを 1かい ひけるよ。</div>",null,function(){renderHome();show("s-home");});};
+   b.pos=0;b.world++;k.encNext=3;save();
+   pendingEv=function(){evShow("🏁 ゴール！","<div class='note'>ワールド "+b.world+" を クリア！<br>つぎの プリントで、すごく レアな キャラが あらわれる！</div>",null,null);};
    return;
   }
   var t=tileType(b.pos);
   if(t==="star"){
    pendingEv=function(){evShow("★ たまボーナス","<div class='note'>ボーナスマスに とまった！<br>おまけの たまを 1つ もらった。</div>",null,null);};
   }else if(t==="game"){
-   pendingEv=function(){evShow("🎮 ミニゲーム","<div class='note'>ミニゲームの マスだ！ 5もん ぜんぶ 正解で キャラを 1かい ひけるよ。</div>",null,function(){startGame();},"あそぶ");};
+   pendingEv=function(){evShow("🎮 ミニゲーム","<div class='note'>ミニゲームの マスだ！ 5もん ぜんぶ 正解で、つぎの プリントに レアな キャラが あらわれる。</div>",null,function(){startGame();},"あそぶ");};
   }else if(t==="gift"){
-   k.gacha=(k.gacha||0)+1;save();
-   pendingEv=function(){evShow("🎁 プレゼント","<div class='note'>キャラを 1かい ひけるよ！</div>",null,function(){renderHome();show("s-home");});};
+   k.encNext=2;save();
+   pendingEv=function(){evShow("🎁 プレゼント","<div class='note'>つぎの プリントで、レアな キャラが かならず あらわれる！</div>",null,null);};
   }
  }else if(m==="story"){
   var st=k.story,ch=STORY[st.ch%STORY.length];
@@ -3836,11 +3904,11 @@ function storyRiddle(){
   ch.opt,function(i){
    evHide();
    if(i===ch.ans){
-    k.gacha=(k.gacha||0)+1;
+    k.encNext=2;
     st.ch++;st.sc=0;st.hints=[];
     if(st.ch%STORY.length===0)st.loop++;
     save();beep("clear");
-    evShow("せいかい！",'<div class="scene">'+ch.end+'</div><div class="note" style="margin-top:8px">キャラを 1かい ひけるよ！</div>',null,function(){renderHome();show("s-home");});
+    evShow("せいかい！",'<div class="scene">'+ch.end+'</div><div class="note" style="margin-top:8px">つぎの プリントで、レアな キャラが かならず あらわれる！</div>',null,null);
    }else{
     beep("ng");
     evShow("うーん…","<div class='note'>ちがうみたい。ヒントを もういちど よんで かんがえよう。</div>",null,function(){storyRiddle();},"もういちど");
@@ -3884,10 +3952,10 @@ document.getElementById("gm-b").addEventListener("click",function(e){
 function gameEnd(){
  clearInterval(gm.timer);
  var k=P(),win=gm.ok>=5;
- if(win){k.gacha=(k.gacha||0)+1;save();}
+ if(win){k.encNext=Math.max(k.encNext||0,1);save();}
  var ok=gm.ok;gm=null;
  renderHome();show("s-home");
- evShow(win?"パーフェクト！":"おしい！","<div class='note'>"+ok+" / 5 もん せいかい。"+(win?"キャラを 1かい ひけるよ！":"つぎの ミニゲームで また ちょうせん しよう。")+"</div>",null,function(){renderHome();});
+ evShow(win?"パーフェクト！":"おしい！","<div class='note'>"+ok+" / 5 もん せいかい。"+(win?"つぎの プリントで レアな キャラが あらわれる！":"つぎの ミニゲームで また ちょうせん しよう。")+"</div>",null,function(){renderHome();});
 }
 
 /* ---- ガチャ・ずかん ---- */
