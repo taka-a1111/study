@@ -1,5 +1,5 @@
-/* BUILD_TAG: 2026-09-03f */
-var CACHE = "kumonmath-2026-09-03f";
+/* BUILD_TAG: 2026-09-03g */
+var CACHE = "kumonmath-2026-09-03g";
 var ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./digit_model.json"];
 
