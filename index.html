@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03d / kumon_math_ver7.9 -->
+<!-- BUILD_TAG: 2026-09-03e / kumon_math_ver8.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -248,6 +248,18 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .fc .d{padding:2px 8px 0}
 .bl{display:inline-block;min-width:48px;border-bottom:3px solid var(--ai);color:var(--ai)}
 .sl{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:6}
+.sl:empty{margin:0}
+/* ひっ算（けたを そろえる） */
+.col{display:inline-grid;grid-template-columns:38px repeat(var(--w),46px);gap:4px 2px;justify-items:end;align-items:center;
+  font-family:var(--num);font-weight:600;font-size:38px;line-height:1.1;position:relative;z-index:6}
+.col .cr{font-size:15px;color:var(--aka);height:20px;line-height:20px;font-weight:700;justify-self:center;width:46px;text-align:center}
+.col .cd{width:46px;text-align:center}
+.col .cop{color:var(--sumi);justify-self:start;font-size:32px}
+.col .rl{grid-column:1 / -1;height:3px;background:var(--ink);border-radius:2px;width:100%;margin:4px 0 6px}
+.col .ab{width:44px;height:56px;border:2px solid var(--line);border-radius:9px;background:var(--soft);
+  display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;justify-self:center}
+.col .ab.a{border-color:var(--ai);background:var(--ai-s)}
+.col .ab .c{width:3px;height:26px;background:var(--ai);animation:bk 1s steps(2,start) infinite}
 .sll{font-size:16px;color:var(--sumi)}
 .bx{display:inline-flex;align-items:center;justify-content:center;min-width:104px;height:66px;padding:0 12px;border:2px solid var(--line);border-radius:12px;background:var(--soft);font-family:var(--num);font-size:35px;font-weight:700}
 .bx.s{min-width:80px;height:58px;font-size:29px}
@@ -559,7 +571,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.9 / 2026-09-03d</div>
+  <div class="tiny">まいにち計算 ver8.0 / 2026-09-03e</div>
 </section>
 
 <!-- こども追加 -->
@@ -620,7 +632,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03d</div>
+  <div class="tiny">BUILD 2026-09-03e</div>
 </section>
 
 <!-- れいだい -->
@@ -984,7 +996,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.9 / BUILD 2026-09-03d</div>
+  <div class="tiny">kumon_math ver8.0 / BUILD 2026-09-03e</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1094,7 +1106,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03d";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03e";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1388,20 +1400,20 @@ function tryQ(g){
    a=rnd(g.a);b=rnd(g.b);c=(a%10)+(b%10)>=10;
    if(g.carry===true&&!c)return null;
    if(g.carry===false&&c)return null;
-   return Q(vcol(a,b,"＋"),S1(a+b));
+   var qa=Q(vcol(a,b,"＋"),S1(a+b),{},"col");qa.ca=a;qa.cb=b;qa.cop="＋";return qa;
  case "subc":
    a=rnd(g.a);b=rnd(g.b);
    if(a-b<1)return null;
    var bo=(a%10)<(b%10);
    if(g.borrow===true&&!bo)return null;
    if(g.borrow===false&&bo)return null;
-   return Q(vcol(a,b,"−"),S1(a-b));
+   var qs=Q(vcol(a,b,"−"),S1(a-b),{},"col");qs.ca=a;qs.cb=b;qs.cop="−";return qs;
  case "mul":
    a=rnd(g.dan);b=rnd(g.b);
    return Q(a+'<span class="op">×</span>'+b+'<span class="op">＝</span>',S1(a*b));
  case "mulc":
    a=rnd(g.a);b=rnd(g.b);
-   return Q(vcol(a,b,"×"),S1(a*b));
+   var qm=Q(vcol(a,b,"×"),S1(a*b),{},"col");qm.ca=a;qm.cb=b;qm.cop="×";return qm;
  case "div":
    b=rnd(g.b);q=rnd(g.q);
    return Q((b*q)+'<span class="op">÷</span>'+b+'<span class="op">＝</span>',S1(q));
@@ -2791,7 +2803,7 @@ function tick(){
 function cq(){return run.fixing?run.qs[run.fixQ[0]]:run.qs[run.i];}
 function draw(){
  var q=cq();
- document.getElementById("qp").innerHTML=q.prompt;
+ document.getElementById("qp").innerHTML=(q.layout==="col")?colHTML(q,run.inp):q.prompt;
  document.getElementById("qs").innerHTML=slotHTML(q,run.inp,run.box,null);
  var pg="";
  for(var i=0;i<run.qs.length;i++){
@@ -2813,7 +2825,46 @@ function draw(){
   ex.style.visibility=(qq.keys.neg||qq.keys.dot)?"visible":"hidden";
  }
 }
+function colHTML(q,inp){
+ var a=String(q.ca),b=String(q.cb),ans=String(q.slots[0].ans);
+ var W=Math.max(a.length,b.length,ans.length);
+ var v=(inp[0]||"").replace("-","");
+ var h='<div class="col" style="--w:'+W+'">';
+ /* くり上がり：たし算だけ。答えの 下の けたが 合っていたら 出す */
+ var carry=[];
+ if(q.cop==="＋"){
+  var c=0;
+  for(var i=0;i<W;i++){
+   var da=Number(a[a.length-1-i]||0),db=Number(b[b.length-1-i]||0);
+   var sum=da+db+c;c=sum>=10?1:0;carry[i]=c; /* i けた目から 上への くり上がり */
+  }
+ }
+ var okDigits=0; /* 右から 何けた 合っているか */
+ for(var k=0;k<v.length;k++){
+  if(v[v.length-1-k]===ans[ans.length-1-k])okDigits++;else break;
+ }
+ h+='<span></span>';
+ for(var col=0;col<W;col++){
+  var idx=W-1-col; /* idx=0 が 一のくらい */
+  var show=(q.cop==="＋"&&idx>=1&&carry[idx-1]===1&&okDigits>=idx);
+  h+='<span class="cr">'+(show?"1":"")+'</span>';
+ }
+ h+='<span></span>';
+ for(col=0;col<W;col++){var ai=a.length-W+col;h+='<span class="cd">'+(ai>=0?a[ai]:"")+'</span>';}
+ h+='<span class="cop">'+q.cop+'</span>';
+ for(col=0;col<W;col++){var bi=b.length-W+col;h+='<span class="cd">'+(bi>=0?b[bi]:"")+'</span>';}
+ h+='<span class="rl"></span>';
+ h+='<span></span>';
+ var nextIdx=W-1-v.length; /* つぎに 入る セル */
+ for(col=0;col<W;col++){
+  var vi=v.length-W+col;
+  var isNext=(col===nextIdx);
+  h+='<span class="ab'+(isNext?" a":"")+'">'+(vi>=0?v[vi]:(isNext?'<span class="c"></span>':""))+'</span>';
+ }
+ return h+'</div>';
+}
 function slotHTML(q,inp,box,mark){
+ if(q.layout==="col")return "";
  if(q.layout==="frac")
   return '<span class="fs">'+bx(inp[0],box===0,true,0,mark)+'<span class="b"></span>'+bx(inp[1],box===1,true,1,mark)+'</span>';
  var h="";
@@ -2855,11 +2906,21 @@ function readyBtn(){
 function onKey(k){
  if(lock)return;
  var q=cq();
- if(k==="del"){run.inp[run.box]=run.inp[run.box].slice(0,-1);draw();return;}
+ if(k==="del"){
+  if(q.layout==="col")run.inp[0]=run.inp[0].slice(1);
+  else run.inp[run.box]=run.inp[run.box].slice(0,-1);
+  draw();return;
+ }
  if(k==="go"){submit();return;}
  if(k==="mic"){voiceToggle("pad");return;}
  if(k==="neg"){run.inp[run.box]=run.inp[run.box].charAt(0)==="-"?run.inp[run.box].slice(1):"-"+run.inp[run.box];draw();maybeAutoSubmit(false);return;}
  if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
+ if(q.layout==="col"){
+  var Wc=Math.max(String(q.ca).length,String(q.cb).length,String(q.slots[0].ans).length);
+  if(run.inp[0].length>=Wc)return;
+  run.inp[0]=k+run.inp[0];  /* 一のくらいから 入れる */
+  draw();maybeAutoSubmit(false);return;
+ }
  if(run.inp[run.box].replace("-","").length>=6)return;
  run.inp[run.box]+=k;
  if(q.slots.length>1&&run.box===0&&run.inp[1]===""&&run.inp[0].replace("-","").length>=String(Math.abs(q.slots[0].ans)).length)run.box=1;
@@ -4809,7 +4870,7 @@ function drawT(){
  document.getElementById("t-k").textContent=test.left+"秒";
  var pg="";for(var i=0;i<test.qs.length;i++)pg+='<i class="'+(i<test.n?"o":"")+'"></i>';
  document.getElementById("t-pg").innerHTML=pg;
- document.getElementById("tqp").innerHTML=q.prompt;
+ document.getElementById("tqp").innerHTML=(q.layout==="col")?colHTML(q,test.inp):q.prompt;
  document.getElementById("tqs").innerHTML=slotHTML(q,test.inp,test.box,null);
  buildPad("t-pad",onTK,q.keys);
  if(hwOn){
@@ -4824,7 +4885,11 @@ function drawT(){
 }
 function onTK(k){
  var q=test.qs[test.n];
- if(k==="del"){test.inp[test.box]=test.inp[test.box].slice(0,-1);drawT();return;}
+ if(k==="del"){
+  if(q.layout==="col")test.inp[0]=test.inp[0].slice(1);
+  else test.inp[test.box]=test.inp[test.box].slice(0,-1);
+  drawT();return;
+ }
  if(k==="mic"){voiceToggle("t-pad");return;}
  if(k==="neg"){test.inp[test.box]=test.inp[test.box].charAt(0)==="-"?test.inp[test.box].slice(1):"-"+test.inp[test.box];drawT();return;}
  if(k==="dot"){if(test.inp[test.box].indexOf(".")<0&&test.inp[test.box]!=="")test.inp[test.box]+=".";drawT();return;}
@@ -4832,6 +4897,11 @@ function onTK(k){
   if(test.inp[0]==="")return;
   var ok=true;q.slots.forEach(function(s,i){if(!same(test.inp[i],s.ans))ok=false;});
   tAns(ok);return;
+ }
+ if(q.layout==="col"){
+  var Wt=Math.max(String(q.ca).length,String(q.cb).length,String(q.slots[0].ans).length);
+  if(test.inp[0].length>=Wt)return;
+  test.inp[0]=k+test.inp[0];drawT();maybeAutoSubmit(true);return;
  }
  if(test.inp[test.box].replace("-","").length>=6)return;
  test.inp[test.box]+=k;
