@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03k / kumon_math_ver8.5 -->
+<!-- BUILD_TAG: 2026-09-03m / kumon_math_ver8.6 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -630,7 +630,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.5 / 2026-09-03k</div>
+  <div class="tiny">まいにち計算 ver8.6 / 2026-09-03m</div>
 </section>
 
 <!-- こども追加 -->
@@ -691,7 +691,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03k</div>
+  <div class="tiny">BUILD 2026-09-03m</div>
 </section>
 
 <!-- れいだい -->
@@ -722,7 +722,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="pp" id="sh-pp">
     <canvas class="scr" id="scr"></canvas>
     <div class="qp" id="qp"></div><div class="sl" id="qs"></div>
-    <div class="pennote hide" id="pennote">かきおわったら ✏️ で もどる</div>
+    <div class="pennote hide" id="pennote">答えの枠に 書くと 数字が 入る</div>
     <div class="tools hide" id="tools">
       <button data-t="pen" class="on" title="ペン">✏️</button>
       <button data-t="era" title="消しゴム">⌫</button>
@@ -1085,7 +1085,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.5 / BUILD 2026-09-03k</div>
+  <div class="tiny">kumon_math ver8.6 / BUILD 2026-09-03m</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1195,7 +1195,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03k";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03m";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2881,7 +2881,7 @@ function startPrint(){
  var full=run.std[1]*1.25;
  document.getElementById("tk1").style.left=Math.round(100*run.std[0]/full)+"%";
  document.getElementById("tk2").style.left=Math.round(100*run.std[1]/full)+"%";
- lock=false;hwQKey="";
+ lock=false;hwQKey="";memoQKey="";
  run.enc=encMaybe(k);run.skipped=false;
  var eb=document.getElementById("sh-enc");
  if(run.enc!==null){
@@ -2921,7 +2921,8 @@ function draw(){
  if(voiceOn&&voiceTarget==="pad")voiceMark(true);
  bindSlots("qs",function(n){run.box=n;draw();});
  readyBtn();
- cvClear();
+ var mk=(run.fixing?"f"+run.fixQ[0]:"q"+run.i);
+ if(mk!==memoQKey){memoQKey=mk;cvClear();run.colD=null;}
  if(penOn)setTimeout(cvResizeKeep,30);
  if(hwOn){
   var qk=(run.fixing?"f"+run.fixQ[0]:"q"+run.i);
@@ -2935,6 +2936,7 @@ function colHTML(q,inp){
  var a=String(q.ca),b=String(q.cb),ans=String(q.slots[0].ans);
  var W=Math.max(a.length,b.length,ans.length);
  var v=(inp[0]||"").replace("-","");
+ var cd=(typeof run!=="undefined"&&run&&run.colD&&run.colD.length===W&&inp===run.inp)?run.colD:null;
  var h='<div class="col" style="--w:'+W+'">';
  /* くり上がり：たし算だけ。答えの 下の けたが 合っていたら 出す */
  var carry=[];
@@ -2946,7 +2948,8 @@ function colHTML(q,inp){
   }
  }
  var okDigits=0; /* 右から 何けた 合っているか */
- for(var k=0;k<v.length;k++){
+ if(cd){for(var kk=0;kk<W;kk++){var dd=cd[W-1-kk];if(dd!==""&&dd===ans[ans.length-1-kk])okDigits++;else break;}}
+ else for(var k=0;k<v.length;k++){
   if(v[v.length-1-k]===ans[ans.length-1-k])okDigits++;else break;
  }
  h+='<span></span>';
@@ -2964,8 +2967,9 @@ function colHTML(q,inp){
  var nextIdx=W-1-v.length; /* つぎに 入る セル */
  for(col=0;col<W;col++){
   var vi=v.length-W+col;
-  var isNext=(col===nextIdx);
-  h+='<span class="ab'+(isNext?" a":"")+'">'+(vi>=0?v[vi]:(isNext?'<span class="c"></span>':""))+'</span>';
+  var isNext=cd?false:(col===nextIdx);
+  var shown=cd?cd[col]:(vi>=0?v[vi]:"");
+  h+='<span class="ab'+(isNext?" a":"")+'">'+(shown||(isNext?'<span class="c"></span>':""))+'</span>';
  }
  return h+'</div>';
 }
@@ -3013,6 +3017,7 @@ function onKey(k){
  if(lock)return;
  var q=cq();
  if(k==="del"){
+  run.colD=null;
   if(q.layout==="col")run.inp[0]=run.inp[0].slice(1);
   else run.inp[run.box]=run.inp[run.box].slice(0,-1);
   draw();return;
@@ -3023,6 +3028,7 @@ function onKey(k){
  if(k==="dot"){if(run.inp[run.box].indexOf(".")<0&&run.inp[run.box]!=="")run.inp[run.box]+=".";draw();return;}
  if(q.layout==="col"){
   var Wc=Math.max(String(q.ca).length,String(q.cb).length,String(q.slots[0].ans).length);
+  run.colD=null;
   if(run.inp[0].length>=Wc)return;
   run.inp[0]=k+run.inp[0];  /* 一のくらいから 入れる */
   draw();maybeAutoSubmit(false);return;
@@ -3454,7 +3460,7 @@ function hwBoxToVector(M,b){
  }
  return out;
 }
-var hwStrokes=[],hwCur=null,hwQKey="";
+var hwStrokes=[],hwCur=null,hwQKey="",memoQKey="";
 function hwRedraw(){
  if(!hwcx)return;
  hwcx.clearRect(0,0,hwcv.width,hwcv.height);
@@ -3628,9 +3634,97 @@ function cvSetup(){
   cv.addEventListener(t,function(e){
    drawing=false;
    try{cv.releasePointerCapture(e.pointerId);}catch(err){}
+   if(penMode!=="era"){clearTimeout(memoTimer);memoTimer=setTimeout(memoRecognize,380);}
   });
  });
  window.addEventListener("resize",function(){if(penOn)cvResize();});
+}
+/* ---- メモの ペンで 答えの枠に 書いた 数字を 読みとる ---- */
+var memoTimer=null;
+function memoRegion(rect){
+ /* キャンバス座標での 領域から、線を 太らせた マスクを つくる */
+ var dpr=window.devicePixelRatio||1,cr=cv.getBoundingClientRect();
+ var x0=Math.max(0,Math.floor((rect.left-cr.left)*dpr)),y0=Math.max(0,Math.floor((rect.top-cr.top)*dpr));
+ var x1=Math.min(cv.width,Math.ceil((rect.right-cr.left)*dpr)),y1=Math.min(cv.height,Math.ceil((rect.bottom-cr.top)*dpr));
+ var w=x1-x0,h=y1-y0;
+ if(w<8||h<8)return null;
+ var im=cx.getImageData(x0,y0,w,h).data;
+ var g=new Float32Array(w*h),ink=0;
+ for(var i=0;i<w*h;i++){var a=im[i*4+3]/255;if(a>0.2){g[i]=1;ink++;}}
+ if(ink<12)return null;
+ /* 3x3 で 2回 ふとらせる（メモの線は 細いため） */
+ for(var pass=0;pass<2;pass++){
+  var g2=new Float32Array(w*h);
+  for(var y=0;y<h;y++)for(var x=0;x<w;x++){
+   var v=0;
+   for(var dy=-1;dy<=1&&!v;dy++)for(var dx=-1;dx<=1;dx++){
+    var nx=x+dx,ny=y+dy;
+    if(nx>=0&&ny>=0&&nx<w&&ny<h&&g[ny*w+nx]>0){v=1;break;}
+   }
+   g2[y*w+x]=v;
+  }
+  g=g2;
+ }
+ return {g:g,w:w,h:h,x0:x0,y0:y0};
+}
+function memoRecognize(){
+ if(!penOn||!run||lock)return;
+ if(!DM){loadModel(function(ok){if(ok)memoRecognize();});return;}
+ var q=cq(),changed=false;
+ if(q.layout==="col"){
+  var cells=document.querySelectorAll("#qp .col .ab");
+  if(!cells.length)return;
+  var W=cells.length;
+  if(!run.colD||run.colD.length!==W){
+   run.colD=[];var v=(run.inp[0]||"").replace("-","");
+   for(var c=0;c<W;c++){var vi=v.length-W+c;run.colD.push(vi>=0?v[vi]:"");}
+  }
+  for(var ci=0;ci<W;ci++){
+   var M=memoRegion(cells[ci].getBoundingClientRect());
+   if(!M)continue;
+   var boxes=hwMergeBoxes(hwComponents(M),M.w,M.h);
+   if(!boxes.length)continue;
+   var b=boxes[0];
+   for(var bi=1;bi<boxes.length;bi++)if(boxes[bi].area>b.area)b=boxes[bi];
+   var vec=hwBoxToVector(M,b);if(!vec)continue;
+   var r=predictDigit(vec);
+   run.colD[ci]=String(r.d);
+   cx.save();cx.setTransform(1,0,0,1,0,0);cx.clearRect(M.x0,M.y0,M.w,M.h);cx.restore();
+   changed=true;
+  }
+  if(changed){
+   run.inp[0]=run.colD.join("");
+   draw();
+   if(S.sound){try{tone({f:1000,dur:.05,vol:.06,wave:"sine"});}catch(e){}}
+   maybeAutoSubmit(false);
+  }
+  return;
+ }
+ var bxs=document.querySelectorAll("#qs .bx");
+ for(var si=0;si<bxs.length;si++){
+  var M2=memoRegion(bxs[si].getBoundingClientRect());
+  if(!M2)continue;
+  var bs2=hwMergeBoxes(hwComponents(M2),M2.w,M2.h);
+  if(!bs2.length)continue;
+  var txt="";
+  bs2.forEach(function(bb){
+   var bw=bb.x1-bb.x0+1,bh=bb.y1-bb.y0+1;
+   if(q.keys.neg&&bw/bh>2.4&&bh<M2.h*0.22){txt+="-";return;}
+   if(q.keys.dot&&bw<M2.h*0.22&&bh<M2.h*0.22&&bb.y0>M2.h*0.55){txt+=".";return;}
+   var vv=hwBoxToVector(M2,bb);if(!vv)return;
+   txt+=String(predictDigit(vv).d);
+  });
+  if(!txt||txt==="-"||txt===".")continue;
+  var slot=Number(bxs[si].getAttribute("data-i")||0);
+  run.inp[slot]=txt;
+  cx.save();cx.setTransform(1,0,0,1,0,0);cx.clearRect(M2.x0,M2.y0,M2.w,M2.h);cx.restore();
+  changed=true;
+ }
+ if(changed){
+  draw();
+  if(S.sound){try{tone({f:1000,dur:.05,vol:.06,wave:"sine"});}catch(e){}}
+  maybeAutoSubmit(false);
+ }
 }
 function cvPos(e){
  var r=cv.getBoundingClientRect();
