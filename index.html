@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03h / kumon_math_ver8.3 -->
+<!-- BUILD_TAG: 2026-09-03i / kumon_math_ver8.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -628,7 +628,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.3 / 2026-09-03h</div>
+  <div class="tiny">まいにち計算 ver8.3 / 2026-09-03i</div>
 </section>
 
 <!-- こども追加 -->
@@ -689,7 +689,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03h</div>
+  <div class="tiny">BUILD 2026-09-03i</div>
 </section>
 
 <!-- れいだい -->
@@ -1083,7 +1083,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.3 / BUILD 2026-09-03h</div>
+  <div class="tiny">kumon_math ver8.3 / BUILD 2026-09-03i</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1193,7 +1193,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03h";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03i";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -3125,17 +3125,6 @@ document.getElementById("sh-q").addEventListener("click",function(){
  if(confirm("この プリントを やめますか。きろくは のこりません。")){renderHome();show("s-home");}
  else{run.t0=Date.now()-run.sec*1000;run.timer=setInterval(tick,1000);}
 });
-
-/* まるつけ：点数 */
-.mkscore{border-radius:16px;padding:16px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;
-  background:var(--mid);margin-bottom:12px}
-.mkscore.miss{background:var(--yam)}
-.mkscore .big b{font-family:var(--num);font-size:52px;line-height:1;font-weight:700}
-.mkscore .big span{font-size:18px;margin-left:4px}
-.mkscore .sub{text-align:right;font-size:14px;line-height:1.7}
-.mkscore .sub span{display:block}
-.mkscore .sub span:first-child{font-size:16px;font-weight:700}
-.mrow.x{background:var(--aka-s);margin:0 -14px;padding-left:14px;padding-right:14px}
 
 /* まるつけ */
 function endSheet(){
