@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03g / kumon_math_ver8.2 -->
+<!-- BUILD_TAG: 2026-09-03h / kumon_math_ver8.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -338,6 +338,17 @@ body.pen .pp{background-image:
 .pad .go.rd{background:var(--mid);border-color:var(--mid)}
 .pad .vd{visibility:hidden}
 
+/* まるつけ：点数 */
+.mkscore{border-radius:16px;padding:16px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;
+  background:var(--mid);margin-bottom:12px}
+.mkscore.miss{background:var(--yam)}
+.mkscore .big b{font-family:var(--num);font-size:52px;line-height:1;font-weight:700}
+.mkscore .big span{font-size:18px;margin-left:4px}
+.mkscore .sub{text-align:right;font-size:14px;line-height:1.7}
+.mkscore .sub span{display:block}
+.mkscore .sub span:first-child{font-size:16px;font-weight:700}
+.mrow.x{background:var(--aka-s);margin:0 -14px;padding-left:14px;padding-right:14px}
+
 /* まるつけ */
 .mrow{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--line)}
 .mrow:last-child{border:none}
@@ -617,7 +628,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.2 / 2026-09-03g</div>
+  <div class="tiny">まいにち計算 ver8.3 / 2026-09-03h</div>
 </section>
 
 <!-- こども追加 -->
@@ -678,7 +689,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03g</div>
+  <div class="tiny">BUILD 2026-09-03h</div>
 </section>
 
 <!-- れいだい -->
@@ -738,6 +749,10 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- まるつけ -->
 <section class="sc full" id="s-mark">
   <div class="hd"><h2>まるつけ</h2><div class="sp"></div><span class="num" id="mk-t"></span></div>
+  <div class="mkscore" id="mk-score">
+    <div class="big"><b id="mk-sc"></b><span>てん</span></div>
+    <div class="sub"><span id="mk-ok"></span><span id="mk-ng"></span></div>
+  </div>
   <div class="card" style="padding:6px 14px" id="mk-list"></div>
   <div class="card note" id="mk-note" style="margin-top:12px"></div>
   <div class="sp"></div>
@@ -1068,7 +1083,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.2 / BUILD 2026-09-03g</div>
+  <div class="tiny">kumon_math ver8.3 / BUILD 2026-09-03h</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1178,7 +1193,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03g";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03h";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -3111,6 +3126,17 @@ document.getElementById("sh-q").addEventListener("click",function(){
  else{run.t0=Date.now()-run.sec*1000;run.timer=setInterval(tick,1000);}
 });
 
+/* まるつけ：点数 */
+.mkscore{border-radius:16px;padding:16px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;
+  background:var(--mid);margin-bottom:12px}
+.mkscore.miss{background:var(--yam)}
+.mkscore .big b{font-family:var(--num);font-size:52px;line-height:1;font-weight:700}
+.mkscore .big span{font-size:18px;margin-left:4px}
+.mkscore .sub{text-align:right;font-size:14px;line-height:1.7}
+.mkscore .sub span{display:block}
+.mkscore .sub span:first-child{font-size:16px;font-weight:700}
+.mrow.x{background:var(--aka-s);margin:0 -14px;padding-left:14px;padding-right:14px}
+
 /* まるつけ */
 function endSheet(){
  clearInterval(run.timer);
@@ -3120,6 +3146,12 @@ function endSheet(){
  run.ans.forEach(function(a){if(!a.right)wr.push(a.i);});
  run.wrong=wr.length;run.fixQ=wr.slice();
  document.getElementById("mk-t").textContent=ft(run.sec);
+ var total=run.qs.length,okN=total-wr.length,scN=Math.round(100*okN/total);
+ var ms=document.getElementById("mk-score");
+ ms.classList.toggle("miss",wr.length>0);
+ document.getElementById("mk-sc").textContent=scN;
+ document.getElementById("mk-ok").textContent="○ "+okN+" もん";
+ document.getElementById("mk-ng").textContent=wr.length?("× "+wr.length+" もん"):"ぜんもん せいかい！";
  document.getElementById("mk-list").innerHTML=run.ans.map(function(a,n){
   var q=run.qs[a.i];
   var mine=a.mine.join(q.layout==="frac"?"/":(q.layout==="rem"?" あまり ":", "));
@@ -3132,12 +3164,12 @@ function endSheet(){
  }).join("");
  var nt=document.getElementById("mk-note"),bt=document.getElementById("mk-go");
  if(!wr.length){
-  nt.textContent="ぜんもん せいかい。100てんです。";
+  nt.textContent="ぜんもん せいかい。このまま けっかへ すすみます。";
   bt.textContent="けっかを みる";
   document.getElementById("mk-skip").classList.add("hide");
   beep("clear");
  }else{
-  nt.textContent="まちがいが "+wr.length+"もん。みどりの 数字が 正しい こたえです。なおして 100てんに してから おわります。（なおしの じかんは かぞえません）";
+  nt.textContent="赤い行が まちがえた もんだい。みどりの 数字が 正しい こたえです。なおして 100てんに してから おわります（なおしの じかんは かぞえません）。";
   bt.textContent="なおす（"+wr.length+"もん）";
   document.getElementById("mk-skip").classList.toggle("hide",S.mustFix===true);
  }
