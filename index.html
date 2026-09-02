@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03c / kumon_math_ver7.8 -->
+<!-- BUILD_TAG: 2026-09-03d / kumon_math_ver7.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -176,10 +176,35 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .lvr .g{font-size:12px;color:var(--sumi);margin-left:7px}
 .lvr p{margin:4px 0 0;font-size:13.5px;color:var(--sumi);line-height:1.6}
 .lvr .so{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--yam);background:var(--yam-s);border-radius:5px;padding:2px 7px}
-.strow{display:flex;justify-content:space-between;gap:10px;padding:13px 2px;border-bottom:1px solid var(--line);font-size:15px}
-.strow:last-child{border:none}
-.strow.now{color:var(--ai);font-weight:700}
-.strow .n{font-family:var(--num);font-size:13px;color:var(--sumi);white-space:nowrap}
+.acc{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surf);overflow:hidden}
+.acc.now{border-color:var(--ai);border-width:2px}
+.acc.done{background:var(--mid-s)}
+.acch{display:flex;align-items:center;gap:10px;width:100%;padding:12px 12px;text-align:left}
+.acch .st{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;background:var(--soft);color:var(--usu)}
+.acc.done .acch .st{background:var(--mid);color:#fff}
+.acc.now .acch .st{background:var(--ai);color:#fff}
+.acch .tx{flex:1;min-width:0}
+.acch .tx b{display:block;font-size:15px;line-height:1.3}
+.acch .tx span{font-family:var(--num);font-size:11.5px;color:var(--sumi)}
+.acch .mini{display:flex;gap:3px;flex:0 0 auto}
+.acch .mini i{width:9px;height:9px;border-radius:50%;background:#e0e5de}
+.acch .mini i.d{background:var(--mid)}.acch .mini i.n{background:var(--yam)}
+.acch .ar{color:var(--usu);font-size:12px;flex:0 0 auto;transition:transform .2s}
+.acc.open .acch .ar{transform:rotate(180deg)}
+.accb{display:none;padding:0 12px 12px;border-top:1px solid var(--line)}
+.acc.open .accb{display:block}
+.accb .ex{display:grid;grid-template-columns:1fr;gap:6px;margin:10px 0}
+.accb .exq{background:var(--soft);border-radius:10px;padding:8px 12px;font-family:var(--num);font-size:19px;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+.accb .exq .a{color:var(--mid);font-weight:700}
+.accb .exq .vc{font-size:15px;min-width:auto}
+.accb .exq .fc{font-size:.7em}
+.accb .exq .jp{font-family:var(--jp);font-size:12px;display:inline;margin-right:6px}
+.accb .exq .dg{display:inline-grid;grid-template-columns:repeat(5,9px) 5px repeat(5,9px);gap:2px;margin:0}
+.accb .exq .dg i{width:9px;height:9px}.accb .exq .dg s{width:5px}
+.accb .exq .bl{min-width:24px;border-width:2px}
+.lvbar{height:8px;background:#e4e8e2;border-radius:4px;overflow:hidden;margin-top:8px}
+.lvbar b{display:block;height:100%;background:var(--mid)}
 
 /* れいだい */
 .ex{background:var(--mid-s);border:1px solid #d2e8de;border-radius:16px;padding:22px;text-align:center}
@@ -329,6 +354,18 @@ body.pen .pp{background-image:
 .st{flex:1;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:13px 6px;text-align:center}
 .st b{display:block;font-family:var(--num);font-size:26px;line-height:1.25}
 .st span{font-size:12px;color:var(--sumi)}
+
+/* 結果 */
+.rcard{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:12px}
+.rscore{text-align:center;padding:4px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.rscore b{font-family:var(--num);font-size:56px;line-height:1;font-weight:700}
+.rscore span{font-size:16px;margin-left:4px;color:var(--sumi)}
+.rline{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:15px;color:var(--sumi)}
+.rline b{font-size:19px;color:var(--ink)}
+.rgauge{position:relative;height:12px;border-radius:6px;margin-top:10px;
+  background:linear-gradient(90deg,var(--mid) 0 40%,var(--yam) 40% 80%,var(--aka) 80% 100%);opacity:.9}
+.rgauge b{position:absolute;top:-5px;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-left:-11px}
+.rgl{display:flex;justify-content:space-between;font-size:11px;color:var(--usu);margin-top:6px}
 
 /* 共通行 */
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15.5px}
@@ -522,7 +559,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver7.8 / 2026-09-03c</div>
+  <div class="tiny">まいにち計算 ver7.9 / 2026-09-03d</div>
 </section>
 
 <!-- こども追加 -->
@@ -583,7 +620,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03c</div>
+  <div class="tiny">BUILD 2026-09-03d</div>
 </section>
 
 <!-- れいだい -->
@@ -655,14 +692,17 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <section class="sc full" id="s-res">
   <div class="hd"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
   <div class="bg" id="rs-bg"><h2></h2><p></p></div>
-  <div class="hide" id="rs-orb" style="text-align:center;margin-top:14px"></div>
-  <div class="hide" id="rs-best" style="text-align:center"></div>
-  <div class="sts">
-    <div class="st"><b id="rs-sc"></b><span>てん</span></div>
-    <div class="st"><b id="rs-tm"></b><span>じかん</span></div>
-    <div class="st"><b id="rs-st"></b><span>めやす</span></div>
+  <div class="rcard">
+    <div class="rscore"><b id="rs-sc"></b><span>てん</span></div>
+    <div class="rline"><span>かかった じかん</span><b class="num" id="rs-tm"></b></div>
+    <div class="rline"><span>めやす</span><b class="num" id="rs-st"></b></div>
+    <div class="rline"><span>まちがい</span><b class="num" id="rs-wr"></b></div>
+    <div class="rgauge" id="rs-gauge"><i></i><b></b></div>
+    <div class="rgl"><span>はやい</span><span>めやす</span><span>ゆっくり</span></div>
   </div>
-  <div class="card note" id="rs-nt"></div>
+  <div class="hide" id="rs-best" style="text-align:center"></div>
+  <div class="hide" id="rs-orb" style="text-align:center;margin-top:12px"></div>
+  <div class="card note" id="rs-nt" style="margin-top:12px"></div>
   <div class="sp"></div>
   <div class="stk"><button class="btn" id="rs-nx"></button><button class="btn q" id="rs-hm">きょうは ここまで</button></div>
   <div class="tiny">&nbsp;</div>
@@ -944,7 +984,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver7.8 / BUILD 2026-09-03c</div>
+  <div class="tiny">kumon_math ver7.9 / BUILD 2026-09-03d</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1054,7 +1094,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03c";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03d";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2235,46 +2275,70 @@ var CDATA=[
 
 function cname(id){return (CDATA[id]&&CDATA[id][0])||(CPAL[Math.floor(id/10)%12][3]+CSPE[id%10]);}
 function cinfo(id){return CDATA[id]||["",CDESC[id%10],"",""];}
-function cbody(sp,c,d,l){
+function cbody(sp,c,d,l,gid){
+ var G='url(#'+gid+')';
  switch(sp){
-  case 0: return '<path d="M18,74 C18,44 32,26 50,26 C68,26 82,44 82,74 C82,80 74,82 50,82 C26,82 18,80 18,74 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<ellipse cx="38" cy="42" rx="9" ry="6" fill="'+l+'" opacity=".6"/>';
-  case 1: return '<path d="M26,34 L22,16 L38,26 Z M74,34 L78,16 L62,26 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<circle cx="50" cy="54" r="28" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M16,54 L4,50 M16,60 L4,62 M84,54 L96,50 M84,60 L96,62" stroke="'+d+'" stroke-width="2.5" stroke-linecap="round"/>';
-  case 2: return '<ellipse cx="50" cy="58" rx="27" ry="26" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M78,56 L94,62 L78,66 Z" fill="#f0a62a" stroke="'+d+'" stroke-width="2"/>'+
-    '<path d="M36,58 C28,62 26,72 34,76 C40,74 42,66 40,60 Z" fill="'+l+'"/>'+
-    '<path d="M44,30 C44,20 52,16 56,22 C52,24 48,28 48,32 Z" fill="'+d+'"/>';
-  case 3: return '<ellipse cx="46" cy="56" rx="30" ry="21" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M76,56 L94,40 L94,72 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M42,36 L52,22 L58,38 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>'+
-    '<path d="M36,60 C42,66 52,68 60,64" stroke="'+d+'" stroke-width="2" fill="none"/>';
-  case 4: return '<path d="M30,24 L24,10 L40,20 Z M70,24 L76,10 L60,20 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>'+
-    '<path d="M22,58 C22,36 34,24 52,24 C72,24 82,38 80,56 C78,72 62,80 46,78 C32,76 22,70 22,58 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
+  case 0: return '<path d="M18,74 C18,44 32,24 50,24 C68,24 82,44 82,74 C82,80 74,84 50,84 C26,84 18,80 18,74 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<ellipse cx="36" cy="40" rx="10" ry="6" fill="#fff" opacity=".55"/><circle cx="62" cy="34" r="3" fill="#fff" opacity=".6"/>'+
+    '<path d="M30,78 C34,86 40,88 44,84" stroke="'+d+'" stroke-width="2" fill="none" opacity=".5"/>';
+  case 1: return '<path d="M26,36 L20,12 L40,24 Z M74,36 L80,12 L60,24 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M28,32 L25,18 L36,26 Z M72,32 L75,18 L64,26 Z" fill="#f4a7b9"/>'+
+    '<circle cx="50" cy="54" r="28" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M46,60 L50,64 L54,60 Z" fill="#f4a7b9"/><path d="M50,64 C46,70 42,70 40,66 M50,64 C54,70 58,70 60,66" stroke="'+d+'" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+    '<path d="M18,56 L4,52 M18,62 L4,64 M82,56 L96,52 M82,62 L96,64" stroke="'+d+'" stroke-width="2.4" stroke-linecap="round"/>';
+  case 2: return '<ellipse cx="50" cy="58" rx="28" ry="27" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<ellipse cx="50" cy="66" rx="17" ry="13" fill="'+l+'" opacity=".8"/>'+
+    '<path d="M78,56 L96,62 L78,68 Z" fill="#f0a62a" stroke="#b8760a" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M32,56 C22,60 20,74 30,80 C38,78 40,66 38,58 Z" fill="'+d+'" opacity=".55"/>'+
+    '<path d="M44,32 C44,20 52,16 56,22 C52,24 48,28 48,32 Z M52,30 C54,20 62,18 64,24 C60,26 56,30 56,32 Z" fill="'+d+'"/>'+
+    '<path d="M40,84 L36,92 M44,84 L44,92 M56,84 L56,92 M60,84 L64,92" stroke="#f0a62a" stroke-width="2.6" stroke-linecap="round"/>';
+  case 3: return '<path d="M76,56 L96,38 L92,56 L96,74 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<ellipse cx="46" cy="56" rx="31" ry="22" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M40,36 L52,20 L60,38 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M44,78 L52,88 L60,76 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M56,44 q6,6 0,12 M64,42 q6,7 0,14 M56,60 q6,6 0,12" stroke="'+d+'" stroke-width="1.8" fill="none" opacity=".55"/>'+
+    '<path d="M22,50 C26,44 30,44 34,50" stroke="'+d+'" stroke-width="2" fill="none" opacity=".6"/>';
+  case 4: return '<path d="M30,26 L22,6 L42,18 Z M70,26 L78,6 L58,18 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M22,58 C22,36 34,22 52,22 C72,22 82,38 80,56 C78,72 62,80 46,78 C32,76 22,70 22,58 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M34,60 C36,72 46,78 56,74 C50,68 44,64 34,60 Z" fill="'+l+'" opacity=".85"/>'+
     '<path d="M80,54 C90,52 96,56 96,62 C90,64 82,62 78,60 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>'+
-    '<path d="M28,72 C24,80 26,88 32,92 C28,84 28,78 30,72 Z" fill="'+l+'"/>';
-  case 5: return '<rect x="24" y="30" width="52" height="46" rx="10" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M50,30 L50,16" stroke="'+d+'" stroke-width="3"/><circle cx="50" cy="12" r="5" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>'+
-    '<rect x="34" y="62" width="32" height="8" rx="4" fill="'+l+'"/>'+
-    '<circle cx="30" cy="72" r="3" fill="'+d+'"/><circle cx="70" cy="72" r="3" fill="'+d+'"/>';
-  case 6: return '<path d="M50,14 L61,42 L92,44 L67,62 L76,90 L50,74 L24,90 L33,62 L8,44 L39,42 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>';
-  case 7: return '<rect x="40" y="54" width="20" height="28" rx="8" fill="'+l+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M14,56 C14,32 30,18 50,18 C70,18 86,32 86,56 C70,62 30,62 14,56 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<circle cx="34" cy="40" r="6" fill="'+l+'"/><circle cx="62" cy="34" r="5" fill="'+l+'"/><circle cx="70" cy="48" r="4" fill="'+l+'"/>';
-  case 8: return '<path d="M22,76 C22,44 34,24 50,24 C66,24 78,44 78,76 C72,70 66,80 60,74 C54,68 46,84 40,74 C34,66 28,82 22,76 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>';
-  case 9: return '<path d="M26,72 C14,72 10,60 18,54 C16,42 28,34 38,40 C44,28 62,28 68,40 C80,38 90,48 86,60 C92,66 88,74 78,72 Z" fill="'+c+'" stroke="'+d+'" stroke-width="3"/>';
+    '<path d="M36,24 L40,14 L44,24 M50,22 L54,10 L58,22 M64,24 L68,14 L72,26" fill="'+d+'" stroke="'+d+'" stroke-width="1"/>'+
+    '<path d="M28,72 C24,80 26,88 32,92 C28,84 28,78 30,72 Z" fill="'+l+'"/>'+
+    '<path d="M6,44 C10,30 24,30 26,42 C18,44 12,44 6,44 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" opacity=".9"/>';
+  case 5: return '<rect x="22" y="28" width="56" height="50" rx="12" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<rect x="30" y="38" width="40" height="26" rx="6" fill="#1e2a3a"/>'+
+    '<path d="M50,28 L50,14" stroke="'+d+'" stroke-width="3"/><circle cx="50" cy="11" r="5" fill="#ffe27a" stroke="'+d+'" stroke-width="2"/>'+
+    '<rect x="34" y="68" width="32" height="6" rx="3" fill="'+l+'"/>'+
+    '<circle cx="30" cy="74" r="2.6" fill="'+d+'"/><circle cx="70" cy="74" r="2.6" fill="'+d+'"/>'+
+    '<rect x="12" y="44" width="10" height="16" rx="4" fill="'+d+'"/><rect x="78" y="44" width="10" height="16" rx="4" fill="'+d+'"/>'+
+    '<rect x="36" y="78" width="10" height="8" fill="'+d+'"/><rect x="54" y="78" width="10" height="8" fill="'+d+'"/>';
+  case 6: return '<path d="M50,12 L61,40 L92,42 L67,60 L76,90 L50,74 L24,90 L33,60 L8,42 L39,40 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M50,22 L56,38 L72,40" stroke="#fff" stroke-width="2.5" fill="none" opacity=".55" stroke-linecap="round"/>';
+  case 7: return '<rect x="38" y="52" width="24" height="32" rx="9" fill="'+l+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M14,56 C14,32 30,16 50,16 C70,16 86,32 86,56 C70,64 30,64 14,56 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M18,56 C30,52 70,52 82,56" stroke="'+d+'" stroke-width="2" fill="none" opacity=".5"/>'+
+    '<circle cx="32" cy="38" r="6" fill="#fff" opacity=".9"/><circle cx="60" cy="30" r="5" fill="#fff" opacity=".9"/><circle cx="70" cy="46" r="4" fill="#fff" opacity=".9"/><circle cx="46" cy="46" r="3" fill="#fff" opacity=".9"/>';
+  case 8: return '<path d="M22,76 C22,44 34,22 50,22 C66,22 78,44 78,76 C72,70 66,80 60,74 C54,68 46,84 40,74 C34,66 28,82 22,76 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M22,58 C12,58 8,66 14,70 M78,58 C88,58 92,66 86,70" stroke="'+d+'" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+    '<ellipse cx="38" cy="36" rx="8" ry="5" fill="#fff" opacity=".5"/>';
+  case 9: return '<path d="M26,72 C14,72 10,60 18,54 C16,42 28,34 38,40 C44,28 62,28 68,40 C80,38 90,48 86,60 C92,66 88,74 78,72 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
+    '<path d="M28,66 C40,70 60,70 74,66" stroke="'+d+'" stroke-width="2" fill="none" opacity=".4"/>'+
+    '<ellipse cx="40" cy="42" rx="8" ry="4" fill="#fff" opacity=".6"/>';
  }
  return "";
 }
 function ceyes(t,d){
- if(t===0)return '<circle cx="40" cy="52" r="5" fill="#fff"/><circle cx="41" cy="53" r="2.6" fill="#1a1a1a"/>'+
-   '<circle cx="62" cy="52" r="5" fill="#fff"/><circle cx="63" cy="53" r="2.6" fill="#1a1a1a"/>';
- if(t===1)return '<path d="M34,54 C38,48 44,48 48,54 M54,54 C58,48 64,48 68,54" stroke="#1a1a1a" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
- if(t===2)return '<circle cx="40" cy="52" r="3.4" fill="#1a1a1a"/><circle cx="62" cy="52" r="3.4" fill="#1a1a1a"/>'+
-   '<path d="M44,64 C48,68 54,68 58,64" stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
- return '<path d="M35,48 L47,54 L35,58 M67,48 L55,54 L67,58" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+ var blush='<ellipse cx="32" cy="60" rx="5" ry="3" fill="#f4a7b9" opacity=".6"/><ellipse cx="68" cy="60" rx="5" ry="3" fill="#f4a7b9" opacity=".6"/>';
+ if(t===0)return blush+'<circle cx="40" cy="52" r="5.5" fill="#fff"/><circle cx="41" cy="53" r="3" fill="#1a1a1a"/><circle cx="42.5" cy="51.5" r="1" fill="#fff"/>'+
+   '<circle cx="62" cy="52" r="5.5" fill="#fff"/><circle cx="63" cy="53" r="3" fill="#1a1a1a"/><circle cx="64.5" cy="51.5" r="1" fill="#fff"/>';
+ if(t===1)return blush+'<path d="M34,54 C38,47 44,47 48,54 M54,54 C58,47 64,47 68,54" stroke="#1a1a1a" stroke-width="3.4" fill="none" stroke-linecap="round"/>'+
+   '<path d="M46,63 C48,66 52,66 54,63" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round"/>';
+ if(t===2)return blush+'<circle cx="40" cy="52" r="3.6" fill="#1a1a1a"/><circle cx="62" cy="52" r="3.6" fill="#1a1a1a"/>'+
+   '<path d="M44,64 C48,69 54,69 58,64" stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+ return blush+'<path d="M35,48 L47,54 L35,58 M67,48 L55,54 L67,58" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+   '<path d="M44,66 L58,66" stroke="#1a1a1a" stroke-width="2.4" stroke-linecap="round"/>';
 }
+
 function cacc(t,c,d,l){
  if(t===1)return '<path d="M34,22 L30,8 L44,18 Z M68,22 L72,8 L58,18 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>';
  if(t===2)return '<path d="M12,42 C0,34 2,20 14,22 C10,32 12,38 20,44 Z M88,42 C100,34 98,20 86,22 C90,32 88,38 80,44 Z" fill="#fff" stroke="'+d+'" stroke-width="2" opacity=".9"/>';
@@ -2295,6 +2359,8 @@ function charSVG(id,cls,st){
  if(st===1){c=pal[2];l="#ffffff";}
  var aura=r>=2?'<circle cx="50" cy="50" r="47" fill="none" stroke="'+RARC[r]+'" stroke-width="2.5" opacity=".55"/>':"";
  var spark=r===3?'<path d="M84,18 l2.6,6 l6,2.6 l-6,2.6 l-2.6,6 l-2.6,-6 l-6,-2.6 l6,-2.6 Z" fill="'+RARC[3]+'"/>':"";
+ var gid="cg"+id+"_"+st;
+ var defs='<defs><radialGradient id="'+gid+'" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="'+l+'"/><stop offset=".45" stop-color="'+c+'"/><stop offset="1" stop-color="'+d+'"/></radialGradient></defs>';
  var evo="";
  if(st>=1)evo+='<circle cx="50" cy="52" r="44" fill="none" stroke="#ffd873" stroke-width="2" opacity=".75"/>';
  if(st>=2){
@@ -2303,8 +2369,8 @@ function charSVG(id,cls,st){
    '<path d="M12,64 l2.4,5.4 l5.4,2.4 l-5.4,2.4 l-2.4,5.4 l-2.4,-5.4 l-5.4,-2.4 l5.4,-2.4 Z" fill="#ffe9a8"/>'+
    '<path d="M88,58 l2,4.6 l4.6,2 l-4.6,2 l-2,4.6 l-2,-4.6 l-4.6,-2 l4.6,-2 Z" fill="#ffe9a8"/>';
  }
- return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+
-   aura+cbody(sp,c,d,l)+ceyes(ey,d)+cacc(ac,c,d,l)+spark+evo+'</svg>';
+ return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+defs+
+   aura+cbody(sp,c,d,l,gid)+ceyes(ey,d)+cacc(ac,c,d,l)+spark+evo+'</svg>';
 }
 
 /* ===== ぼうけんの 絵（部品を 組み合わせて 場面を つくる） ===== */
@@ -2951,10 +3017,10 @@ function showResult(){
   }
  }
  var jd,ti,ms,cl,adv;
- if(run.wrong>0){jd="repeat_wrong";cl="a";adv=false;ti="もういちど おなじ プリント";ms="まちがえた ところを もう1かい。つぎは できます。";}
- else if(t<=mn){jd="pass";cl="p";adv=true;ti="ごうかく";ms="100てん、じかんも ばっちり。つぎへ すすみます。";}
- else if(t<=mx){jd="pass_slow";cl="s";adv=true;ti="ごうかく";ms="100てんです。じかんは めやすの なかなので つぎへ すすみます。";}
- else{jd="repeat_slow";cl="a";adv=false;ti="もういちど おなじ プリント";ms="100てんでしたが じかんが かかりました。すらすらに してから すすみます。";}
+ if(run.wrong>0){jd="repeat_wrong";cl="a";adv=false;ti="もういちど";ms="まちがいが あったので、おなじ プリントを もう1かい やります。";}
+ else if(t<=mn){jd="pass";cl="p";adv=true;ti="ごうかく！";ms="100てん。じかんも はやい！ つぎへ すすみます。";}
+ else if(t<=mx){jd="pass_slow";cl="s";adv=true;ti="ごうかく！";ms="100てん。つぎへ すすみます。";}
+ else{jd="repeat_slow";cl="a";adv=false;ti="もういちど";ms="100てんでしたが、じかんが かかったので おなじ プリントを もう1かい。";}
  k.history.push({d:dk(),ts:Date.now(),id:st.id,name:st.name,lv:st.lv,p:k.printNo,sec:Math.round(t),
    score:sc,wrong:run.wrong,judge:jd,mn:mn,mx:mx});
  if(k.history.length>900)k.history=k.history.slice(-900);
@@ -2983,7 +3049,10 @@ function showResult(){
  document.getElementById("rs-id").textContent=st.id;
  document.getElementById("rs-sc").textContent=sc;
  document.getElementById("rs-tm").textContent=ft(t);
- document.getElementById("rs-st").textContent=ft(mn)+"〜"+ft(mx);
+ document.getElementById("rs-st").textContent=ft(mn)+" 〜 "+ft(mx);
+ document.getElementById("rs-wr").textContent=run.wrong+" もん";
+ var pos=t<=mn?(40*t/mn):(t<=mx?(40+40*(t-mn)/(mx-mn)):(80+20*Math.min(1,(t-mx)/mx)));
+ document.getElementById("rs-gauge").querySelector("b").style.left=Math.max(2,Math.min(98,pos))+"%";
  var ex="";
  if(clear)ex+="「"+st.name+"」を クリアしました。";
  if(up)ex+=STEPS[k.stepIdx].lv+"教材（"+STEPS[k.stepIdx].lvTitle+"）に すすみます。";
@@ -4329,7 +4398,8 @@ function renderMap(){
     var L=LV[li],dn=cur.li>li,nw=cur.li===li;
     h+='<button class="lvr'+(dn?" dn":"")+(nw?" nw":"")+'" data-lv="'+li+'"><span class="bd">'+L.lv+'</span>'+
      '<span><b>'+L.title+'</b><span class="g">'+L.grade+'</span><p>'+L.aim+'</p>'+
-     '<p style="color:var(--usu)">'+L.sec.length+'ステップ / '+(L.sec.length*PPS)+'まい</p></span></button>';
+     '<p style="color:var(--usu)">'+(dn?L.sec.length:(nw?cur.si:0))+' / '+L.sec.length+' ステップ</p>'+
+     '<div class="lvbar"><b style="width:'+(dn?100:(nw?Math.round(100*(cur.si+(P().printNo-1)/PPS)/L.sec.length):0))+'%"></b></div></span></button>';
    }else{
     var F=null;FUT.forEach(function(f){if(f.lv===lv)F=f;});
     if(F)h+='<div class="lvr"><span class="bd">'+F.lv+'</span><span><b>'+F.title+'</b>'+
@@ -4344,18 +4414,60 @@ document.getElementById("maplist").addEventListener("click",function(e){
  var b=e.target.closest("[data-lv]");if(!b)return;
  renderLv(Number(b.getAttribute("data-lv")));show("s-lv");
 });
+function exHTML(q){
+ var ans=q.slots.map(function(x){return x.ans;}).join(q.layout==="frac"?"/":(q.layout==="rem"?" あまり ":", "));
+ return '<div class="exq"><span>'+q.prompt+'</span><span class="a">'+ans+'</span></div>';
+}
 function renderLv(li){
  lvOpen=li;
- var L=LV[li],cur=STEPS[P().stepIdx];
+ var k=P(),L=LV[li],cur=STEPS[k.stepIdx];
  document.getElementById("lv-h").textContent=L.lv+" 教材";
  document.getElementById("lv-t").textContent=L.title+"（"+L.grade+"）";
- document.getElementById("lv-a").textContent=L.aim;
- document.getElementById("lv-s").innerHTML=L.sec.map(function(s){
-  var id=L.lv+" "+s[0],nw=cur.id===id;
-  return '<div class="strow'+(nw?" now":"")+'"><span>'+(nw?"▶ ":"")+s[1]+'</span><span class="n">'+s[0]+'</span></div>';
- }).join("");
+ var doneSteps=cur.li>li?L.sec.length:(cur.li<li?0:cur.si);
+ document.getElementById("lv-a").innerHTML=L.aim+'<div class="lvbar"><b style="width:'+Math.round(100*doneSteps/L.sec.length)+'%"></b></div>'+
+  '<div class="note" style="margin-top:4px">'+doneSteps+' / '+L.sec.length+' ステップ おわり</div>';
+ var h="";
+ L.sec.forEach(function(sc,si){
+  var id=L.lv+" "+sc[0];
+  var gi=idxOf(id);
+  var done=gi<k.stepIdx,nw=gi===k.stepIdx;
+  var mini="";
+  for(var i=1;i<=PPS;i++)mini+='<i class="'+(done?"d":(nw?(i<k.printNo?"d":(i===k.printNo?"n":"")):""))+'"></i>';
+  h+='<div class="acc'+(done?" done":"")+(nw?" now":"")+'" data-i="'+gi+'">'+
+   '<button class="acch" data-acc="'+gi+'"><span class="st">'+(done?"✓":(nw?"▶":(si+1)))+'</span>'+
+   '<span class="tx"><b>'+sc[1]+'</b><span>'+id+'　'+(nw?(k.printNo+"/"+PPS+"まいめ"):(done?"クリア":"5まい"))+'</span></span>'+
+   '<span class="mini">'+mini+'</span><span class="ar">▼</span></button>'+
+   '<div class="accb"><div class="note" style="padding-top:8px">こんな もんだいが 出ます（れい）</div><div class="ex" data-ex="'+gi+'"></div>'+
+   '<button class="btn o" data-go="'+gi+'" style="padding:12px">ここから はじめる</button></div></div>';
+ });
+ document.getElementById("lv-s").innerHTML=h;
  document.getElementById("lv-go").textContent=L.lv+" の さいしょから 始める";
+ var nowEl=document.querySelector("#lv-s .acc.now");
+ if(nowEl)setTimeout(function(){nowEl.scrollIntoView({behavior:"smooth",block:"center"});},80);
 }
+document.getElementById("lv-s").addEventListener("click",function(e){
+ var g=e.target.closest("[data-go]");
+ if(g){
+  var gi=Number(g.getAttribute("data-go"));
+  openGate(function(){
+   var k=P();k.stepIdx=gi;k.printNo=1;k.printRepeat=0;save();renderHome();show("s-home");
+  });
+  return;
+ }
+ var b=e.target.closest("[data-acc]");if(!b)return;
+ var acc=b.parentNode;
+ var wasOpen=acc.classList.contains("open");
+ acc.classList.toggle("open",!wasOpen);
+ if(!wasOpen){
+  var gi2=Number(b.getAttribute("data-acc"));
+  var ex=acc.querySelector("[data-ex]");
+  if(ex&&!ex.innerHTML){
+   var st=STEPS[gi2],hh="";
+   for(var i=0;i<3;i++)hh+=exHTML(makeQ(st.gen));
+   ex.innerHTML=hh;
+  }
+ }
+});
 document.getElementById("lv-go").addEventListener("click",function(){
  openGate(function(){
   var k=P();k.stepIdx=firstOf(lvOpen);k.printNo=1;k.printRepeat=0;save();
