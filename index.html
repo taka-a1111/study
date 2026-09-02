@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03e / kumon_math_ver8.0 -->
+<!-- BUILD_TAG: 2026-09-03f / kumon_math_ver8.1 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -465,6 +465,9 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .mcard .v{font-size:17px;font-weight:700;margin-top:4px}
 .mcard .d{font-size:13.5px;color:var(--sumi);margin-top:4px;line-height:1.7}
 .board svg{width:100%;height:auto;display:block}
+.board .token{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.board .token{animation:none}}
 .hintlist{margin:10px 0 0;padding:0;list-style:none}
 .hintlist li{background:var(--yam-s);border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:14px}
 .hintlist li::before{content:"🔎 ";}
@@ -571,7 +574,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.0 / 2026-09-03e</div>
+  <div class="tiny">まいにち計算 ver8.1 / 2026-09-03f</div>
 </section>
 
 <!-- こども追加 -->
@@ -632,7 +635,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03e</div>
+  <div class="tiny">BUILD 2026-09-03f</div>
 </section>
 
 <!-- れいだい -->
@@ -996,7 +999,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.0 / BUILD 2026-09-03e</div>
+  <div class="tiny">kumon_math ver8.1 / BUILD 2026-09-03f</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1106,7 +1109,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03e";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03f";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4117,64 +4120,93 @@ document.getElementById("modes").addEventListener("click",function(e){
 document.getElementById("bd-go").addEventListener("click",function(){document.getElementById("go-start").click();});
 document.getElementById("st-go").addEventListener("click",function(){document.getElementById("go-start").click();});
 
-/* ---- すごろくの マップ ---- */
+/* ---- すごろくの マップ（ボードゲームふう） ---- */
 var WORLDS=[
- {n:"みどりの まきば",sky:"#bfe3ff",gr:"#7cc26b",gr2:"#5fa851",road:"#e8dcc0",deco:"tree"},
- {n:"あおい うみべ",sky:"#8fd0ff",gr:"#f2dfb0",gr2:"#e0c98e",road:"#fff3d6",deco:"shell"},
- {n:"しろい ゆきやま",sky:"#dbeeff",gr:"#f2f7fb",gr2:"#dbe6ef",road:"#ffffff",deco:"ice"},
- {n:"よるの ほしぞら",sky:"#1b2450",gr:"#2b3566",gr2:"#212a52",road:"#4a5590",deco:"star"},
- {n:"きんの さばく",sky:"#ffd9a0",gr:"#e6bb72",gr2:"#cfa257",road:"#fff0cf",deco:"cactus"}
+ {n:"みどりの まきば",sky:["#cfe9ff","#9fd4ff"],gr:"#8ccd6f",gr2:"#6fb85a",road:"#f1e5c9",edge:"#c9a77a"},
+ {n:"あおい うみべ",sky:["#a9defb","#5fbcf5"],gr:"#f4e3b6",gr2:"#e7d19b",road:"#fff6dc",edge:"#d9b98a"},
+ {n:"しろい ゆきやま",sky:["#e6f1fb","#b9d3ec"],gr:"#f7fafc",gr2:"#e3ecf4",road:"#ffffff",edge:"#c3d4e3"},
+ {n:"よるの ほしぞら",sky:["#0f1636","#2a2f6a"],gr:"#2f3a6e",gr2:"#26305c",road:"#5a63a0",edge:"#8a92c8"},
+ {n:"きんの さばく",sky:["#ffe1ad","#f6c06a"],gr:"#ecc47a",gr2:"#d8ad5d",road:"#fff3d3",edge:"#c9a05c"}
 ];
+function smoothPath(pts){
+ if(pts.length<2)return "";
+ var d="M"+pts[0][0]+","+pts[0][1];
+ for(var i=0;i<pts.length-1;i++){
+  var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+  var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6;
+  var c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+  d+=" C"+c1x.toFixed(1)+","+c1y.toFixed(1)+" "+c2x.toFixed(1)+","+c2y.toFixed(1)+" "+p2[0]+","+p2[1];
+ }
+ return d;
+}
+function pl(part,x,y,sc,op){return '<g transform="translate('+x+','+y+') scale('+sc+')"'+(op?' opacity="'+op+'"':'')+'>'+part+'</g>';}
 function renderBoard(){
- var k=P(),b=k.board,W=WORLDS[b.world%WORLDS.length];
+ var k=P(),b=k.board,wi=b.world%WORLDS.length,W=WORLDS[wi];
  document.getElementById("bd-h").textContent="すごろく";
- document.getElementById("bd-note").innerHTML='<b style="color:var(--ink)">ワールド '+(b.world+1)+'　'+W.n+'</b><br>'+
-  'いま '+(b.pos+1)+' / '+BOARD_N+' マス。プリント 1まいで 1マス すすむ。';
- var cols=5,cw=58,ch=52,padX=16,padY=20;
- var rows=Math.ceil(BOARD_N/cols);
- var VW=padX*2+cols*cw, VH=padY*2+rows*ch;
+ document.getElementById("bd-note").innerHTML='<b style="color:var(--ink)">ワールド '+(b.world+1)+'　'+W.n+'</b><br>いま '+(b.pos+1)+' / '+BOARD_N+' マス。プリント 1まいで 1マス。';
+ var cols=5,VW=340,rowH=118,padY=70,rows=Math.ceil(BOARD_N/cols);
+ var VH=padY*2+(rows-1)*rowH;
  var pts=[];
  for(var i=0;i<BOARD_N;i++){
   var r=Math.floor(i/cols),c=i%cols;
   if(r%2===1)c=cols-1-c;
-  pts.push([padX+c*cw+cw/2, VH-padY-(r*ch+ch/2)]);
+  var x=46+c*62+((i%3)-1)*5,y=VH-padY-r*rowH+((i%2)?-8:8);
+  pts.push([x,y]);
  }
- var g='<defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+W.sky+'"/><stop offset="1" stop-color="'+W.gr+'"/></linearGradient></defs>'+
-  '<rect width="'+VW+'" height="'+VH+'" fill="url(#bsky)"/>';
- /* かざり */
- var deco="";
- for(var d=0;d<10;d++){
-  var dx=(d*97)%VW, dy=18+((d*61)%(VH-40));
-  if(W.deco==="tree")deco+='<g opacity=".5" transform="translate('+dx+','+(dy-70)+') scale(.5)">'+ART.tree(0,W.gr2)+'</g>';
-  if(W.deco==="star")deco+=ART.star(dx,dy,4+(d%3),"#ffffff").replace("<path",'<path opacity=".55"');
-  if(W.deco==="ice")deco+='<circle cx="'+dx+'" cy="'+dy+'" r="'+(2+d%3)+'" fill="#fff" opacity=".7"/>';
-  if(W.deco==="shell")deco+='<g opacity=".5">'+ART.shell(dx,dy,"#fff",5)+'</g>';
-  if(W.deco==="cactus")deco+='<g opacity=".45" transform="translate('+dx+','+dy+') scale(.5)">'+ART.cactus(0,0)+'</g>';
+ var g='<defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+W.sky[0]+'"/><stop offset="1" stop-color="'+W.sky[1]+'"/></linearGradient>'+
+  '<filter id="sh" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-opacity=".28"/></filter></defs>';
+ g+='<rect width="'+VW+'" height="'+VH+'" fill="url(#bsky)"/>';
+ /* 地面：やわらかい 丘 */
+ for(var r2=0;r2<rows+1;r2++){
+  var gy=VH-padY-r2*rowH+40;
+  g+='<path d="M-20,'+(gy+24)+' C40,'+(gy-14)+' 100,'+(gy+34)+' 170,'+(gy-2)+' C230,'+(gy-26)+' 300,'+(gy+28)+' 360,'+(gy+2)+' L360,'+(gy+150)+' L-20,'+(gy+150)+' Z" fill="'+(r2%2?W.gr:W.gr2)+'"/>';
  }
- g+=deco;
+ /* ワールドの かざり（みちの 両側と、段の あいだ） */
+ var A2=ART,dec="";
+ var spots=[];
+ for(var yy=40;yy<VH-30;yy+=64){spots.push([4,yy]);spots.push([300,yy+30]);}
+ for(var r3=0;r3<rows-1;r3++){var gy2=VH-padY-r3*rowH-rowH/2;spots.push([150,gy2+18]);}
+ spots.forEach(function(sp,i){
+  var x=sp[0],y=sp[1],sc=0.62+(i%3)*0.12,mid=(x===150);
+  if(mid)sc=0.5;
+  if(wi===0)dec+=pl(i%5===0?A2.lake(0):(i%5===1?A2.rock(0):(i%5===2?A2.flower(0,120,"#f4a7b9")+A2.flower(14,126,"#e8bf2a"):A2.tree(0,i%2?"#3f9a4a":"#5cb85c"))),x,y-125*sc,sc);
+  if(wi===1)dec+=pl(i%6===0?A2.lighthouse(0,true):(i%6===1?A2.boat(0):(i%6===2?A2.shell(0,122,"#fff",10)+A2.shell(18,126,"#f7c6d0",7):(i%6===3?A2.gull(0,60)+A2.gull(22,52):A2.tree(0,"#3fae5f")))),x,y-125*sc,sc);
+  if(wi===2)dec+=pl(i%3===0?'<path d="M-34,130 L0,50 L34,130 Z" fill="#c8d6e4"/><path d="M0,50 L-12,76 L12,76 Z" fill="#fff"/>':(i%3===1?A2.tree(0,"#dfe9f2"):'<circle cx="0" cy="112" r="10" fill="#fff"/><circle cx="0" cy="96" r="7" fill="#fff"/><circle cx="-3" cy="95" r="1.2" fill="#333"/><circle cx="3" cy="95" r="1.2" fill="#333"/>'),x,y-125*sc,sc);
+  if(wi===3)dec+=pl(i%4===0?A2.castle(0):(i%4===1?A2.star(0,80,12,"#fff")+A2.star(20,60,7,"#fff"):(i%4===2?A2.tree(0,"#1e3a54"):A2.star(0,90,9,"#ffe27a"))),x,y-125*sc,sc,i%4?0.9:0.7);
+  if(wi===4)dec+=pl(i%4===0?A2.camel(0,122):(i%4===1?A2.cactus(0,122)+A2.cactus(20,126):(i%4===2?A2.hill(0,60):A2.star(0,70,8,"#fff"))),x,y-125*sc,sc);
+ });
+ g+=dec;
  /* みち */
- var road='<polyline points="'+pts.map(function(p){return p[0]+","+p[1];}).join(" ")+'" fill="none" stroke="'+W.road+'" stroke-width="24" stroke-linejoin="round" stroke-linecap="round"/>'+
-  '<polyline points="'+pts.map(function(p){return p[0]+","+p[1];}).join(" ")+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5 7" opacity=".7"/>';
- g+=road;
+ var path=smoothPath(pts);
+ g+='<path d="'+path+'" fill="none" stroke="'+W.edge+'" stroke-width="34" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>';
+ g+='<path d="'+path+'" fill="none" stroke="'+W.road+'" stroke-width="26" stroke-linejoin="round" stroke-linecap="round"/>';
+ g+='<path d="'+path+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 8" opacity=".6"/>';
+ /* スタート・ゴールの はた */
+ var st=pts[0],go=pts[BOARD_N-1];
+ g+='<g transform="translate('+(st[0]-40)+','+(st[1]+18)+')"><rect x="0" y="0" width="80" height="20" rx="10" fill="#2557c7"/><text x="40" y="14" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">スタート</text></g>';
+ g+=pl(A2.flag(0,0),go[0]+16,go[1]-52,1.1);
  /* マス */
- var tiles=pts.map(function(p,i){
+ var TC={star:["#ffe27a","#c98f0a"],game:["#d8c4f5","#7d55c0"],gift:["#ffd0dd","#c0456f"],hatena:["#bfe3ff","#2f79d6"],goal:["#ffb3ab","#c0453c"]};
+ pts.forEach(function(p,i){
   var t=tileType(i),done=i<b.pos,cur=i===b.pos;
-  var fill=cur?"#2557c7":(done?"#17916b":(t?"#fff6e0":"#ffffff"));
-  var stroke=cur?"#1b3f96":(done?"#0e6f4c":(t?"#d0871c":"#c9d0c8"));
-  var txt=cur||done?"#fff":"#5a6672";
-  var s2='<g><rect x="'+(p[0]-15)+'" y="'+(p[1]-15)+'" width="30" height="30" rx="9" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.4"/>';
-  if(t)s2+='<text x="'+p[0]+'" y="'+(p[1]+6)+'" text-anchor="middle" font-size="16">'+TILE_IC[t]+'</text>';
-  else s2+='<text x="'+p[0]+'" y="'+(p[1]+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+txt+'">'+(i+1)+'</text>';
-  return s2+'</g>';
- }).join("");
- g+=tiles;
- /* じぶんの こま */
+  var fill=done?"#17916b":(cur?"#2557c7":(t?TC[t][0]:"#fffdf7"));
+  var stroke=done?"#0e6f4c":(cur?"#1b3f96":(t?TC[t][1]:"#c9b58f"));
+  g+='<ellipse cx="'+p[0]+'" cy="'+(p[1]+14)+'" rx="15" ry="5" fill="#000" opacity=".16"/>';
+  g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="17" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.6" filter="url(#sh)"/>';
+  if(t&&!done)g+='<text x="'+p[0]+'" y="'+(p[1]+6)+'" text-anchor="middle" font-size="16">'+TILE_IC[t]+'</text>';
+  else if(done)g+='<text x="'+p[0]+'" y="'+(p[1]+5)+'" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">✓</text>';
+  else g+='<text x="'+p[0]+'" y="'+(p[1]+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+(cur?"#fff":"#6b5a3a")+'">'+(i+1)+'</text>';
+ });
+ /* こま */
  var cp=pts[b.pos];
- g+='<g><ellipse cx="'+cp[0]+'" cy="'+(cp[1]+16)+'" rx="12" ry="4" fill="#000" opacity=".18"/>'+
-  '<circle cx="'+cp[0]+'" cy="'+(cp[1]-24)+'" r="15" fill="#fff" stroke="#2557c7" stroke-width="2.5"/>'+
-  '<text x="'+cp[0]+'" y="'+(cp[1]-18)+'" text-anchor="middle" font-size="17">'+k.icon+'</text>'+
-  '<path d="M'+(cp[0]-5)+','+(cp[1]-11)+' L'+cp[0]+','+(cp[1]-4)+' L'+(cp[0]+5)+','+(cp[1]-11)+' Z" fill="#2557c7"/></g>';
- document.getElementById("bd-map").innerHTML='<svg viewBox="0 0 '+VW+' '+VH+'" style="width:100%;height:auto;border-radius:12px">'+g+'</svg>';
+ g+='<g class="token" style="transform-origin:'+cp[0]+'px '+cp[1]+'px"><circle cx="'+cp[0]+'" cy="'+(cp[1]-30)+'" r="17" fill="#fff" stroke="#2557c7" stroke-width="3" filter="url(#sh)"/>'+
+  '<text x="'+cp[0]+'" y="'+(cp[1]-23)+'" text-anchor="middle" font-size="19">'+k.icon+'</text>'+
+  '<path d="M'+(cp[0]-6)+','+(cp[1]-16)+' L'+cp[0]+','+(cp[1]-6)+' L'+(cp[0]+6)+','+(cp[1]-16)+' Z" fill="#2557c7"/></g>';
+ document.getElementById("bd-map").innerHTML='<svg viewBox="0 0 '+VW+' '+VH+'" style="width:100%;height:auto;border-radius:14px;display:block">'+g+'</svg>';
+ setTimeout(function(){
+  var el=document.querySelector("#bd-map .token");
+  if(el)el.scrollIntoView({behavior:"smooth",block:"center"});
+ },60);
 }
 /* ---- ぼうけんの おはなし ---- */
 function renderStory(){
