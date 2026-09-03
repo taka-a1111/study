@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "まいにち計算",
-  "short_name": "まいにち計算",
-  "description": "公文式の学習法にもとづく算数・数学の自学自習アプリ（6A〜I教材／147ステップ）",
+  "name": "まいがく",
+  "short_name": "まいがく",
+  "description": "公文式の学習法にもとづく算数・国語・数学の自学自習アプリ（6A〜I教材／147ステップ）",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
