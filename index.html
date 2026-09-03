@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03m / kumon_math_ver8.6 -->
+<!-- BUILD_TAG: 2026-09-03n / kumon_math_ver8.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -181,6 +181,8 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .acc{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surf);overflow:hidden}
 .acc.now{border-color:var(--ai);border-width:2px}
 .acc.done{background:var(--mid-s)}
+.acc.skip{border-color:var(--yam);background:#fff9ec}
+.acc.skip .acch .st{background:var(--yam);color:#fff}
 .acch{display:flex;align-items:center;gap:10px;width:100%;padding:12px 12px;text-align:left}
 .acch .st{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;background:var(--soft);color:var(--usu)}
 .acc.done .acch .st{background:var(--mid);color:#fff}
@@ -630,7 +632,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.6 / 2026-09-03m</div>
+  <div class="tiny">まいにち計算 ver8.7 / 2026-09-03n</div>
 </section>
 
 <!-- こども追加 -->
@@ -691,7 +693,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03m</div>
+  <div class="tiny">BUILD 2026-09-03n</div>
 </section>
 
 <!-- れいだい -->
@@ -1085,7 +1087,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.6 / BUILD 2026-09-03m</div>
+  <div class="tiny">kumon_math ver8.7 / BUILD 2026-09-03n</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1195,7 +1197,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03m";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03n";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1816,7 +1818,7 @@ var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,pin:null,l
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
-   best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0,chars:{},gacha:0,pcount:0,
+   best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0,chars:{},gacha:0,pcount:0,done:{},
    mode:"print",board:{world:0,pos:0},story:{ch:0,sc:0,hints:[],loop:0},encNext:null};
 }
 var S=load();
@@ -1838,6 +1840,7 @@ function P(){
  var k=S.kids[S.cur];
  if(k){if(!k.best)k.best={};if(!k.certs)k.certs=[];if(!k.praise)k.praise=[];if(!k.praiseSeen)k.praiseSeen=0;if(!k.wipedAt)k.wipedAt=0;
  if(!k.chars)k.chars={};if(!k.gacha)k.gacha=0;if(!k.pcount)k.pcount=0;
+ if(!k.done){k.done={};for(var di=0;di<k.stepIdx&&di<STEPS.length;di++)k.done[STEPS[di].id]=true;}
  if(!k.mode)k.mode="print";if(!k.board)k.board={world:0,pos:0};
  if(!k.story)k.story={ch:0,sc:0,hints:[],loop:0};}
  return k;
@@ -3208,6 +3211,8 @@ function showResult(){
   k.printRepeat=0;k.printNo++;
   if(k.printNo>PPS){
    clear=true;var pv=STEPS[k.stepIdx].lv;
+   if(!k.done)k.done={};
+   k.done[STEPS[k.stepIdx].id]=true;
    k.stepIdx=Math.min(STEPS.length-1,k.stepIdx+1);k.printNo=1;
    if(STEPS[k.stepIdx].lv!==pv){
     up=true;
@@ -4017,6 +4022,8 @@ function mergeState(local,remote){
    }
   }
   lk.pcount=Math.max(lk.pcount||0,rk.pcount||0);
+  lk.done=lk.done||{};
+  if(rFresh)for(var dk2 in (rk.done||{}))lk.done[dk2]=true;
   lk.mode=src.mode||lk.mode;
   lk.theme=src.theme||lk.theme;
   if(rk.board&&(!lk.board||rk.board.world>lk.board.world||(rk.board.world===lk.board.world&&rk.board.pos>lk.board.pos)))lk.board=rk.board;
@@ -4727,19 +4734,21 @@ document.getElementById("zd-close").addEventListener("click",function(){
 /* ============================================================
    9. 教材マップ
    ============================================================ */
+function doneInLevel(k,L){var n=0;L.sec.forEach(function(sc){if(k.done&&k.done[L.lv+" "+sc[0]])n++;});return n;}
 function renderMap(){
- var cur=STEPS[P().stepIdx],h="";
+ var k=P(),cur=STEPS[k.stepIdx],h="";
  var gs=[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
  gs.forEach(function(g){
   h+='<div class="gp">'+g[0]+'</div>';
   g[1].split(",").forEach(function(lv){
    var li=-1;LV.forEach(function(L,i){if(L.lv===lv)li=i;});
    if(li>=0){
-    var L=LV[li],dn=cur.li>li,nw=cur.li===li;
+    var L=LV[li],nd=doneInLevel(k,L),dn=nd>=L.sec.length,nw=cur.li===li;
+    var skipped=(nw?cur.si:(cur.li>li?L.sec.length:0))-nd; if(skipped<0)skipped=0;
     h+='<button class="lvr'+(dn?" dn":"")+(nw?" nw":"")+'" data-lv="'+li+'"><span class="bd">'+L.lv+'</span>'+
      '<span><b>'+L.title+'</b><span class="g">'+L.grade+'</span><p>'+L.aim+'</p>'+
-     '<p style="color:var(--usu)">'+(dn?L.sec.length:(nw?cur.si:0))+' / '+L.sec.length+' ステップ</p>'+
-     '<div class="lvbar"><b style="width:'+(dn?100:(nw?Math.round(100*(cur.si+(P().printNo-1)/PPS)/L.sec.length):0))+'%"></b></div></span></button>';
+     '<p style="color:var(--usu)">'+nd+' / '+L.sec.length+' ステップ おわり'+(skipped>0?'　<span style="color:var(--yam)">まだ '+skipped+'つ とばしている</span>':'')+'</p>'+
+     '<div class="lvbar"><b style="width:'+Math.round(100*nd/L.sec.length)+'%"></b></div></span></button>';
    }else{
     var F=null;FUT.forEach(function(f){if(f.lv===lv)F=f;});
     if(F)h+='<div class="lvr"><span class="bd">'+F.lv+'</span><span><b>'+F.title+'</b>'+
@@ -4763,19 +4772,20 @@ function renderLv(li){
  var k=P(),L=LV[li],cur=STEPS[k.stepIdx];
  document.getElementById("lv-h").textContent=L.lv+" 教材";
  document.getElementById("lv-t").textContent=L.title+"（"+L.grade+"）";
- var doneSteps=cur.li>li?L.sec.length:(cur.li<li?0:cur.si);
+ var doneSteps=doneInLevel(k,L);
+ var skippedN=0;L.sec.forEach(function(sc){var gi0=idxOf(L.lv+" "+sc[0]);if(gi0<k.stepIdx&&!(k.done&&k.done[L.lv+" "+sc[0]]))skippedN++;});
  document.getElementById("lv-a").innerHTML=L.aim+'<div class="lvbar"><b style="width:'+Math.round(100*doneSteps/L.sec.length)+'%"></b></div>'+
-  '<div class="note" style="margin-top:4px">'+doneSteps+' / '+L.sec.length+' ステップ おわり</div>';
+  '<div class="note" style="margin-top:4px">'+doneSteps+' / '+L.sec.length+' ステップ おわり'+(skippedN?'　<span style="color:var(--yam);font-weight:700">とばした ステップが '+skippedN+'つ あります</span>':'')+'</div>';
  var h="";
  L.sec.forEach(function(sc,si){
   var id=L.lv+" "+sc[0];
   var gi=idxOf(id);
-  var done=gi<k.stepIdx,nw=gi===k.stepIdx;
+  var done=!!(k.done&&k.done[id]),nw=gi===k.stepIdx,skipped=(!done&&gi<k.stepIdx);
   var mini="";
   for(var i=1;i<=PPS;i++)mini+='<i class="'+(done?"d":(nw?(i<k.printNo?"d":(i===k.printNo?"n":"")):""))+'"></i>';
-  h+='<div class="acc'+(done?" done":"")+(nw?" now":"")+'" data-i="'+gi+'">'+
-   '<button class="acch" data-acc="'+gi+'"><span class="st">'+(done?"✓":(nw?"▶":(si+1)))+'</span>'+
-   '<span class="tx"><b>'+sc[1]+'</b><span>'+id+'　'+(nw?(k.printNo+"/"+PPS+"まいめ"):(done?"クリア":"5まい"))+'</span></span>'+
+  h+='<div class="acc'+(done?" done":"")+(nw?" now":"")+(skipped?" skip":"")+'" data-i="'+gi+'">'+
+   '<button class="acch" data-acc="'+gi+'"><span class="st">'+(done?"✓":(nw?"▶":(skipped?"！":(si+1))))+'</span>'+
+   '<span class="tx"><b>'+sc[1]+'</b><span>'+id+'　'+(nw?(k.printNo+"/"+PPS+"まいめ"):(done?"クリア":(skipped?"まだ（とばした）":"5まい")))+'</span></span>'+
    '<span class="mini">'+mini+'</span><span class="ar">▼</span></button>'+
    '<div class="accb"><div class="note" style="padding-top:8px">こんな もんだいが 出ます（れい）</div><div class="ex" data-ex="'+gi+'"></div>'+
    '<button class="btn o" data-go="'+gi+'" style="padding:12px">ここから はじめる</button></div></div>';
@@ -4829,7 +4839,8 @@ function renderRec(){
  document.getElementById("rc-w").textContent=wk;
  var cur=STEPS[k.stepIdx],h2="";
  LV.forEach(function(L,li){
-  var p=cur.li>li?1:(cur.li<li?0:(cur.si+(k.printNo-1)/PPS)/L.sec.length);
+  var p=doneInLevel(k,L)/L.sec.length;
+  if(cur.li===li)p=Math.min(1,p+((k.printNo-1)/PPS)/L.sec.length);
   h2+='<div class="row" style="border:none;padding:7px 0 2px"><span>'+L.lv+'　'+L.title+'</span><span class="r">'+Math.round(p*100)+'%</span></div>'+
    '<div class="bar"><b style="width:'+Math.round(p*100)+'%"></b></div>';
  });
@@ -5068,7 +5079,7 @@ function resetKid(i,wipe){
  k.stepIdx=0;k.printNo=1;k.printRepeat=0;k.seenEx={};
  if(wipe){
   k.history=[];k.best={};k.certs=[];k.praise=[];k.praiseSeen=0;
-  k.chars={};k.gacha=0;k.pcount=0;
+  k.chars={};k.gacha=0;k.pcount=0;k.done={};
   k.board={world:0,pos:0};k.story={ch:0,sc:0,hints:[],loop:0};
   k.wipedAt=Date.now();
  }
