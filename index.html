@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03r / kumon_math_ver9.0 -->
+<!-- BUILD_TAG: 2026-09-03s / kumon_math_ver9.1 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -331,6 +331,14 @@ body.pen .pp{background-image:
   font-family:var(--num);font-size:22px;font-weight:600}
 .hwrow .fn{font-family:var(--jp);font-size:15px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
 .hwrow .go{background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:16px;font-weight:700}
+.pad.choice{grid-template-columns:1fr 1fr;gap:10px}
+.pad.choice .ch{height:64px;font-family:var(--jp);font-size:22px;font-weight:700;padding:0 8px;line-height:1.3;white-space:normal}
+.qp .jw{font-family:var(--jp);font-size:44px;font-weight:700;display:block;margin-bottom:6px;letter-spacing:.04em}
+.chosen{display:inline-block;min-width:120px;padding:8px 16px;border:2px solid var(--ai);border-radius:12px;background:var(--ai-s);
+  font-family:var(--jp);font-size:24px;font-weight:700}
+.subj{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-left:8px;vertical-align:middle}
+.subj button{padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--sumi);background:var(--surf)}
+.subj button.on{background:var(--ai);color:#fff}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pad button{height:58px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:27px;font-weight:600}
 .pad button:active{background:var(--ai-s)}
@@ -649,7 +657,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.0 / 2026-09-03r</div>
+  <div class="tiny">まいにち計算 ver9.1 / 2026-09-03s</div>
 </section>
 
 <!-- こども追加 -->
@@ -683,7 +691,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <div class="tx"><b id="h-msg">きょうの 学習</b><span id="h-sub"></span></div>
     </div>
     <div class="hr"></div>
-    <div class="lvline"><b id="h-lv"></b><i id="h-grade"></i></div>
+    <div class="lvline"><b id="h-lv"></b><i id="h-grade"></i><span class="subj" id="subj"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span></div>
     <div class="nm" id="h-step"></div>
     <div class="de" id="h-title"></div>
     <div class="dots" id="h-dots"></div>
@@ -710,7 +718,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03r</div>
+  <div class="tiny">BUILD 2026-09-03s</div>
 </section>
 
 <!-- れいだい -->
@@ -1108,7 +1116,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.0 / BUILD 2026-09-03r</div>
+  <div class="tiny">kumon_math ver9.1 / BUILD 2026-09-03s</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1218,7 +1226,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03r";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03s";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -1452,13 +1460,184 @@ var LV=[
  ["31-40","Oの まとめ",{t:"mix",list:[{t:"opow"},{t:"olin"},{t:"oquad"}]}]
 ]}
 ];
+/* ===== 国語（公文式の 段階を もとに した 自習カリキュラム） ===== */
+var JP_WORDS=["いぬ","ねこ","うま","さる","とり","さかな","はな","ほし","つき","そら","やま","かわ","うみ","くも","あめ","ゆき","かぜ","き","くさ","いし",
+ "て","あし","め","みみ","くち","はな","かお","あたま","こども","おとな","がっこう","せんせい","ともだち","えんぴつ","つくえ","いす","ほん","かばん","ぼうし","くつ",
+ "りんご","みかん","ぶどう","いちご","ばなな","すいか","ごはん","ぱん","たまご","みず","くるま","でんしゃ","ばす","ふね","ひこうき","じてんしゃ","あか","あお","きいろ","しろ"];
+var JP_SIM={"ぬ":"め","め":"ぬ","わ":"ね","ね":"れ","れ":"わ","さ":"き","き":"さ","い":"り","り":"い","は":"ほ","ほ":"は","る":"ろ","ろ":"る","し":"つ","つ":"し",
+ "こ":"に","に":"こ","た":"な","な":"た","う":"ら","ら":"う","お":"あ","あ":"お","く":"へ","へ":"く","ま":"も","も":"ま","ち":"さ","そ":"ろ","ん":"そ",
+ "シ":"ツ","ツ":"シ","ソ":"ン","ン":"ソ","ク":"ワ","ワ":"ク","ヌ":"ス","ス":"ヌ","チ":"テ","テ":"チ","コ":"ユ","ユ":"コ","ロ":"ワ","カ":"力","ア":"マ","マ":"ア","ナ":"メ","メ":"ナ"};
+function toKata(s){return s.replace(/[ぁ-ゖ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});}
+function jpVariant(w){
+ var a=w.split(""),i=ri(0,a.length-1),c=a[i];
+ if(JP_SIM[c]&&Math.random()<0.7){a[i]=JP_SIM[c];return a.join("");}
+ if(a.length>=2){var j=(i+1)%a.length;var t=a[i];a[i]=a[j];a[j]=t;return a.join("");}
+ return w+"い";
+}
+/* にている ことばを 3つ つくる（つくれない ときは ほかの ことばで うめる） */
+function jpDistract(w,pool){
+ var d=[],guard=0;
+ while(d.length<3&&guard<40){guard++;var v=jpVariant(w);if(v!==w&&d.indexOf(v)<0)d.push(v);}
+ if(d.length<3)pickN(pool.filter(function(x){return x!==w&&d.indexOf(x)<0;}),3-d.length).forEach(function(x){d.push(x);});
+ return d;
+}
+function pickN(arr,n,excl){var out=[],guard=0;while(out.length<n&&guard<200){guard++;var x=arr[ri(0,arr.length-1)];if(x!==excl&&out.indexOf(x)<0)out.push(x);}return out;}
+function Qc(prompt,ans,choices,extra){
+ choices=choices.slice();choices.sort(function(){return Math.random()-.5;});
+ var q=Q(prompt,[{ans:ans}],{},"choice");q.choices=choices;
+ if(extra)for(var k in extra)q[k]=extra[k];
+ return q;
+}
+var JP_OPP=[["おおきい","ちいさい"],["たかい","ひくい"],["ながい","みじかい"],["あつい","つめたい"],["おもい","かるい"],["はやい","おそい"],["あかるい","くらい"],["ひろい","せまい"],
+ ["つよい","よわい"],["あたらしい","ふるい"],["おおい","すくない"],["とおい","ちかい"],["うえ","した"],["まえ","うしろ"],["みぎ","ひだり"],["あさ","よる"],["なつ","ふゆ"],["はる","あき"],
+ ["いく","くる"],["あける","しめる"],["たつ","すわる"],["おきる","ねる"],["わらう","なく"],["かう","うる"],["おす","ひく"],["いれる","だす"],["はじまる","おわる"],["のぼる","おりる"]];
+var JP_CAT=[["どうぶつ",["いぬ","ねこ","うま","さる","とり","ぞう","きりん","うさぎ","くま","ぱんだ"]],["たべもの",["りんご","ぱん","ごはん","みかん","たまご","いちご","かれー","すし","ばなな","けーき"]],
+ ["のりもの",["くるま","でんしゃ","ばす","ふね","ひこうき","じてんしゃ","たくしー","とらっく"]],["いろ",["あか","あお","きいろ","しろ","くろ","みどり","ももいろ","ちゃいろ"]],
+ ["からだ",["て","あし","め","みみ","くち","はな","あたま","かた","おなか","ゆび"]],["おうちの もの",["つくえ","いす","ほん","てれび","とけい","ふとん","まど","でんき","かがみ","こっぷ"]]];
+var JP_JOSHI=[["わたし＿ がっこうへ いく。","は",["は","を","に","が"]],["ぼく＿ りんごを たべる。","は",["は","を","へ","で"]],["いぬ＿ はしる。","が",["が","を","へ","に"]],
+ ["ほん＿ よむ。","を",["を","は","に","で"]],["こうえん＿ あそぶ。","で",["で","を","は","が"]],["がっこう＿ いく。","へ",["へ","を","が","は"]],
+ ["ともだち＿ あそぶ。","と",["と","を","が","は"]],["みず＿ のむ。","を",["を","は","に","へ"]],["いえ＿ かえる。","に",["に","を","が","と"]],["えんぴつ＿ かく。","で",["で","を","は","に"]],
+ ["ねこ＿ ねている。","が",["が","を","へ","で"]],["おかあさん＿ りょうりを つくる。","が",["が","を","へ","で"]],["こども＿ うたを うたう。","が",["が","を","へ","と"]],
+ ["でんしゃ＿ のる。","に",["に","を","が","は"]],["はな＿ さく。","が",["が","を","に","へ"]],["あさ＿ おきる。","に",["に","を","が","へ"]],["ぼうし＿ かぶる。","を",["を","が","に","へ"]],
+ ["うみ＿ およぐ。","で",["で","を","が","へ"]],["せんせい＿ はなす。","と",["と","を","が","へ"]],["ふゆ＿ さむい。","は",["は","を","に","へ"]]];
+var JP_SUBJ=[["ねこが なく。","だれが？","ねこ",["ねこ","なく","が","いぬ"]],["いぬが はしる。","だれが？","いぬ",["いぬ","はしる","ねこ","が"]],["とりが とぶ。","なにを する？","とぶ",["とぶ","とり","が","なく"]],
+ ["おとうとが わらう。","だれが？","おとうと",["おとうと","わらう","が","いもうと"]],["こどもが あそぶ。","なにを する？","あそぶ",["あそぶ","こども","が","ねる"]],
+ ["はなが さく。","だれが？","はな",["はな","さく","が","くさ"]],["おかあさんが りょうりを つくる。","なにを つくる？","りょうり",["りょうり","おかあさん","つくる","を"]],
+ ["ぼくが ほんを よむ。","なにを よむ？","ほん",["ほん","ぼく","よむ","を"]],["ねこが さかなを たべる。","なにを たべる？","さかな",["さかな","ねこ","たべる","を"]],
+ ["せんせいが はなす。","だれが？","せんせい",["せんせい","はなす","が","こども"]],["あめが ふる。","なにを する？","ふる",["ふる","あめ","が","やむ"]],
+ ["いもうとが うたを うたう。","なにを うたう？","うた",["うた","いもうと","うたう","を"]],["でんしゃが はしる。","なにが？","でんしゃ",["でんしゃ","はしる","が","くるま"]],
+ ["おとうさんが しんぶんを よむ。","なにを よむ？","しんぶん",["しんぶん","おとうさん","よむ","を"]],["かぜが ふく。","なにを する？","ふく",["ふく","かぜ","が","とぶ"]]];
+/* 漢字：[漢字, よみ, 見せる ことば] */
+var KJ1=[["一","いち","一"],["二","に","二"],["三","さん","三"],["四","し","四"],["五","ご","五"],["六","ろく","六"],["七","しち","七"],["八","はち","八"],["九","きゅう","九"],["十","じゅう","十"],
+["百","ひゃく","百"],["千","せん","千"],["上","うえ","上"],["下","した","下"],["左","ひだり","左"],["右","みぎ","右"],["中","なか","中"],["大","おおきい","大きい"],["小","ちいさい","小さい"],["月","つき","月"],
+["日","ひ","日"],["年","とし","年"],["早","はやい","早い"],["木","き","木"],["林","はやし","林"],["森","もり","森"],["土","つち","土"],["花","はな","花"],["草","くさ","草"],["竹","たけ","竹"],
+["糸","いと","糸"],["貝","かい","貝"],["石","いし","石"],["玉","たま","玉"],["田","た","田"],["男","おとこ","男"],["女","おんな","女"],["子","こ","子"],["学","がっこう","学校"],["校","がっこう","学校"],
+["村","むら","村"],["町","まち","町"],["王","おう","王"],["人","ひと","人"],["名","なまえ","名前"],["力","ちから","力"],["気","げんき","元気"],["生","うまれる","生まれる"],["正","ただしい","正しい"],["文","ぶん","文"],
+["字","じ","字"],["音","おと","音"],["見","みる","見る"],["立","たつ","立つ"],["休","やすむ","休む"],["出","でる","出る"],["入","はいる","入る"],["先","さき","先"],["車","くるま","車"],["犬","いぬ","犬"],
+["虫","むし","虫"],["手","て","手"],["足","あし","足"],["目","め","目"],["耳","みみ","耳"],["口","くち","口"],["火","ひ","火"],["水","みず","水"],["金","きん","金"],["円","えん","円"],
+["白","しろ","白"],["赤","あか","赤"],["青","あお","青"],["夕","ゆうがた","夕方"],["天","てんき","天気"],["空","そら","空"],["雨","あめ","雨"],["山","やま","山"],["川","かわ","川"],["本","ほん","本"]];
+var KJ2=[["引","ひく","引く"],["羽","はね","羽"],["雲","くも","雲"],["園","こうえん","公園"],["遠","とおい","遠い"],["何","なに","何"],["科","かがく","科学"],["夏","なつ","夏"],["家","いえ","家"],["歌","うた","歌"],
+["画","え","画"],["回","まわる","回る"],["会","あう","会う"],["海","うみ","海"],["絵","え","絵"],["外","そと","外"],["角","かど","角"],["楽","たのしい","楽しい"],["活","せいかつ","生活"],["間","あいだ","間"],
+["丸","まるい","丸い"],["岩","いわ","岩"],["顔","かお","顔"],["汽","きしゃ","汽車"],["記","にっき","日記"],["帰","かえる","帰る"],["弓","ゆみ","弓"],["牛","うし","牛"],["魚","さかな","魚"],["京","とうきょう","東京"],
+["強","つよい","強い"],["教","おしえる","教える"],["近","ちかい","近い"],["兄","あに","兄"],["形","かたち","形"],["計","けいさん","計算"],["元","げんき","元気"],["言","いう","言う"],["原","はら","原"],["戸","と","戸"],
+["古","ふるい","古い"],["午","ごご","午後"],["後","うしろ","後ろ"],["語","ものがたり","物語"],["工","こうじょう","工場"],["公","こうえん","公園"],["広","ひろい","広い"],["交","こうさてん","交差点"],["光","ひかり","光"],["考","かんがえる","考える"],
+["行","いく","行く"],["高","たかい","高い"],["黄","きいろ","黄色"],["合","あう","合う"],["谷","たに","谷"],["国","くに","国"],["黒","くろい","黒い"],["今","いま","今"],["才","てんさい","天才"],["細","ほそい","細い"],
+["作","つくる","作る"],["算","けいさん","計算"],["止","とまる","止まる"],["市","いち","市"],["矢","や","矢"],["姉","あね","姉"],["思","おもう","思う"],["紙","かみ","紙"],["寺","てら","寺"],["自","じぶん","自分"],
+["時","とき","時"],["室","きょうしつ","教室"],["社","じんじゃ","神社"],["弱","よわい","弱い"],["首","くび","首"],["秋","あき","秋"],["週","しゅう","週"],["春","はる","春"],["書","かく","書く"],["少","すこし","少し"],
+["場","ばしょ","場所"],["色","いろ","色"],["食","たべる","食べる"],["心","こころ","心"],["新","あたらしい","新しい"],["親","おや","親"],["図","ずかん","図かん"],["数","かず","数"],["西","にし","西"],["声","こえ","声"],
+["星","ほし","星"],["晴","はれる","晴れる"],["切","きる","切る"],["雪","ゆき","雪"],["船","ふね","船"],["線","せん","線"],["前","まえ","前"],["組","くむ","組む"],["走","はしる","走る"],["多","おおい","多い"],
+["太","ふとい","太い"],["体","からだ","体"],["台","だい","台"],["地","ち","地"],["池","いけ","池"],["知","しる","知る"],["茶","ちゃ","茶"],["昼","ひる","昼"],["長","ながい","長い"],["鳥","とり","鳥"],
+["朝","あさ","朝"],["直","なおす","直す"],["通","とおる","通る"],["弟","おとうと","弟"],["店","みせ","店"],["点","てん","点"],["電","でんき","電気"],["刀","かたな","刀"],["冬","ふゆ","冬"],["当","あたる","当たる"],
+["東","ひがし","東"],["答","こたえ","答え"],["頭","あたま","頭"],["同","おなじ","同じ"],["道","みち","道"],["読","よむ","読む"],["内","うち","内"],["南","みなみ","南"],["肉","にく","肉"],["馬","うま","馬"],
+["売","うる","売る"],["買","かう","買う"],["麦","むぎ","麦"],["半","はんぶん","半分"],["番","ばんごう","番号"],["父","ちち","父"],["風","かぜ","風"],["分","わける","分ける"],["聞","きく","聞く"],["米","こめ","米"],
+["歩","あるく","歩く"],["母","はは","母"],["方","ほう","方"],["北","きた","北"],["毎","まいにち","毎日"],["妹","いもうと","妹"],["万","まん","万"],["明","あかるい","明るい"],["鳴","なく","鳴く"],["毛","け","毛"],
+["門","もん","門"],["夜","よる","夜"],["野","のはら","野原"],["友","ともだち","友だち"],["用","つかう","用いる"],["曜","ようび","曜日"],["来","くる","来る"],["里","さと","里"],["理","りゆう","理由"],["話","はなす","話す"]];
+var KJ3=[["悪","わるい","悪い"],["安","やすい","安い"],["暗","くらい","暗い"],["医","いしゃ","医者"],["委","いいん","委員"],["意","いみ","意味"],["育","そだつ","育つ"],["員","いいん","委員"],["院","びょういん","病院"],["飲","のむ","飲む"],
+["運","はこぶ","運ぶ"],["泳","およぐ","泳ぐ"],["駅","えき","駅"],["央","ちゅうおう","中央"],["横","よこ","横"],["屋","やね","屋根"],["温","あたたかい","温かい"],["化","ばける","化ける"],["荷","にもつ","荷物"],["界","せかい","世界"],
+["開","ひらく","開く"],["階","かいだん","階段"],["寒","さむい","寒い"],["感","かんじる","感じる"],["漢","かんじ","漢字"],["館","としょかん","図書館"],["岸","きし","岸"],["起","おきる","起きる"],["期","きかん","期間"],["客","きゃく","客"],
+["究","けんきゅう","研究"],["急","いそぐ","急ぐ"],["級","がっきゅう","学級"],["宮","みや","宮"],["球","たま","球"],["去","さる","去る"],["橋","はし","橋"],["業","じゅぎょう","授業"],["曲","まがる","曲がる"],["局","ゆうびんきょく","郵便局"],
+["銀","ぎん","銀"],["区","く","区"],["苦","くるしい","苦しい"],["具","どうぐ","道具"],["君","きみ","君"],["係","かかり","係"],["軽","かるい","軽い"],["血","ち","血"],["決","きめる","決める"],["研","けんきゅう","研究"],
+["県","けん","県"],["庫","そうこ","倉庫"],["湖","みずうみ","湖"],["向","むく","向く"],["幸","しあわせ","幸せ"],["港","みなと","港"],["号","ばんごう","番号"],["根","ね","根"],["祭","まつり","祭り"],["皿","さら","皿"],
+["仕","しごと","仕事"],["死","しぬ","死ぬ"],["使","つかう","使う"],["始","はじめる","始める"],["指","ゆび","指"],["歯","は","歯"],["詩","し","詩"],["次","つぎ","次"],["事","こと","事"],["持","もつ","持つ"],
+["式","しき","式"],["実","み","実"],["写","うつす","写す"],["者","もの","者"],["主","おも","主な"],["守","まもる","守る"],["取","とる","取る"],["酒","さけ","酒"],["受","うける","受ける"],["州","しゅう","州"],
+["拾","ひろう","拾う"],["終","おわる","終わる"],["習","ならう","習う"],["集","あつめる","集める"],["住","すむ","住む"],["重","おもい","重い"],["宿","やど","宿"],["所","ところ","所"],["暑","あつい","暑い"],["助","たすける","助ける"],
+["昭","しょうわ","昭和"],["消","きえる","消える"],["商","しょうてん","商店"],["章","ぶんしょう","文章"],["勝","かつ","勝つ"],["乗","のる","乗る"],["植","うえる","植える"],["申","もうす","申す"],["身","み","身"],["神","かみ","神"],
+["真","まこと","真"],["深","ふかい","深い"],["進","すすむ","進む"],["世","よ","世"],["整","ととのえる","整える"],["昔","むかし","昔"],["全","ぜんぶ","全部"],["相","あいて","相手"],["送","おくる","送る"],["想","かんそう","感想"],
+["息","いき","息"],["速","はやい","速い"],["族","かぞく","家族"],["他","ほか","他"],["打","うつ","打つ"],["対","たいせん","対戦"],["待","まつ","待つ"],["代","かわる","代わる"],["第","だい","第"],["題","だいめい","題名"],
+["炭","すみ","炭"],["短","みじかい","短い"],["談","そうだん","相談"],["着","きる","着る"],["注","そそぐ","注ぐ"],["柱","はしら","柱"],["丁","ちょうめ","丁目"],["帳","てちょう","手帳"],["調","しらべる","調べる"],["追","おう","追う"],
+["定","さだめる","定める"],["庭","にわ","庭"],["笛","ふえ","笛"],["鉄","てつ","鉄"],["転","ころぶ","転ぶ"],["都","みやこ","都"],["度","たび","度"],["投","なげる","投げる"],["豆","まめ","豆"],["島","しま","島"],
+["湯","ゆ","湯"],["登","のぼる","登る"],["等","ひとしい","等しい"],["動","うごく","動く"],["童","どうわ","童話"],["農","のうか","農家"],["波","なみ","波"],["配","くばる","配る"],["倍","ばい","倍"],["箱","はこ","箱"],
+["畑","はたけ","畑"],["発","はっぴょう","発表"],["反","はんたい","反対"],["坂","さか","坂"],["板","いた","板"],["皮","かわ","皮"],["悲","かなしい","悲しい"],["美","うつくしい","美しい"],["鼻","はな","鼻"],["筆","ふで","筆"],
+["氷","こおり","氷"],["表","おもて","表"],["秒","びょう","秒"],["病","びょうき","病気"],["品","しな","品"],["負","まける","負ける"],["部","ぶぶん","部分"],["服","ふく","服"],["福","ふく","福"],["物","もの","物"],
+["平","たいら","平ら"],["返","かえす","返す"],["勉","べんきょう","勉強"],["放","はなす","放す"],["味","あじ","味"],["命","いのち","命"],["面","めん","面"],["問","とう","問う"],["役","やく","役"],["薬","くすり","薬"],
+["由","りゆう","理由"],["油","あぶら","油"],["有","ある","有る"],["遊","あそぶ","遊ぶ"],["予","よてい","予定"],["羊","ひつじ","羊"],["洋","ようふく","洋服"],["葉","は","葉"],["陽","たいよう","太陽"],["様","さま","様"],
+["落","おちる","落ちる"],["流","ながれる","流れる"],["旅","たび","旅"],["両","りょうほう","両方"],["緑","みどり","緑"],["礼","れい","礼"],["列","れつ","列"],["練","れんしゅう","練習"],["路","みち","路"],["和","わ","和"]];
+function kjGen(list,from,to,mode){
+ return function(){
+  var pool=list.slice(from,to);
+  var e=pool[ri(0,pool.length-1)];
+  var key=mode==="r"?1:2; /* よみ なら よみかた、かき なら 漢字の ことば */
+  var ans=e[key],seen={};seen[ans]=1;
+  var ch=[ans],guard=0;
+  /* おなじ ことばに なる 漢字（学・校 → 学校 など）が かぶらないように する */
+  while(ch.length<4&&guard<80){guard++;var o=pool[ri(0,pool.length-1)];if(o===e||seen[o[key]])continue;seen[o[key]]=1;ch.push(o[key]);}
+  if(ch.length<4){var all=list;guard=0;while(ch.length<4&&guard<200){guard++;var o2=all[ri(0,all.length-1)];if(seen[o2[key]])continue;seen[o2[key]]=1;ch.push(o2[key]);}}
+  if(mode==="r")return Qc('<span class="jw">'+e[2]+'</span><span class="jp">よみかたは？</span>',ans,ch);
+  return Qc('<span class="jw">'+e[1]+'</span><span class="jp">かんじで かくと？</span>',ans,ch);
+ };
+}
+var JPG={
+ same2:function(){var w=pickN(JP_WORDS.filter(function(x){return x.length===2;}),1)[0];var d=jpDistract(w,JP_WORDS);
+  return Qc('<span class="jw">'+w+'</span><span class="jp">おなじ ことばは？</span>',w,[w].concat(d));},
+ same3:function(){var w=pickN(JP_WORDS.filter(function(x){return x.length>=3;}),1)[0];var d=jpDistract(w,JP_WORDS);
+  return Qc('<span class="jw">'+w+'</span><span class="jp">おなじ ことばは？</span>',w,[w].concat(d));},
+ kata:function(){var w=pickN(JP_WORDS,1)[0],k=toKata(w);var d=jpDistract(k,JP_WORDS.map(toKata));
+  return Qc('<span class="jw">'+w+'</span><span class="jp">カタカナで かくと？</span>',k,[k].concat(d));},
+ kata2:function(){var w=pickN(JP_WORDS,1)[0],k=toKata(w);var d=pickN(JP_WORDS.filter(function(x){return x!==w;}),3).map(function(x){return toKata(x);});
+  return Qc('<span class="jw">'+k+'</span><span class="jp">ひらがなで かくと？</span>',w,[w].concat(d.map(function(x){return x.replace(/[ァ-ヶ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0x60);});})));},
+ opp:function(){var p=JP_OPP[ri(0,JP_OPP.length-1)],a=Math.random()<.5?p[0]:p[1],ans=a===p[0]?p[1]:p[0];
+  var d=pickN(JP_OPP.map(function(x){return x[ri(0,1)];}).filter(function(x){return x!==a&&x!==ans;}),3);
+  return Qc('<span class="jw">'+a+'</span><span class="jp">はんたいの ことばは？</span>',ans,[ans].concat(d));},
+ cat:function(){var ci=ri(0,JP_CAT.length-1),c=JP_CAT[ci],ans=c[1][ri(0,c[1].length-1)];
+  var d=[],gd=0;while(d.length<3&&gd<60){gd++;var o=JP_CAT[ri(0,JP_CAT.length-1)];if(o===c)continue;var w=o[1][ri(0,o[1].length-1)];if(d.indexOf(w)<0)d.push(w);}
+  return Qc('<span class="jp">'+c[0]+'は どれ？</span>',ans,[ans].concat(d));},
+ joshi:function(){var j=JP_JOSHI[ri(0,JP_JOSHI.length-1)];return Qc('<span class="jw" style="font-size:.8em">'+j[0]+'</span><span class="jp">＿に はいる ことばは？</span>',j[1],j[2]);},
+ subj:function(){var j=JP_SUBJ[ri(0,JP_SUBJ.length-1)];return Qc('<span class="jw" style="font-size:.8em">'+j[0]+'</span><span class="jp">'+j[1]+'</span>',j[2],j[3]);}
+};
+var LV_J=[
+ {lv:"国6A",title:"ひらがなを よむ",grade:"年少〜年中",aim:"ひらがなの ことばを よみ、にている もじを 見わけます。",sec:[
+  ["1-10","おなじ ことば（2もじ）","same2"],["11-20","おなじ ことば（3もじ）","same3"],["21-30","にている もじ 1","same2"],["31-40","にている もじ 2","same3"]],tm:[3,6]},
+ {lv:"国5A",title:"カタカナ",grade:"年中〜年長",aim:"ひらがなと カタカナを むすびつけます。",sec:[
+  ["1-10","カタカナに する 1","kata"],["11-20","カタカナに する 2","kata"],["21-30","ひらがなに もどす","kata2"],["31-40","カタカナ まとめ","kata"]],tm:[3,6]},
+ {lv:"国4A",title:"ことばの なかま",grade:"年長",aim:"はんたいの ことばや、ことばの なかまわけを 学びます。",sec:[
+  ["1-10","はんたいの ことば 1","opp"],["11-20","はんたいの ことば 2","opp"],["21-30","なかまわけ 1","cat"],["31-40","なかまわけ 2","cat"]],tm:[3,6]},
+ {lv:"国3A",title:"文の しくみ",grade:"年長〜小1",aim:"「は」「が」「を」などの つかいかたと、だれが なにを するかを 学びます。",sec:[
+  ["1-10","くっつきの ことば 1","joshi"],["11-20","くっつきの ことば 2","joshi"],["21-30","だれが・なにを 1","subj"],["31-40","だれが・なにを 2","subj"]],tm:[4,8]},
+ {lv:"国A",title:"かんじ 1年（80字）",grade:"小1",aim:"1年生で ならう 80字の よみと かきを 学びます。",sec:[
+  ["1-10","かんじ1 よみ 1〜20",["KJ1",0,20,"r"]],["11-20","かんじ1 かき 1〜20",["KJ1",0,20,"w"]],["21-30","かんじ1 よみ 21〜40",["KJ1",20,40,"r"]],["31-40","かんじ1 かき 21〜40",["KJ1",20,40,"w"]],
+  ["41-50","かんじ1 よみ 41〜60",["KJ1",40,60,"r"]],["51-60","かんじ1 かき 41〜60",["KJ1",40,60,"w"]],["61-70","かんじ1 よみ 61〜80",["KJ1",60,80,"r"]],["71-80","かんじ1 かき 61〜80",["KJ1",60,80,"w"]],
+  ["81-90","かんじ1 まとめ よみ",["KJ1",0,80,"r"]],["91-100","かんじ1 まとめ かき",["KJ1",0,80,"w"]]],tm:[3,6]},
+ {lv:"国B",title:"かんじ 2年（160字）",grade:"小2",aim:"2年生で ならう 160字の よみと かきを 学びます。",sec:(function(){var s=[];for(var i=0;i<8;i++){s.push([(i*20+1)+"-"+(i*20+10),"かんじ2 よみ "+(i*20+1)+"〜"+(i*20+20),["KJ2",i*20,i*20+20,"r"]]);s.push([(i*20+11)+"-"+(i*20+20),"かんじ2 かき "+(i*20+1)+"〜"+(i*20+20),["KJ2",i*20,i*20+20,"w"]]);}s.push(["161-170","かんじ2 まとめ よみ",["KJ2",0,160,"r"]]);s.push(["171-180","かんじ2 まとめ かき",["KJ2",0,160,"w"]]);return s;})(),tm:[3,6]},
+ {lv:"国C",title:"かんじ 3年（200字）",grade:"小3",aim:"3年生で ならう 200字の よみと かきを 学びます。",sec:(function(){var s=[];for(var i=0;i<10;i++){s.push([(i*20+1)+"-"+(i*20+10),"かんじ3 よみ "+(i*20+1)+"〜"+(i*20+20),["KJ3",i*20,i*20+20,"r"]]);s.push([(i*20+11)+"-"+(i*20+20),"かんじ3 かき "+(i*20+1)+"〜"+(i*20+20),["KJ3",i*20,i*20+20,"w"]]);}s.push(["201-210","かんじ3 まとめ よみ",["KJ3",0,200,"r"]]);s.push(["211-220","かんじ3 まとめ かき",["KJ3",0,200,"w"]]);return s;})(),tm:[3,6]}
+];
+function jpGenOf(g){
+ if(typeof g==="string")return JPG[g];
+ var list={KJ1:KJ1,KJ2:KJ2,KJ3:KJ3}[g[0]];
+ return kjGen(list,g[1],g[2],g[3]);
+}
+
 var FUT=[];
-var STEPS=[];
-LV.forEach(function(L,li){L.sec.forEach(function(s,si){
+function buildSteps(LVS){
+ var out=[];
+ LVS.forEach(function(L,li){L.sec.forEach(function(s,si){
   var o=s[3]||{};
-  STEPS.push({id:L.lv+" "+s[0],no:s[0],name:s[1],gen:s[2],q:o.q||L.q,std:o.std||L.std,
-    lv:L.lv,lvTitle:L.title,grade:L.grade,li:li,si:si});
-});});
+  out.push({id:L.lv+" "+s[0],no:s[0],name:s[1],gen:s[2],q:o.q||L.q||10,std:o.std||L.std||(L.tm?[L.tm[0]*10,L.tm[1]*10]:[60,120]),
+    lv:L.lv,lvTitle:L.title,grade:L.grade,li:li,si:si,subj:L.lv.charAt(0)==="国"?"jp":"math"});
+ });});
+ return out;
+}
+var LV_M=LV,STEPS_M=buildSteps(LV_M),STEPS_J=buildSteps(LV_J);
+var STEPS=STEPS_M;
+var SUBJ="math";
+/* 教科の 切り替え：進度は 教科ごとに 別に 持つ */
+function setSubject(sj){
+ var k=P();if(!k)return;
+ if(sj===SUBJ)return;
+ var cur={stepIdx:k.stepIdx,printNo:k.printNo,printRepeat:k.printRepeat};
+ if(!k.subjState)k.subjState={};
+ k.subjState[SUBJ]=cur;
+ SUBJ=sj;k.subj=sj;
+ LV=(sj==="jp")?LV_J:LV_M;STEPS=(sj==="jp")?STEPS_J:STEPS_M;
+ var st=k.subjState[sj]||{stepIdx:0,printNo:1,printRepeat:0};
+ k.stepIdx=Math.min(st.stepIdx||0,STEPS.length-1);k.printNo=st.printNo||1;k.printRepeat=st.printRepeat||0;
+ save();
+}
+function applySubject(k){
+ /* 学習者を ひらいたとき、その子の 教科に あわせる */
+ var sj=k.subj||"math";
+ if(sj!==SUBJ){SUBJ=sj;LV=(sj==="jp")?LV_J:LV_M;STEPS=(sj==="jp")?STEPS_J:STEPS_M;}
+ if(k.stepIdx>=STEPS.length)k.stepIdx=0;
+}
 function idxOf(id){for(var i=0;i<STEPS.length;i++)if(STEPS[i].id===id)return i;return 0;}
 function firstOf(li){for(var i=0;i<STEPS.length;i++)if(STEPS[i].li===li)return i;return 0;}
 var GRADES=[["年少","6A 1-10"],["年中","5A 1-10"],["年長","4A 1-10"],["小1","3A 1-10"],["小2","A 1-10"],
@@ -1823,7 +2002,9 @@ function tryQ(g){
  }
  return null;
 }
-function makeQ(g){for(var i=0;i<600;i++){var q=tryQ(g);if(q)return q;}return Q('1<span class="op">＋</span>1<span class="op">＝</span>',S1(2));}
+function makeQ(g){
+ if(typeof g==="function"||Array.isArray(g)||typeof g==="string"){var f=typeof g==="function"?g:jpGenOf(g);return f();}
+ for(var i=0;i<600;i++){var q=tryQ(g);if(q)return q;}return Q('1<span class="op">＋</span>1<span class="op">＝</span>',S1(2));}
 function makeSheet(st,n){
  var l=[],seen={},gd=0;
  while(l.length<n&&gd<n*40){gd++;var q=makeQ(st.gen);if(seen[q.prompt]&&l.length<n*.85)continue;seen[q.prompt]=1;l.push(q);}
@@ -1839,7 +2020,7 @@ var DEF={ver:3,cur:0,sound:true,instant:true,voice:true,mustFix:false,pin:null,l
 function newKid(name,icon,idx){
  return {id:"k"+Date.now()+Math.floor(Math.random()*999),name:name,icon:icon,
    stepIdx:idx||0,printNo:1,printRepeat:0,daily:5,qmode:"std",placed:true,seenEx:{},history:[],
-   best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0,chars:{},gacha:0,pcount:0,done:{},
+   best:{},certs:[],praise:[],praiseSeen:0,wipedAt:0,chars:{},gacha:0,pcount:0,done:{},subj:"math",subjState:{},
    mode:"print",board:{world:0,pos:0},story:{ch:0,sc:0,hints:[],loop:0},encNext:null};
 }
 var S=load();
@@ -1859,6 +2040,7 @@ function save(){
 }
 function P(){
  var k=S.kids[S.cur];
+ if(k)applySubject(k);
  if(k){if(!k.best)k.best={};if(!k.certs)k.certs=[];if(!k.praise)k.praise=[];if(!k.praiseSeen)k.praiseSeen=0;if(!k.wipedAt)k.wipedAt=0;
  if(!k.chars)k.chars={};if(!k.gacha)k.gacha=0;if(!k.pcount)k.pcount=0;
  if(!k.done){k.done={};for(var di=0;di<k.stepIdx&&di<STEPS.length;di++)k.done[STEPS[di].id]=true;}
@@ -2836,7 +3018,7 @@ function renderHome(){
  var k=P(),st=STEPS[Math.min(k.stepIdx,STEPS.length-1)];
  document.getElementById("h-av").textContent=k.icon;
  document.getElementById("h-name").textContent=k.name;
- document.getElementById("h-lv").textContent=st.lv;
+ document.getElementById("h-lv").textContent=st.lv.replace("国","");
  document.getElementById("h-grade").textContent=st.grade;
  document.getElementById("h-step").textContent=st.name;
  document.getElementById("h-title").textContent=st.lvTitle;
@@ -2877,6 +3059,8 @@ function renderHome(){
  document.getElementById("h-praise").classList.toggle("hide",!pr);
  if(pr)document.getElementById("h-praise-m").textContent=pr.text;
  renderMode(k);
+ var sb=document.getElementById("subj").querySelectorAll("[data-s]");
+ for(var si2=0;si2<sb.length;si2++)sb[si2].classList.toggle("on",sb[si2].getAttribute("data-s")===(k.subj||"math"));
  var gb=document.getElementById("go-gacha");
  gb.classList.add("hide");
  updateInstallUI();
@@ -2885,8 +3069,10 @@ document.getElementById("h-praise-ok").addEventListener("click",function(){
  var k=P();k.praiseSeen=Date.now();save();renderHome();beep("ok");
 });
 document.getElementById("go-start").addEventListener("click",function(){
+ var k0=P();if(SUBJ==="jp"&&!k0.placed){k0.placed=true;save();}
+ if(SUBJ==="jp"&&!k0.jpStarted){k0.jpStarted=true;save();}
  var st=STEPS[P().stepIdx];
- if(!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
+ if(SUBJ!=="jp"&&!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
  startPrint();
 });
 function showEx(st){
@@ -2962,7 +3148,9 @@ function draw(){
   pg+='<i class="'+(a?(a.right?"o":"x"):"")+'"></i>';
  }
  document.getElementById("sh-pg").innerHTML=run.fixing?"":pg;
- buildPad("pad",onKey,q.keys);
+ buildPad("pad",onKey,q.keys,q);
+ document.getElementById("inmode").classList.toggle("hide",q.layout==="choice");
+ if(q.layout==="choice"&&hwOn)hwToggle(false);
  if(voiceOn&&voiceTarget==="pad")voiceMark(true);
  bindSlots("qs",function(n){run.box=n;draw();});
  readyBtn();
@@ -3020,6 +3208,10 @@ function colHTML(q,inp){
 }
 function slotHTML(q,inp,box,mark){
  if(q.layout==="col")return "";
+ if(q.layout==="choice"){
+  if(mark)return '<span class="chosen">'+(inp[0]||"　")+'</span>';
+  return inp[0]?'<span class="chosen">'+inp[0]+'</span>':"";
+ }
  if(q.layout==="frac")
   return '<span class="fs">'+bx(inp[0],box===0,true,0,mark)+'<span class="b"></span>'+bx(inp[1],box===1,true,1,mark)+'</span>';
  var h="";
@@ -3039,8 +3231,16 @@ function bindSlots(id,cb){
  var bs=document.getElementById(id).querySelectorAll(".bx");
  for(var i=0;i<bs.length;i++)(function(el){el.addEventListener("click",function(){cb(Number(el.getAttribute("data-s")));});})(bs[i]);
 }
-function buildPad(id,h,keys){
+function buildPad(id,h,keys,q){
  keys=keys||{};
+ if(q&&q.layout==="choice"){
+  var el0=document.getElementById(id),hs="";
+  q.choices.forEach(function(c,i){hs+='<button class="ch" data-k="c:'+i+'">'+c+'</button>';});
+  el0.className="pad choice";el0.innerHTML=hs;
+  el0.onclick=function(e){var b=e.target.closest("[data-k]");if(!b)return;h(b.getAttribute("data-k"));};
+  return;
+ }
+ document.getElementById(id).className="pad";
  var ext=keys.neg?"−":(keys.dot?".":"");
  var s="";
  ["1","2","3","4","5","6","7","8","9"].forEach(function(k){s+='<button data-k="'+k+'">'+k+'</button>';});
@@ -3061,6 +3261,11 @@ function readyBtn(){
 function onKey(k){
  if(lock)return;
  var q=cq();
+ if(k.indexOf("c:")===0){
+  run.inp[0]=q.choices[Number(k.slice(2))];draw();
+  setTimeout(function(){submit();},120);
+  return;
+ }
  if(k==="del"){
   run.colD=null;
   if(q.layout==="col")run.inp[0]=run.inp[0].slice(1);
@@ -3121,6 +3326,7 @@ function maybeAutoSubmit(isTest){
  }
 }
 function same(inp,ans){
+ if(typeof ans==="string")return inp===ans;
  if(inp===""||inp==="-")return false;
  var v=Number(inp);
  return !isNaN(v)&&Math.abs(v-ans)<1e-9;
@@ -3365,7 +3571,7 @@ function showResult(){
 }
 function goNextPrint(){
  var st=STEPS[P().stepIdx];
- if(!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
+ if(SUBJ!=="jp"&&!P().seenEx[st.id]&&P().printNo===1){showEx(st);return;}
  startPrint();
 }
 document.getElementById("rs-nx").addEventListener("click",function(){
@@ -4067,6 +4273,9 @@ function mergeState(local,remote){
   lk.done=lk.done||{};
   if(rFresh)for(var dk2 in (rk.done||{}))lk.done[dk2]=true;
   lk.mode=src.mode||lk.mode;
+  lk.subj=src.subj||lk.subj;
+  lk.subjState=lk.subjState||{};
+  for(var ssk in (rk.subjState||{})){var a1=lk.subjState[ssk],b1=rk.subjState[ssk];if(!a1||(b1&&(b1.stepIdx>a1.stepIdx||(b1.stepIdx===a1.stepIdx&&b1.printNo>a1.printNo))))lk.subjState[ssk]=b1;}
   lk.theme=src.theme||lk.theme;
   if(rk.board&&(!lk.board||rk.board.world>lk.board.world||(rk.board.world===lk.board.world&&rk.board.pos>lk.board.pos)))lk.board=rk.board;
   if(rk.story&&(!lk.story||rk.story.ch>lk.story.ch||(rk.story.ch===lk.story.ch&&rk.story.sc>lk.story.sc)))lk.story=rk.story;
@@ -4368,6 +4577,10 @@ function renderMode(k){
   document.getElementById("mc-open").onclick=function(){if(st.sc>=5)storyRiddle();else{renderStory();show("s-story");}};
  }
 }
+document.getElementById("subj").addEventListener("click",function(e){
+ var b=e.target.closest("[data-s]");if(!b)return;
+ setSubject(b.getAttribute("data-s"));renderHome();
+});
 document.getElementById("modes").addEventListener("click",function(e){
  var b=e.target.closest("[data-m]");if(!b)return;
  var k=P();k.mode=b.getAttribute("data-m");save();renderHome();
@@ -4779,7 +4992,7 @@ document.getElementById("zd-close").addEventListener("click",function(){
 function doneInLevel(k,L){var n=0;L.sec.forEach(function(sc){if(k.done&&k.done[L.lv+" "+sc[0]])n++;});return n;}
 function renderMap(){
  var k=P(),cur=STEPS[k.stepIdx],h="";
- var gs=[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
+ var gs=SUBJ==="jp"?[["幼児","国6A,国5A,国4A,国3A"],["小学生","国A,国B,国C"]]:[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
  gs.forEach(function(g){
   h+='<div class="gp">'+g[0]+'</div>';
   g[1].split(",").forEach(function(lv){
@@ -4787,7 +5000,7 @@ function renderMap(){
    if(li>=0){
     var L=LV[li],nd=doneInLevel(k,L),dn=nd>=L.sec.length,nw=cur.li===li;
     var skipped=(nw?cur.si:(cur.li>li?L.sec.length:0))-nd; if(skipped<0)skipped=0;
-    h+='<button class="lvr'+(dn?" dn":"")+(nw?" nw":"")+'" data-lv="'+li+'"><span class="bd">'+L.lv+'</span>'+
+    h+='<button class="lvr'+(dn?" dn":"")+(nw?" nw":"")+'" data-lv="'+li+'"><span class="bd">'+L.lv.replace("国","")+'</span>'+
      '<span><b>'+L.title+'</b><span class="g">'+L.grade+'</span><p>'+L.aim+'</p>'+
      '<p style="color:var(--usu)">'+nd+' / '+L.sec.length+' ステップ おわり'+(skipped>0?'　<span style="color:var(--yam)">まだ '+skipped+'つ とばしている</span>':'')+'</p>'+
      '<div class="lvbar"><b style="width:'+Math.round(100*nd/L.sec.length)+'%"></b></div></span></button>';
@@ -4807,6 +5020,7 @@ document.getElementById("maplist").addEventListener("click",function(e){
 });
 function exHTML(q){
  var ans=q.slots.map(function(x){return x.ans;}).join(q.layout==="frac"?"/":(q.layout==="rem"?" あまり ":", "));
+ if(q.layout==="choice")ans=q.slots[0].ans;
  return '<div class="exq"><span>'+q.prompt+'</span><span class="a">'+ans+'</span></div>';
 }
 function renderLv(li){
@@ -5204,7 +5418,7 @@ function drawT(){
  document.getElementById("t-pg").innerHTML=pg;
  document.getElementById("tqp").innerHTML=(q.layout==="col")?colHTML(q,test.inp):q.prompt;
  document.getElementById("tqs").innerHTML=slotHTML(q,test.inp,test.box,null);
- buildPad("t-pad",onTK,q.keys);
+ buildPad("t-pad",onTK,q.keys,q);
  if(hwOn){
   var tk="t"+test.n;
   if(tk!==hwQKey){hwQKey=tk;clearTimeout(hwTimer);hwClearCanvas();}
@@ -5217,6 +5431,7 @@ function drawT(){
 }
 function onTK(k){
  var q=test.qs[test.n];
+ if(k.indexOf("c:")===0){test.inp[0]=q.choices[Number(k.slice(2))];drawT();setTimeout(function(){onTK("go");},120);return;}
  if(k==="del"){
   if(q.layout==="col")test.inp[0]=test.inp[0].slice(1);
   else test.inp[test.box]=test.inp[test.box].slice(0,-1);
