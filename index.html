@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03s / kumon_math_ver9.1 -->
+<!-- BUILD_TAG: 2026-09-03t / kumon_math_ver9.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -657,7 +657,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.1 / 2026-09-03s</div>
+  <div class="tiny">まいにち計算 ver9.2 / 2026-09-03t</div>
 </section>
 
 <!-- こども追加 -->
@@ -718,7 +718,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03s</div>
+  <div class="tiny">BUILD 2026-09-03t</div>
 </section>
 
 <!-- れいだい -->
@@ -921,7 +921,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- マップ -->
 <section class="sc" id="s-map">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button></div>
-  <div class="hd"><h2>教材マップ</h2></div>
+  <div class="hd"><h2>教材マップ</h2><div class="sp"></div><span class="subj" id="subj2"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span></div>
   <p class="note">6A から O まで 20教材。学年ではなく 教材で 進みます。タップすると ステップの 中身が 見られます。</p>
   <div id="maplist"></div>
   <div class="tiny">J〜O は内容の表示のみ</div>
@@ -1116,7 +1116,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.1 / BUILD 2026-09-03s</div>
+  <div class="tiny">kumon_math ver9.2 / BUILD 2026-09-03t</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1226,7 +1226,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03s";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03t";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2687,7 +2687,7 @@ function charSVG(id,cls,st){
  if(st===1){c=pal[2];l="#ffffff";}
  var aura=r>=2?'<circle cx="50" cy="50" r="47" fill="none" stroke="'+RARC[r]+'" stroke-width="2.5" opacity=".55"/>':"";
  var spark=r===3?'<path d="M84,18 l2.6,6 l6,2.6 l-6,2.6 l-2.6,6 l-2.6,-6 l-6,-2.6 l6,-2.6 Z" fill="'+RARC[3]+'"/>':"";
- var gid="cg"+id+"_"+st;
+ var gid="cg"+id+"_"+st+"_"+(++__gid);
  var defs='<defs><radialGradient id="'+gid+'" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="'+l+'"/><stop offset=".45" stop-color="'+c+'"/><stop offset="1" stop-color="'+d+'"/></radialGradient></defs>';
  var evo="";
  if(st>=1)evo+='<circle cx="50" cy="52" r="44" fill="none" stroke="#ffd873" stroke-width="2" opacity=".75"/>';
@@ -2890,8 +2890,9 @@ function encMaybe(k){
 }
 
 /* 星の数だけ 星が入った 玉。1枚おえるごとに 1つ 手に入る */
+var __gid=0;
 function orbSVG(stars,filled,isNew){
- var id="og"+stars+(filled?"f":"e");
+ var id="og"+stars+(filled?"f":"e")+"_"+(++__gid);
  var pts=[];
  if(stars===1)pts=[[0,0]];
  else if(stars===2)pts=[[-4.6,0],[4.6,0]];
@@ -4989,9 +4990,15 @@ document.getElementById("zd-close").addEventListener("click",function(){
 /* ============================================================
    9. 教材マップ
    ============================================================ */
+document.getElementById("subj2").addEventListener("click",function(e){
+ var b=e.target.closest("[data-s]");if(!b)return;
+ setSubject(b.getAttribute("data-s"));renderMap();
+});
 function doneInLevel(k,L){var n=0;L.sec.forEach(function(sc){if(k.done&&k.done[L.lv+" "+sc[0]])n++;});return n;}
 function renderMap(){
  var k=P(),cur=STEPS[k.stepIdx],h="";
+ var sb2=document.getElementById("subj2").querySelectorAll("[data-s]");
+ for(var sj=0;sj<sb2.length;sj++)sb2[sj].classList.toggle("on",sb2[sj].getAttribute("data-s")===SUBJ);
  var gs=SUBJ==="jp"?[["幼児","国6A,国5A,国4A,国3A"],["小学生","国A,国B,国C"]]:[["幼児","6A,5A,4A"],["小学生","3A,2A,A,B,C,D,E,F"],["中学生","G,H,I"],["高校生","J,K,L,M,N,O"]];
  gs.forEach(function(g){
   h+='<div class="gp">'+g[0]+'</div>';
