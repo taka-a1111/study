@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04e / kumon_math_ver10.3 -->
+<!-- BUILD_TAG: 2026-09-04f / kumon_math_ver10.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -419,14 +419,21 @@ body.pen .pp{background-image:
   background:linear-gradient(90deg,var(--mid) 0 40%,var(--yam) 40% 80%,var(--aka) 80% 100%);opacity:.9}
 .rgauge b{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-left:-9px}
 .rgl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--usu);margin-top:4px}
-.rmid{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:120px;padding:6px 0}
-.res .gainbox{gap:6px}
-.res .gainbox .big{width:136px;height:136px}
-.res .gainbox .big svg{width:120px;height:120px}
-.res .gainbox .ring{width:136px;height:136px;margin:-68px 0 0 -68px}
+.rmid{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden;padding:4px 0}
+.res .gainbox{gap:4px}
+.res .gainbox .big{width:116px;height:116px}
+.res .gainbox .big svg{width:100px;height:100px}
+.res .gainbox .ring{width:116px;height:116px;margin:-58px 0 0 -58px}
 .res .gainbox .txt{font-size:15px}
-.res .gainbox .row{margin-top:4px;gap:8px}
-.res .gainbox .row svg{width:30px;height:30px}
+.res .gainbox .row{margin-top:4px;gap:6px;justify-content:center;flex-wrap:wrap}
+.res .gainbox .row svg{width:28px;height:28px}
+.res .gainbox .row .sep{height:16px;margin:0 2px}
+.res .gainbox.many .big{width:88px;height:88px}
+.res .gainbox.many .big svg{width:76px;height:76px}
+.res .gainbox.many .ring{width:88px;height:88px;margin:-44px 0 0 -44px}
+.res .gainbox.many .row svg{width:22px;height:22px}
+.res .gainbox.many .row{gap:4px}
+.res .stk{flex:0 0 auto}
 @media (max-height:700px){
  .res .gainbox .big{width:96px;height:96px}.res .gainbox .big svg{width:84px;height:84px}
  .res .gainbox .ring{width:96px;height:96px;margin:-48px 0 0 -48px}.res .gainbox .row svg{width:24px;height:24px}}
@@ -686,7 +693,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.3 / 2026-09-04e</div>
+  <div class="tiny">まいがく ver10.4 / 2026-09-04f</div>
 </section>
 
 <!-- こども追加 -->
@@ -748,7 +755,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04e</div>
+  <div class="tiny">BUILD 2026-09-04f</div>
 </section>
 
 <!-- れいだい -->
@@ -821,7 +828,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 </section>
 
 <!-- けっか -->
-<section class="sc full res" id="s-res">
+<section class="sc full res" id="s-res" style="height:100dvh;overflow:hidden">
   <div class="hd" style="margin-bottom:6px"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
   <div class="bg" id="rs-bg"><h2></h2><p></p></div>
   <div class="rcard">
@@ -1148,7 +1155,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.3 / BUILD 2026-09-04e</div>
+  <div class="tiny">kumon_math ver10.4 / BUILD 2026-09-04f</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1258,7 +1265,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04e";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04f";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -3730,7 +3737,8 @@ function showResult(){
   }
   var head=(madeBig?stampSVG(6,true,false,true):stampSVG(Math.max(0,(got>dn2?(rest2||dn2):got)-1),true,false,false))
    .replace(/class="orb[^"]*"/,'').replace(/style="[^"]*"/,'');
-  ob.innerHTML='<div class="gainbox"><div class="big">'+head+'<span class="ring"></span></div>'+
+  var manyC=(dn2+Math.min(big2,4)+rest2)>7;
+  ob.innerHTML='<div class="gainbox'+(manyC?" many":"")+'"><div class="big">'+head+'<span class="ring"></span></div>'+
    '<div class="txt">'+(madeBig?"大玉を てにいれた！":(got>dn2?"おかわりの たま！":"たまを 1つ てにいれた！"))+'</div>'+
    '<div class="row">'+rowH+'</div></div>';
   ob.classList.remove("hide");
