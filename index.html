@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04d / kumon_math_ver10.2 -->
+<!-- BUILD_TAG: 2026-09-04e / kumon_math_ver10.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -686,7 +686,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.2 / 2026-09-04d</div>
+  <div class="tiny">まいがく ver10.3 / 2026-09-04e</div>
 </section>
 
 <!-- こども追加 -->
@@ -748,7 +748,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04d</div>
+  <div class="tiny">BUILD 2026-09-04e</div>
 </section>
 
 <!-- れいだい -->
@@ -1148,7 +1148,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.2 / BUILD 2026-09-04d</div>
+  <div class="tiny">kumon_math ver10.3 / BUILD 2026-09-04e</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1258,7 +1258,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04d";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04e";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -3810,7 +3810,7 @@ document.getElementById("rs-nx").addEventListener("click",function(){
 });
 document.getElementById("rs-hm").addEventListener("click",function(){
  renderHome();show("s-home");
- if(pendingEv){var f=pendingEv;pendingEv=null;afterEv=function(){renderHome();};f();}
+ if(pendingEv){var f=pendingEv;pendingEv=null;afterEv=function(){renderHome();if(!document.getElementById("s-home").classList.contains("on"))show("s-home");};f();}
 });
 
 /* ---- 手書きで 数字を 入力する ---- */
@@ -5126,7 +5126,8 @@ function modeAfterPrint(k){
    vnOpen(chIdx,scIdx,false,function(){
     if(st.sc>=5){storyRiddle();return;}
     var a=afterEv;afterEv=null;
-    if(a)a();else{renderHome();show("s-home");}
+    if(a)a();
+    if(document.getElementById("s-vn").classList.contains("on")){renderHome();show("s-home");}
    });
   };
  }
