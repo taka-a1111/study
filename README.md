@@ -1,7 +1,11 @@
-# まいがく ver10.0
+# まいがく ver10.1
 
 公文式の学習法をもとにした算数・数学の自学自習PWA。スマホ前提。
 BUILD_TAG: 2026-09-03h
+
+## ver10.1（緊急修正：縦スクロールが効かない）
+
+ver9.9 で html/body に付けた overflow-x:hidden が、Android Chrome で縦スクロールを止めていた（html と body の両方に overflow を指定すると、スクロールの主体が切り替わって画面が動かなくなる）。html/body の指定を外し、横はみ出しの防止は #app の overflow-x:clip（スクロール領域を作らずに見た目だけ切る指定）に置き換えた。あわせて overscroll-behavior は横方向だけに限定した。
 
 ## ver10.0（読み上げと文字表示の同期）
 
