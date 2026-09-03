@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04r / kumon_math_ver11.4 -->
+<!-- BUILD_TAG: 2026-09-04s / kumon_math_ver11.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -377,6 +377,9 @@ body.pen .pp{background-image:
   animation:tin .25s ease-out;max-width:90vw;text-align:center}
 @keyframes tin{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 
+.diag{background:var(--soft);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:12.5px;line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.diag b{font-family:var(--num)}
+
 /* きろく：きょう（たたんだ状態が既定。タップで開く） */
 .today{display:block;width:100%;text-align:left;background:var(--ai);color:#fff;border-radius:14px;padding:10px 14px;margin-bottom:10px}
 .today .trow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -747,7 +750,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver11.4 / 2026-09-04r</div>
+  <div class="tiny">まいがく ver11.5 / 2026-09-04s</div>
 </section>
 
 <!-- こども追加 -->
@@ -811,7 +814,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04r</div>
+  <div class="tiny">BUILD 2026-09-04s</div>
 </section>
 
 <!-- れいだい -->
@@ -1189,9 +1192,11 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     </div>
     <div id="sy-in" class="hide">
       <div class="row"><span id="sy-who"></span><span class="r" id="sy-at"></span></div>
+      <div class="diag hide" id="sy-diag-box"></div>
       <div class="stk" style="margin-top:12px">
         <button class="btn l" id="sy-now">いま すぐ 同期する</button>
         <button class="btn l" id="sy-pull">クラウドの 記録を 取りこむ</button>
+        <button class="btn l" id="sy-diag">クラウドの 中身を みる</button>
         <button class="btn q" id="sy-out2">ログアウト</button>
       </div>
       <div class="note" style="padding-top:8px">自動で 同期しています。プリントを おえたら すぐに 保存し、ほかの たんまつの 変更は 5びょうごとに かくにんして、変わっていれば すぐに 取りこみます（学習中と アプリを 見ていない あいだは 休みます）。</div>
@@ -1229,7 +1234,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver11.4 / BUILD 2026-09-04r</div>
+  <div class="tiny">kumon_math ver11.5 / BUILD 2026-09-04s</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1349,7 +1354,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04r";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04s";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4895,6 +4900,44 @@ document.getElementById("sy-now").addEventListener("click",function(){
 document.getElementById("sy-pull").addEventListener("click",function(){
  var b=this;b.textContent="取りこみ中…";
  syncPull(function(ok){b.textContent="クラウドの 記録を 取りこむ";renderSyncUI();renderHome();alert(ok?"取りこみました。":"取りこめませんでした。");});
+});
+document.getElementById("sy-diag").addEventListener("click",function(){
+ var box=document.getElementById("sy-diag-box");
+ box.classList.remove("hide");
+ if(!auth){box.textContent="ログインしていません。この たんまつの きろくは クラウドに 送られていません。";return;}
+ box.textContent="しらべています…";
+ var lines=[];
+ lines.push("BUILD "+BUILD);
+ lines.push("アカウント "+(auth.email||auth.uid));
+ lines.push("");
+ lines.push("【この たんまつ】");
+ (S.kids||[]).forEach(function(k){
+  var td=dk(),tn=(k.history||[]).filter(function(h){return h.d===td;}).length;
+  lines.push("・"+k.name+"　りれき "+(k.history||[]).length+"件　きょう "+tn+"まい　しんど "+(STEPS[k.stepIdx]?STEPS[k.stepIdx].id:k.stepIdx)+" "+k.printNo+"まいめ");
+ });
+ sbFetch("/rest/v1/kumon_state?select=payload,updated_at,device&user_id=eq."+auth.uid)
+  .then(function(r){
+   if(r.status===401)return sbRefresh().then(function(){return sbFetch("/rest/v1/kumon_state?select=payload,updated_at,device&user_id=eq."+auth.uid);});
+   return r;
+  })
+  .then(function(r){return r.json();})
+  .then(function(rows){
+   lines.push("");
+   if(!rows||!rows.length||!rows[0].payload||!rows[0].payload.kids){
+    lines.push("【クラウド】データが ありません");
+   }else{
+    var row=rows[0];
+    lines.push("【クラウド】さいご "+new Date(row.updated_at).toLocaleString("ja-JP"));
+    lines.push("おくった たんまつ "+String(row.device||"").slice(0,40));
+    var td2=dk();
+    row.payload.kids.forEach(function(k){
+     var tn2=(k.history||[]).filter(function(h){return h.d===td2;}).length;
+     lines.push("・"+k.name+"　りれき "+(k.history||[]).length+"件　きょう "+tn2+"まい　しんど "+(k.stepIdx)+" "+k.printNo+"まいめ");
+    });
+   }
+   box.textContent=lines.join("\n");
+  })
+  .catch(function(e){lines.push("");lines.push("【クラウド】読みこめませんでした（つうしん か ログインを かくにん）");box.textContent=lines.join("\n");});
 });
 document.getElementById("sy-out2").addEventListener("click",function(){
  if(!confirm("ログアウトします。この端末の 記録は のこります。"))return;
