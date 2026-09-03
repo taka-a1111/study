@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04q / kumon_math_ver11.3 -->
+<!-- BUILD_TAG: 2026-09-04r / kumon_math_ver11.4 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -747,7 +747,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver11.3 / 2026-09-04q</div>
+  <div class="tiny">まいがく ver11.4 / 2026-09-04r</div>
 </section>
 
 <!-- こども追加 -->
@@ -811,7 +811,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04q</div>
+  <div class="tiny">BUILD 2026-09-04r</div>
 </section>
 
 <!-- れいだい -->
@@ -1057,7 +1057,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- きろく -->
 <section class="sc" id="s-rec">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいがく</span></button></div>
-  <div class="hd"><h2>きろく</h2><div class="sp"></div><button class="rfs hide" id="rc-refresh">↻ さいしんに する</button></div>
+  <div class="hd"><h2>きろく</h2><div class="sp"></div><button class="rfs hide" id="rc-refresh">↻</button></div>
   <div class="note" id="rc-who" style="margin:-6px 0 8px"></div>
   <button class="today" id="rc-today">
     <div class="trow">
@@ -1194,7 +1194,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
         <button class="btn l" id="sy-pull">クラウドの 記録を 取りこむ</button>
         <button class="btn q" id="sy-out2">ログアウト</button>
       </div>
-      <div class="note" style="padding-top:8px">自動で 同期しています。プリントを おえたとき・設定を かえたときに 保存し、アプリに もどってきたとき・1分ごと・きろく／マップ／ずかんを ひらいたときに 取りこみます（学習中は 取りこみません）。すぐに 見たいときは きろく画面の「↻ さいしんに する」を おしてください。</div>
+      <div class="note" style="padding-top:8px">自動で 同期しています。プリントを おえたら すぐに 保存し、ほかの たんまつの 変更は 5びょうごとに かくにんして、変わっていれば すぐに 取りこみます（学習中と アプリを 見ていない あいだは 休みます）。</div>
     </div>
   </div>
   <div class="card">
@@ -1229,7 +1229,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver11.3 / BUILD 2026-09-04q</div>
+  <div class="tiny">kumon_math ver11.4 / BUILD 2026-09-04r</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1349,7 +1349,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04q";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04r";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4759,8 +4759,8 @@ function scheduleSync(){
  if(!auth)return;
  clearTimeout(pushTimer);
  pushTimer=setTimeout(function(){
-  syncPush(function(ok){if(ok){markSynced();renderSyncUI();}});
- },2500);
+  syncPush(function(ok){if(ok){markSynced();renderSyncUI();noteRemoteAt();}});
+ },800);
 }
 /* 学習していないときだけ、クラウドの変更を取りこむ */
 function refreshCurrent(){
@@ -4790,10 +4790,40 @@ function autoPull(silent){
   if(changed&&!silent)toast("さいしんの きろくを とりこみました");
  });
 }
-document.addEventListener("visibilitychange",function(){if(!document.hidden)setTimeout(autoPull,400);});
+document.addEventListener("visibilitychange",function(){if(!document.hidden)setTimeout(function(){lastRemoteAt=null;pollTick();autoPull(true);},250);});
 window.addEventListener("online",function(){setTimeout(function(){autoPull();scheduleSync();},800);});
-if(auth)setTimeout(function(){autoPull(true);},600);
-setInterval(function(){autoPull(true);},60*1000);
+if(auth)setTimeout(function(){autoPull(true);noteRemoteAt();},600);
+/* 相手の 更新時刻だけを 見て、変わっていたら 本体を 取りこむ（通信は ごく小さい） */
+var lastRemoteAt=null,polling=false;
+function noteRemoteAt(cb){
+ if(!auth){cb&&cb();return;}
+ sbFetch("/rest/v1/kumon_state?select=updated_at&user_id=eq."+auth.uid)
+  .then(function(r){return r.json();})
+  .then(function(rows){if(rows&&rows.length)lastRemoteAt=rows[0].updated_at;cb&&cb();})
+  .catch(function(){cb&&cb();});
+}
+function pollTick(){
+ if(!auth||polling||syncing||document.hidden||!navigator.onLine||syncBusy())return;
+ polling=true;
+ sbFetch("/rest/v1/kumon_state?select=updated_at&user_id=eq."+auth.uid)
+  .then(function(r){
+   if(r.status===401)return sbRefresh().then(function(){return sbFetch("/rest/v1/kumon_state?select=updated_at&user_id=eq."+auth.uid);});
+   return r;
+  })
+  .then(function(r){return r.json();})
+  .then(function(rows){
+   polling=false;
+   if(!rows||!rows.length)return;
+   var at=rows[0].updated_at;
+   if(lastRemoteAt===null){lastRemoteAt=at;return;}
+   if(at===lastRemoteAt)return;
+   lastRemoteAt=at;
+   autoPull();
+  })
+  .catch(function(){polling=false;});
+}
+setInterval(pollTick,5000);
+setInterval(function(){autoPull(true);},5*60*1000);
 function syncNow(cb){
  syncPull(function(){syncPush(function(ok){renderSyncUI();cb&&cb(ok);});});
 }
@@ -5840,7 +5870,7 @@ document.getElementById("rc-refresh").addEventListener("click",function(e){
  b.classList.add("busy");b.textContent="とりこみ中…";
  var before=stamp();
  syncPull(function(ok){
-  b.classList.remove("busy");b.textContent="↻ さいしんに する";
+  b.classList.remove("busy");b.textContent="↻";
   if(!ok){toast("とりこめませんでした。つうしんを かくにん してください");return;}
   markSynced();renderSyncUI();renderRec();
   toast(stamp()!==before?"さいしんの きろくに なりました":"あたらしい きろくは ありません");
