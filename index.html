@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03w / kumon_math_ver9.5 -->
+<!-- BUILD_TAG: 2026-09-03x / kumon_math_ver9.6 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -233,7 +233,7 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .pg{display:flex;gap:3px;margin-bottom:10px}
 .pg i{flex:1;height:4px;border-radius:2px;background:#e4e8e2}
 .pg i.o{background:var(--mid)}.pg i.x{background:var(--aka)}
-.pp{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--ai);border-radius:8px;flex:1;min-height:200px;display:flex;flex-direction:column;justify-content:center;padding:24px 14px;position:relative}
+.pp{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--ai);border-radius:8px;flex:1;min-height:160px;display:flex;flex-direction:column;justify-content:center;padding:18px 14px;position:relative;overflow:hidden}
 .qp{text-align:center;font-family:var(--num);font-size:40px;font-weight:600;line-height:1.35;word-break:break-word}
 .qp .op{color:var(--sumi);padding:0 5px}
 .qp .sm{font-size:29px}
@@ -279,7 +279,7 @@ input[type=text]{width:100%;font:inherit;font-size:17px;padding:14px;border-radi
 .fs .b{width:66px;height:3px;background:var(--ink)}
 .scr{position:absolute;inset:0;width:100%;height:100%;z-index:3;touch-action:none;pointer-events:none}
 body.pen .pad,body.pen .inmode,body.pen .hw{display:none}
-body.pen .pp{min-height:62dvh;justify-content:flex-start;padding-top:16px}
+body.pen .pp{justify-content:flex-start;padding-top:16px}
 body.pen .sl{z-index:2}
 body.pen .qp{opacity:.95}
 body.pen .qp .vc{padding-top:34px}
@@ -319,7 +319,7 @@ body.pen .pp{background-image:
   font-size:13.5px;color:var(--sumi)}
 .inmode button.on{background:var(--ai);color:#fff;border-color:var(--ai);font-weight:700}
 .hw{margin-top:8px}
-.hw .box{width:100%;height:186px;border:2px dashed var(--line);border-radius:14px;background:var(--surf);
+.hw .box{width:100%;height:150px;border:2px dashed var(--line);border-radius:14px;background:var(--surf);
   position:relative;overflow:hidden}
 .hw canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .hw .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -334,12 +334,17 @@ body.pen .pp{background-image:
 .hwrow .fn{font-family:var(--jp);font-size:15px;font-weight:700;background:#e5e9e3;border-color:#dadfd8}
 .hwrow .go{background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:16px;font-weight:700}
 .pad.choice{grid-template-columns:1fr 1fr;gap:10px}
-.pad.choice .ch{height:64px;font-family:var(--jp);font-size:22px;font-weight:700;padding:0 8px;line-height:1.3;white-space:normal}
+.pad.choice .ch{height:60px;font-family:var(--jp);font-size:22px;font-weight:700;padding:0 8px;line-height:1.3;white-space:normal}
 .qp .jw{font-family:var(--jp);font-size:44px;font-weight:700;display:block;margin-bottom:6px;letter-spacing:.04em}
 .chosen{display:inline-block;min-width:120px;padding:8px 16px;border:2px solid var(--ai);border-radius:12px;background:var(--ai-s);
   font-family:var(--jp);font-size:24px;font-weight:700}
 .subj{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-left:auto;vertical-align:middle;flex:0 0 auto}
 .subj button{width:72px;padding:6px 0;text-align:center;font-size:12.5px;font-weight:700;color:var(--sumi);background:var(--surf)}
+.subj.top{margin-left:auto;margin-right:0}
+.subj.top button{width:60px;padding:7px 0;font-size:12px}
+.brand .bh span{white-space:nowrap}
+.brand .who2{margin-left:8px}
+@media (max-width:380px){.brand .bh span{display:none}}
 .subj button.on{background:var(--ai);color:#fff}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .pad button{height:58px;border-radius:12px;background:var(--surf);border:1px solid var(--line);font-family:var(--num);font-size:27px;font-weight:600}
@@ -494,7 +499,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 }
 
 /* 学習モード */
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
 .modes button{padding:9px 4px 8px;border-radius:12px;border:1px solid var(--line);background:var(--surf);
   font-size:11px;line-height:1.25;color:var(--sumi)}
 .modes button svg{width:30px;height:30px;display:block;margin:0 auto 3px;color:var(--ai)}
@@ -503,7 +508,10 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .modes button.on svg,.modes button.on b{color:#fff}
 .modes button.on svg [fill="#fff"]{fill:rgba(255,255,255,.22)}
 .modes button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
-.mcard{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.mcard{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:8px}
+.mrow1{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;line-height:1.5}
+.mrow1>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow1 .mini{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--ai-s);color:var(--ai);font-weight:700;font-size:13px;border:1px solid var(--ai)}
 .mcard .t{font-size:12px;color:var(--sumi);letter-spacing:.08em}
 .mcard .v{font-size:17px;font-weight:700;margin-top:4px}
 .mcard .d{font-size:13.5px;color:var(--sumi);margin-top:4px;line-height:1.7}
@@ -668,7 +676,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.5 / 2026-09-03w</div>
+  <div class="tiny">まいにち計算 ver9.6 / 2026-09-03x</div>
 </section>
 
 <!-- こども追加 -->
@@ -694,6 +702,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- ホーム -->
 <section class="sc" id="s-home">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいにち計算</span></button>
+    <span class="subj top" id="subj"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span>
     <button class="who2" id="h-switch"><b id="h-name"></b><span class="av" id="h-av">🐰</span><i>▾</i></button>
   </div>
   <div class="hero">
@@ -702,7 +711,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <div class="tx"><b id="h-msg">きょうの 学習</b><span id="h-sub"></span></div>
     </div>
     <div class="hr"></div>
-    <div class="lvline"><b id="h-lv"></b><i id="h-grade"></i><span class="subj" id="subj"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span></div>
+    <div class="lvline"><b id="h-lv"></b><i id="h-grade"></i></div>
     <div class="nm" id="h-step"></div>
     <div class="de" id="h-title"></div>
     <div class="dots" id="h-dots"></div>
@@ -720,7 +729,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button data-m="story"><svg viewBox="0 0 40 40"><circle cx="18" cy="17" r="9" fill="#fff" stroke="currentColor" stroke-width="2.6"/><path d="M25,24 L33,33" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M18,12 v6 M18,21 v1.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>ぼうけん</b>なぞとき</button>
   </div>
   <div class="mcard hide" id="mcard"></div>
-  <div style="margin-top:16px"><button class="btn lg" id="go-start"></button></div>
+  <div style="margin-top:10px"><button class="btn lg" id="go-start"></button></div>
   <button class="btn y hide" id="go-gacha" style="margin-top:10px">キャラを もらう！</button>
   <div class="inst hide" id="inst">
     <span class="ic">＋</span>
@@ -729,7 +738,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03w</div>
+  <div class="tiny">BUILD 2026-09-03x</div>
 </section>
 
 <!-- れいだい -->
@@ -746,7 +755,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 </section>
 
 <!-- プリント -->
-<section class="sc full" id="s-sheet">
+<section class="sc full" id="s-sheet" style="height:100dvh;overflow:hidden">
   <div class="stop">
     <div class="l"><b id="sh-id"></b><span id="sh-p"></span></div>
     <div class="r"><span class="tm num" id="sh-t">0:00</span>
@@ -1127,7 +1136,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.5 / BUILD 2026-09-03w</div>
+  <div class="tiny">kumon_math ver9.6 / BUILD 2026-09-03x</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1237,7 +1246,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03w";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03x";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4580,21 +4589,15 @@ function renderMode(k){
  if(m==="print"){c.classList.add("hide");return;}
  c.classList.remove("hide");
  if(m==="board"){
-  var b=k.board,nt=tileType(b.pos);
-  var nextEv="";
-  for(var j=b.pos+1;j<BOARD_N;j++){var tt=tileType(j);if(tt){nextEv="あと "+(j-b.pos)+"マスで "+TILE_IC[tt]+" "+({goal:"ゴール",gift:"キャラ",game:"ミニゲーム",star:"たまボーナス"})[tt];break;}}
-  c.innerHTML='<div class="t">すごろく　ワールド '+(b.world+1)+'</div>'+
-   '<div class="v">'+(b.pos+1)+' / '+BOARD_N+' マス</div>'+
-   '<div class="d">プリントを 1まい おえるごとに 1マス すすみます。ときどき キャラが あらわれるよ。'+(nextEv?"<br>"+nextEv:"")+'</div>'+
-   '<button class="btn l" id="mc-open" style="margin-top:12px">マップを 見る</button>';
+  var b=k.board,nextEv="";
+  for(var j=b.pos+1;j<BOARD_N;j++){var tt=tileType(j);if(tt){nextEv="あと "+(j-b.pos)+"マスで "+TILE_IC[tt];break;}}
+  c.innerHTML='<div class="mrow1"><span><b>ワールド '+(b.world+1)+'</b>　'+(b.pos+1)+' / '+BOARD_N+' マス'+(nextEv?'　<span style="color:var(--sumi)">'+nextEv+'</span>':'')+'</span>'+
+   '<button class="mini" id="mc-open">マップ</button></div>';
   document.getElementById("mc-open").onclick=function(){renderBoard();show("s-board");};
  }else{
   var st=k.story,ch=STORY[st.ch%STORY.length];
-  c.innerHTML='<div class="sart">'+storyArt(st.ch%STORY.length,Math.max(0,Math.min(st.sc,5)-1))+'</div>'+
-   '<div class="t">ぼうけん　だい '+(st.ch%STORY.length+1)+' しょう'+(st.loop?"（"+(st.loop+1)+"しゅうめ）":"")+'</div>'+
-   '<div class="v">'+ch.t+'</div>'+
-   '<div class="d">'+(st.sc>=5?"なぞときの じかん！ ヒントの かずを ならべて ばんごうを 入れよう。":"プリントを おえると つづきが よめます。ヒント "+st.hints.length+"／3")+'</div>'+
-   '<button class="btn l" id="mc-open" style="margin-top:12px">'+(st.sc>=5?"ばんごうを 入れる":"おはなしを よむ")+'</button>';
+  c.innerHTML='<div class="mrow1"><span><b>だい '+(st.ch%STORY.length+1)+' しょう</b>　'+ch.t+'　<span style="color:var(--sumi)">'+(st.sc>=5?"なぞとき！":st.sc+" / 5")+'</span></span>'+
+   '<button class="mini" id="mc-open">'+(st.sc>=5?"とく":"よむ")+'</button></div>';
   document.getElementById("mc-open").onclick=function(){if(st.sc>=5)storyRiddle();else{renderStory();show("s-story");}};
  }
 }
