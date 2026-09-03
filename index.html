@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03t / kumon_math_ver9.2 -->
+<!-- BUILD_TAG: 2026-09-03u / kumon_math_ver9.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -657,7 +657,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.2 / 2026-09-03t</div>
+  <div class="tiny">まいにち計算 ver9.3 / 2026-09-03u</div>
 </section>
 
 <!-- こども追加 -->
@@ -718,7 +718,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03t</div>
+  <div class="tiny">BUILD 2026-09-03u</div>
 </section>
 
 <!-- れいだい -->
@@ -1116,7 +1116,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.2 / BUILD 2026-09-03t</div>
+  <div class="tiny">kumon_math ver9.3 / BUILD 2026-09-03u</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1226,7 +1226,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03t";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03u";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2603,6 +2603,7 @@ var CDATA=[
 
 function cname(id){return (CDATA[id]&&CDATA[id][0])||(CPAL[Math.floor(id/10)%12][3]+CSPE[id%10]);}
 function cinfo(id){return CDATA[id]||["",CDESC[id%10],"",""];}
+var ANT=true;
 function cbody(sp,c,d,l,gid){
  var G='url(#'+gid+')';
  switch(sp){
@@ -2620,12 +2621,11 @@ function cbody(sp,c,d,l,gid){
     '<path d="M32,56 C22,60 20,74 30,80 C38,78 40,66 38,58 Z" fill="'+d+'" opacity=".55"/>'+
     '<path d="M44,32 C44,20 52,16 56,22 C52,24 48,28 48,32 Z M52,30 C54,20 62,18 64,24 C60,26 56,30 56,32 Z" fill="'+d+'"/>'+
     '<path d="M40,84 L36,92 M44,84 L44,92 M56,84 L56,92 M60,84 L64,92" stroke="#f0a62a" stroke-width="2.6" stroke-linecap="round"/>';
-  case 3: return '<path d="M76,56 L96,38 L92,56 L96,74 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>'+
+  case 3: return '<path d="M78,56 C86,44 92,38 96,36 C93,48 93,64 96,76 C92,74 86,68 78,56 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3" stroke-linejoin="round"/>'+
     '<ellipse cx="46" cy="56" rx="31" ry="22" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
-    '<path d="M40,36 L52,20 L60,38 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
-    '<path d="M44,78 L52,88 L60,76 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
-    '<path d="M56,44 q6,6 0,12 M64,42 q6,7 0,14 M56,60 q6,6 0,12" stroke="'+d+'" stroke-width="1.8" fill="none" opacity=".55"/>'+
-    '<path d="M22,50 C26,44 30,44 34,50" stroke="'+d+'" stroke-width="2" fill="none" opacity=".6"/>';
+    '<path d="M38,35 C44,24 54,22 60,36 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M46,66 C54,64 62,68 64,74 C58,76 50,74 46,66 Z" fill="'+l+'" stroke="'+d+'" stroke-width="1.6" opacity=".9"/>'+
+    '<path d="M60,46 q5,6 0,12 M68,44 q5,7 0,14 M60,62 q5,5 0,10" stroke="'+d+'" stroke-width="1.6" fill="none" opacity=".45"/>';
   case 4: return '<path d="M30,26 L22,6 L42,18 Z M70,26 L78,6 L58,18 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" stroke-linejoin="round"/>'+
     '<path d="M22,58 C22,36 34,22 52,22 C72,22 82,38 80,56 C78,72 62,80 46,78 C32,76 22,70 22,58 Z" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
     '<path d="M34,60 C36,72 46,78 56,74 C50,68 44,64 34,60 Z" fill="'+l+'" opacity=".85"/>'+
@@ -2635,7 +2635,7 @@ function cbody(sp,c,d,l,gid){
     '<path d="M6,44 C10,30 24,30 26,42 C18,44 12,44 6,44 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2" opacity=".9"/>';
   case 5: return '<rect x="22" y="28" width="56" height="50" rx="12" fill="'+G+'" stroke="'+d+'" stroke-width="3"/>'+
     '<rect x="30" y="38" width="40" height="26" rx="6" fill="#1e2a3a"/>'+
-    '<path d="M50,28 L50,14" stroke="'+d+'" stroke-width="3"/><circle cx="50" cy="11" r="5" fill="#ffe27a" stroke="'+d+'" stroke-width="2"/>'+
+    (ANT?'<path d="M50,28 L50,14" stroke="'+d+'" stroke-width="3"/><circle cx="50" cy="11" r="5" fill="#ffe27a" stroke="'+d+'" stroke-width="2"/>':'')+
     '<rect x="34" y="68" width="32" height="6" rx="3" fill="'+l+'"/>'+
     '<circle cx="30" cy="74" r="2.6" fill="'+d+'"/><circle cx="70" cy="74" r="2.6" fill="'+d+'"/>'+
     '<rect x="12" y="44" width="10" height="16" rx="4" fill="'+d+'"/><rect x="78" y="44" width="10" height="16" rx="4" fill="'+d+'"/>'+
@@ -2667,10 +2667,18 @@ function ceyes(t,d){
    '<path d="M44,66 L58,66" stroke="#1a1a1a" stroke-width="2.4" stroke-linecap="round"/>';
 }
 
-function cacc(t,c,d,l){
+var CTOP=[24,30,32,36,24,30,14,18,22,36]; /* 種族ごとの あたまの 上の 高さ（ぼうしを 乗せる 位置） */
+function cacc(t,c,d,l,sp){
+ var dy=(CTOP[sp]||26)-26;
+ var inner=cacc0(t,c,d,l);
+ if(!inner)return "";
+ if(t===1||t===3||t===4)return '<g transform="translate(0,'+dy+')">'+inner+'</g>';
+ return inner;
+}
+function cacc0(t,c,d,l){
  if(t===1)return '<path d="M34,22 L30,8 L44,18 Z M68,22 L72,8 L58,18 Z" fill="'+l+'" stroke="'+d+'" stroke-width="2"/>';
  if(t===2)return '<path d="M12,42 C0,34 2,20 14,22 C10,32 12,38 20,44 Z M88,42 C100,34 98,20 86,22 C90,32 88,38 80,44 Z" fill="#fff" stroke="'+d+'" stroke-width="2" opacity=".9"/>';
- if(t===3)return '<path d="M24,26 L76,26 L70,14 L30,14 Z" fill="'+d+'"/><rect x="18" y="24" width="64" height="6" rx="3" fill="'+d+'"/>';
+ if(t===3)return '<path d="M28,26 L72,26 L66,13 L34,13 Z" fill="'+d+'"/><rect x="22" y="24" width="56" height="6" rx="3" fill="'+d+'"/><rect x="34" y="20" width="32" height="3" fill="'+l+'" opacity=".7"/>';
  if(t===4)return '<path d="M50,22 L40,14 L44,26 Z M50,22 L60,14 L56,26 Z" fill="#e2564a" stroke="#b8362c" stroke-width="2"/><circle cx="50" cy="24" r="4" fill="#e2564a"/>';
  if(t===5)return '<circle cx="40" cy="52" r="10" fill="none" stroke="#333" stroke-width="2.6"/><circle cx="62" cy="52" r="10" fill="none" stroke="#333" stroke-width="2.6"/><path d="M50,52 L52,52" stroke="#333" stroke-width="2.6"/>';
  return "";
@@ -2689,6 +2697,7 @@ function charSVG(id,cls,st){
  var spark=r===3?'<path d="M84,18 l2.6,6 l6,2.6 l-6,2.6 l-2.6,6 l-2.6,-6 l-6,-2.6 l6,-2.6 Z" fill="'+RARC[3]+'"/>':"";
  var gid="cg"+id+"_"+st+"_"+(++__gid);
  var defs='<defs><radialGradient id="'+gid+'" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="'+l+'"/><stop offset=".45" stop-color="'+c+'"/><stop offset="1" stop-color="'+d+'"/></radialGradient></defs>';
+ ANT=!(ac===3||ac===1||ac===4);
  var evo="";
  if(st>=1)evo+='<circle cx="50" cy="52" r="44" fill="none" stroke="#ffd873" stroke-width="2" opacity=".75"/>';
  if(st>=2){
@@ -2698,7 +2707,7 @@ function charSVG(id,cls,st){
    '<path d="M88,58 l2,4.6 l4.6,2 l-4.6,2 l-2,4.6 l-2,-4.6 l-4.6,-2 l4.6,-2 Z" fill="#ffe9a8"/>';
  }
  return '<svg class="'+(cls||"")+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+defs+
-   aura+cbody(sp,c,d,l,gid)+ceyes(ey,d)+cacc(ac,c,d,l)+spark+evo+'</svg>';
+   aura+cbody(sp,c,d,l,gid)+ceyes(ey,d)+cacc(ac,c,d,l,sp)+spark+evo+'</svg>';
 }
 
 /* ===== ぼうけんの 絵（部品を 組み合わせて 場面を つくる） ===== */
