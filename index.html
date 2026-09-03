@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03x / kumon_math_ver9.6 -->
+<!-- BUILD_TAG: 2026-09-03y / kumon_math_ver9.7 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -600,6 +600,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .lock .lkd{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff}
 .lock .lkd.act{border-color:#ffe27a;background:rgba(255,226,122,.15)}
 .lock .msg{margin:0 12px;font-size:13.5px;color:#c9d2ea;text-align:center}
+.lock .rules{margin:10px auto 0;max-width:420px;text-align:left;background:rgba(255,226,122,.12);border:1px solid rgba(255,226,122,.4);border-radius:12px;padding:8px 12px}
+.lock .rules div{padding:4px 0;color:#ffe9a8;font-weight:700;font-size:14px}
 
 /* なぞときの ロック */
 .hintcards{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
@@ -676,7 +678,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.6 / 2026-09-03x</div>
+  <div class="tiny">まいにち計算 ver9.7 / 2026-09-03y</div>
 </section>
 
 <!-- こども追加 -->
@@ -738,7 +740,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03x</div>
+  <div class="tiny">BUILD 2026-09-03y</div>
 </section>
 
 <!-- れいだい -->
@@ -1136,7 +1138,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.6 / BUILD 2026-09-03x</div>
+  <div class="tiny">kumon_math ver9.7 / BUILD 2026-09-03y</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1246,7 +1248,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03x";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03y";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2867,6 +2869,44 @@ var STORY=[
  endArt:function(){return [A.castle(150),A.win(110,84),A.win(140,84),A.win(170,84),A.win(200,84),A.star(150,26,13,"#ffe27a"),A.kid(110,150),A.tanuki(70,150),A.guard(190,150)].join("");}}
 ];
 function storyArt(ch,sc){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[sc].art()]);}
+/* 学年に あわせた なぞときの むずかしさ：1=かぞえる 2=たす・ひく 3=かける・くみあわせ */
+function riddleTier(){
+ var k=P();if(!k)return 1;
+ var lv=STEPS[k.stepIdx]?STEPS[k.stepIdx].lv.replace("国",""):"6A";
+ var t1=["6A","5A","4A","3A","2A","A"],t2=["B","C","D"];
+ if(SUBJ==="jp")return lv==="C"?3:(lv==="A"||lv==="B"?2:1);
+ if(t1.indexOf(lv)>=0)return 1;
+ if(t2.indexOf(lv)>=0)return 2;
+ return 3;
+}
+function chObjs(ch){return ch.sc.filter(function(x){return x.hint;}).map(function(x){return x.hint.replace(/^\dつめ ＝ /,"").replace(/の かず$/,"");});}
+/* 3けたの ばんごうと、その 求め方を つくる（章ごとに 決まる） */
+function riddleCode(ch,tier){
+ var o=chObjs(ch),c=String(ch.ans).split("").map(Number);
+ var A=o[0],B=o[1],C=o[2],a=c[0],b=c[1],d=c[2];
+ var rules=[],digits=[];
+ if(tier===1){
+  rules=["1つめ ＝ "+A+"の かず","2つめ ＝ "+B+"の かず","3つめ ＝ "+C+"の かず"];digits=[a,b,d];
+ }else if(tier===2){
+  var cand=[
+   [A+"の かず ＋ "+B+"の かず",a+b],[B+"の かず ＋ "+C+"の かず",b+d],[A+"の かず ＋ "+C+"の かず",a+d],
+   [A+"の かず − "+C+"の かず",a-d],[B+"の かず − "+A+"の かず",b-a],[B+"の かず − "+C+"の かず",b-d],[A+"の かず − "+B+"の かず",a-b],
+   [C+"の かず × 2",d*2],[A+"の かず × 2",a*2],[B+"の かず × 2",b*2]];
+  cand=cand.filter(function(x){return x[1]>=0&&x[1]<=9;});
+  for(var i=0;i<3;i++){var x=cand[i%cand.length];rules.push((i+1)+"つめ ＝ "+x[0]);digits.push(x[1]);}
+ }else{
+  var cand3=[
+   [A+"の かず × "+B+"の かず の 一のくらい",(a*b)%10],
+   [A+"の かず ＋ "+B+"の かず ＋ "+C+"の かず の 一のくらい",(a+b+d)%10],
+   [B+"の かず × "+C+"の かず − "+A+"の かず",b*d-a],
+   ["（"+A+"の かず ＋ "+C+"の かず）× "+B+"の かず の 一のくらい",((a+d)*b)%10],
+   [A+"の かず × "+C+"の かず の 十のくらい",Math.floor((a*d)/10)],
+   [B+"の かず × 3 の 一のくらい",(b*3)%10]];
+  cand3=cand3.filter(function(x){return x[1]>=0&&x[1]<=9;});
+  for(var j=0;j<3;j++){var y=cand3[j%cand3.length];rules.push((j+1)+"つめ ＝ "+y[0]);digits.push(y[1]);}
+ }
+ return {rules:rules,code:digits.join(""),tier:tier};
+}
 function who(tx){
  if(tx.indexOf("こだぬき")>=0&&tx.indexOf("「")>=0)return "こだぬき";
  if(tx.indexOf("おじさん")>=0||tx.indexOf("まちの ひと")>=0)return "ふねの おじさん";
@@ -4778,6 +4818,7 @@ function vnOpen(chI,scI,isEnd,cb){
  document.getElementById("vn-nx").classList.remove("hide");
  vnType(text,function(){
   var h=(!isEnd&&ch.sc[scI].hint)?ch.sc[scI].hint:null;
+  if(h&&riddleTier()>=2)h=h.replace(/^\dつめ ＝ /,"")+"を かぞえて おぼえておこう";
   if(h){var he=document.getElementById("vn-hint");he.textContent=h;he.classList.remove("hide");}
   document.getElementById("vn-nx").classList.add("hide");
   document.getElementById("vn-btns").classList.remove("hide");
@@ -4883,7 +4924,7 @@ function modeAfterPrint(k){
   };
  }
 }
-var lockIn="",lockCh=0,lockCounts=[];
+var lockIn="",lockCh=0,lockCounts=[],lockRC=null;
 function lockDraw(){
  var d=document.getElementById("lk-d");
  if(!d)return;
@@ -4894,12 +4935,17 @@ function lockDraw(){
 function storyRiddle(){
  var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
  lockCh=st.ch%STORY.length;lockIn="";lockCounts=[];
+ lockRC=riddleCode(ch,riddleTier());
  document.getElementById("lk-h").textContent=ch.lock;
+ document.getElementById("lk-msg").innerHTML=(lockRC.tier===1
+  ?"絵の なかの ものを タップして かぞえよう。3つの かずを ならべると ばんごうに なる。"
+  :(lockRC.tier===2?"絵の ものを かぞえて、下の 計算で 3つの 数字を 出そう。":"絵の ものを かぞえて、下の 計算で 3つの 数字を 出そう。「一のくらい」は 答えの いちばん右の 数字。"))+
+  '<div class="rules">'+lockRC.rules.map(function(r){return "<div>"+r+"</div>";}).join("")+'</div>';
  var cards="",hi=0;
  ch.sc.forEach(function(sc,i){
   if(!sc.hint)return;
   var idx=hi++;
-  cards+='<div class="cardq" data-card="'+idx+'"><div class="hd2"><span>'+sc.hint+'</span><b id="lk-c'+idx+'">0</b></div>'+
+  cards+='<div class="cardq" data-card="'+idx+'"><div class="hd2"><span>'+sc.hint.replace(/^\dつめ ＝ /,"")+'</span><b id="lk-c'+idx+'">0</b></div>'+
    storyArt(lockCh,i).replace('style="width:100%;height:auto;display:block;border-radius:12px"','')+
    '<div class="tip">ひとつずつ タップ。もういちど おすと とりけし</div></div>';
   lockCounts.push(0);
@@ -4927,7 +4973,7 @@ document.getElementById("lk-pad").addEventListener("click",function(e){
  if(v==="del"){lockIn=lockIn.slice(0,-1);lockDraw();return;}
  if(v==="ok"){
   if(lockIn.length<3)return;
-  if(lockIn===ch.ans){
+  if(lockIn===(lockRC?lockRC.code:ch.ans)){
    k.encNext=2;
    st.ch++;st.sc=0;st.hints=[];
    if(st.ch%STORY.length===0)st.loop++;
