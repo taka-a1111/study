@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03q / kumon_math_ver8.9 -->
+<!-- BUILD_TAG: 2026-09-03r / kumon_math_ver9.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -398,12 +398,17 @@ body.pen .pp{background-image:
   background:linear-gradient(90deg,var(--mid) 0 40%,var(--yam) 40% 80%,var(--aka) 80% 100%);opacity:.9}
 .rgauge b{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-left:-9px}
 .rgl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--usu);margin-top:4px}
-.res .gainbox{gap:4px}
-.res .gainbox .big{width:64px;height:64px}
-.res .gainbox .big svg{width:56px;height:56px}
-.res .gainbox .ring{width:64px;height:64px;margin:-32px 0 0 -32px}
-.res .gainbox .txt{font-size:13.5px}
-.res .gainbox .row svg{width:20px;height:20px}
+.rmid{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:120px;padding:6px 0}
+.res .gainbox{gap:6px}
+.res .gainbox .big{width:136px;height:136px}
+.res .gainbox .big svg{width:120px;height:120px}
+.res .gainbox .ring{width:136px;height:136px;margin:-68px 0 0 -68px}
+.res .gainbox .txt{font-size:15px}
+.res .gainbox .row{margin-top:4px;gap:8px}
+.res .gainbox .row svg{width:30px;height:30px}
+@media (max-height:700px){
+ .res .gainbox .big{width:96px;height:96px}.res .gainbox .big svg{width:84px;height:84px}
+ .res .gainbox .ring{width:96px;height:96px;margin:-48px 0 0 -48px}.res .gainbox .row svg{width:24px;height:24px}}
 .res .best{padding:4px 12px;font-size:13px;margin-top:6px}
 
 /* 共通行 */
@@ -644,7 +649,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.9 / 2026-09-03q</div>
+  <div class="tiny">まいにち計算 ver9.0 / 2026-09-03r</div>
 </section>
 
 <!-- こども追加 -->
@@ -705,7 +710,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03q</div>
+  <div class="tiny">BUILD 2026-09-03r</div>
 </section>
 
 <!-- れいだい -->
@@ -793,10 +798,11 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <div class="rgauge" id="rs-gauge"><i></i><b></b></div>
     <div class="rgl"><span>はやい</span><span>めやす</span><span>ゆっくり</span></div>
   </div>
-  <div class="hide" id="rs-best" style="text-align:center"></div>
-  <div class="hide" id="rs-orb" style="text-align:center;margin-top:6px"></div>
-  <div class="note" id="rs-nt" style="margin:8px 2px 0;font-size:13.5px;text-align:center"></div>
-  <div class="sp"></div>
+  <div class="rmid">
+    <div class="hide" id="rs-best" style="text-align:center"></div>
+    <div class="hide" id="rs-orb" style="text-align:center"></div>
+    <div class="note" id="rs-nt" style="margin:6px 2px 0;font-size:13.5px;text-align:center"></div>
+  </div>
   <div class="stk" style="gap:6px"><button class="btn" id="rs-nx"></button><button class="btn q" id="rs-hm" style="padding:8px">きょうは ここまで</button></div>
 </section>
 
@@ -1102,7 +1108,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.9 / BUILD 2026-09-03q</div>
+  <div class="tiny">kumon_math ver9.0 / BUILD 2026-09-03r</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1212,7 +1218,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03q";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03r";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
