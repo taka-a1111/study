@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03p / kumon_math_ver8.8 -->
+<!-- BUILD_TAG: 2026-09-03q / kumon_math_ver8.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -382,17 +382,29 @@ body.pen .pp{background-image:
 .st b{display:block;font-family:var(--num);font-size:26px;line-height:1.25}
 .st span{font-size:12px;color:var(--sumi)}
 
-/* 結果 */
-.rcard{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:12px}
-.rscore{text-align:center;padding:4px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
-.rscore b{font-family:var(--num);font-size:56px;line-height:1;font-weight:700}
-.rscore span{font-size:16px;margin-left:4px;color:var(--sumi)}
-.rline{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:15px;color:var(--sumi)}
-.rline b{font-size:19px;color:var(--ink)}
-.rgauge{position:relative;height:12px;border-radius:6px;margin-top:10px;
+/* 結果（ひと画面に おさめる） */
+.res .bg{padding:14px 16px;border-radius:14px}
+.res .bg h2{font-size:21px}
+.res .bg p{margin-top:4px;font-size:13.5px;line-height:1.5}
+.rcard{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:8px}
+.rtop{display:flex;align-items:center;gap:14px}
+.rscore{flex:0 0 auto;text-align:center;padding:0 10px 0 0;border-right:1px solid var(--line)}
+.rscore b{font-family:var(--num);font-size:46px;line-height:1;font-weight:700}
+.rscore span{font-size:13px;margin-left:3px;color:var(--sumi)}
+.rlines{flex:1;min-width:0}
+.rline{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:13px;color:var(--sumi)}
+.rline b{font-size:16px;color:var(--ink)}
+.rgauge{position:relative;height:10px;border-radius:5px;margin-top:10px;
   background:linear-gradient(90deg,var(--mid) 0 40%,var(--yam) 40% 80%,var(--aka) 80% 100%);opacity:.9}
-.rgauge b{position:absolute;top:-5px;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-left:-11px}
-.rgl{display:flex;justify-content:space-between;font-size:11px;color:var(--usu);margin-top:6px}
+.rgauge b{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-left:-9px}
+.rgl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--usu);margin-top:4px}
+.res .gainbox{gap:4px}
+.res .gainbox .big{width:64px;height:64px}
+.res .gainbox .big svg{width:56px;height:56px}
+.res .gainbox .ring{width:64px;height:64px;margin:-32px 0 0 -32px}
+.res .gainbox .txt{font-size:13.5px}
+.res .gainbox .row svg{width:20px;height:20px}
+.res .best{padding:4px 12px;font-size:13px;margin-top:6px}
 
 /* 共通行 */
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15.5px}
@@ -632,7 +644,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.8 / 2026-09-03p</div>
+  <div class="tiny">まいにち計算 ver8.9 / 2026-09-03q</div>
 </section>
 
 <!-- こども追加 -->
@@ -693,7 +705,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03p</div>
+  <div class="tiny">BUILD 2026-09-03q</div>
 </section>
 
 <!-- れいだい -->
@@ -766,23 +778,26 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 </section>
 
 <!-- けっか -->
-<section class="sc full" id="s-res">
-  <div class="hd"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
+<section class="sc full res" id="s-res">
+  <div class="hd" style="margin-bottom:6px"><h2>けっか</h2><div class="sp"></div><span class="num" id="rs-id"></span></div>
   <div class="bg" id="rs-bg"><h2></h2><p></p></div>
   <div class="rcard">
-    <div class="rscore"><b id="rs-sc"></b><span>てん</span></div>
-    <div class="rline"><span>かかった じかん</span><b class="num" id="rs-tm"></b></div>
-    <div class="rline"><span>めやす</span><b class="num" id="rs-st"></b></div>
-    <div class="rline"><span>まちがい</span><b class="num" id="rs-wr"></b></div>
+    <div class="rtop">
+      <div class="rscore"><b id="rs-sc"></b><span>てん</span></div>
+      <div class="rlines">
+        <div class="rline"><span>じかん</span><b class="num" id="rs-tm"></b></div>
+        <div class="rline"><span>めやす</span><b class="num" id="rs-st"></b></div>
+        <div class="rline"><span>まちがい</span><b class="num" id="rs-wr"></b></div>
+      </div>
+    </div>
     <div class="rgauge" id="rs-gauge"><i></i><b></b></div>
     <div class="rgl"><span>はやい</span><span>めやす</span><span>ゆっくり</span></div>
   </div>
   <div class="hide" id="rs-best" style="text-align:center"></div>
-  <div class="hide" id="rs-orb" style="text-align:center;margin-top:12px"></div>
-  <div class="card note" id="rs-nt" style="margin-top:12px"></div>
+  <div class="hide" id="rs-orb" style="text-align:center;margin-top:6px"></div>
+  <div class="note" id="rs-nt" style="margin:8px 2px 0;font-size:13.5px;text-align:center"></div>
   <div class="sp"></div>
-  <div class="stk"><button class="btn" id="rs-nx"></button><button class="btn q" id="rs-hm">きょうは ここまで</button></div>
-  <div class="tiny">&nbsp;</div>
+  <div class="stk" style="gap:6px"><button class="btn" id="rs-nx"></button><button class="btn q" id="rs-hm" style="padding:8px">きょうは ここまで</button></div>
 </section>
 
 <!-- しゅうりょうしょう -->
@@ -1087,7 +1102,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.8 / BUILD 2026-09-03p</div>
+  <div class="tiny">kumon_math ver8.9 / BUILD 2026-09-03q</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1197,7 +1212,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03p";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03q";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
