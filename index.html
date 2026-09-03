@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04f / kumon_math_ver10.4 -->
+<!-- BUILD_TAG: 2026-09-04g / kumon_math_ver10.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -615,6 +615,12 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .lock .lkd{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff}
 .lock .lkd.act{border-color:#ffe27a;background:rgba(255,226,122,.15)}
 .lock .msg{margin:0 12px;font-size:13.5px;color:#c9d2ea;text-align:center}
+.susgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px}
+.sus{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:14px;padding:8px;color:#fff}
+.sus svg{width:100%;height:auto;display:block}
+.sus span{display:block;font-size:14px;font-weight:700;margin-top:4px}
+.sus.ng{animation:lkng .45s;border-color:#ff6b6b}
+.lock .cardq svg{cursor:pointer}
 .lock .rules{margin:10px auto 0;max-width:420px;text-align:left;background:rgba(255,226,122,.12);border:1px solid rgba(255,226,122,.4);border-radius:12px;padding:8px 12px}
 .lock .rules div{padding:4px 0;color:#ffe9a8;font-weight:700;font-size:14px}
 
@@ -693,7 +699,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.4 / 2026-09-04f</div>
+  <div class="tiny">まいがく ver10.5 / 2026-09-04g</div>
 </section>
 
 <!-- こども追加 -->
@@ -743,7 +749,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="modes" id="modes">
     <button data-m="print"><svg viewBox="0 0 40 40"><rect x="9" y="6" width="22" height="28" rx="3" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M14,14 h12 M14,20 h12 M14,26 h7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><b>プリント</b>これまでどおり</button>
     <button data-m="board"><svg viewBox="0 0 40 40"><rect x="7" y="7" width="26" height="26" rx="6" fill="#fff" stroke="currentColor" stroke-width="2.4"/><circle cx="15" cy="15" r="2.6" fill="currentColor"/><circle cx="25" cy="15" r="2.6" fill="currentColor"/><circle cx="20" cy="20" r="2.6" fill="currentColor"/><circle cx="15" cy="25" r="2.6" fill="currentColor"/><circle cx="25" cy="25" r="2.6" fill="currentColor"/></svg><b>すごろく</b>マスを すすむ</button>
-    <button data-m="story"><svg viewBox="0 0 40 40"><circle cx="18" cy="17" r="9" fill="#fff" stroke="currentColor" stroke-width="2.6"/><path d="M25,24 L33,33" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M18,12 v6 M18,21 v1.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>ぼうけん</b>なぞとき</button>
+    <button data-m="story"><svg viewBox="0 0 40 40"><circle cx="18" cy="17" r="9" fill="#fff" stroke="currentColor" stroke-width="2.6"/><path d="M25,24 L33,33" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M18,12 v6 M18,21 v1.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>たんてい</b>すいり</button>
   </div>
   <div class="mcard hide" id="mcard"></div>
   <div style="margin-top:10px"><button class="btn lg" id="go-start"></button></div>
@@ -755,7 +761,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04f</div>
+  <div class="tiny">BUILD 2026-09-04g</div>
 </section>
 
 <!-- れいだい -->
@@ -1155,7 +1161,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.4 / BUILD 2026-09-04f</div>
+  <div class="tiny">kumon_math ver10.5 / BUILD 2026-09-04g</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1265,7 +1271,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04f";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04g";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2956,79 +2962,176 @@ function scene(bg,parts){
 var A=ART;
 function storyEndArt(ch){var a=STORY_ART[ch%STORY_ART.length];return scene(a.bg,a.end);}
 
-/* ===== ぼうけん：かずを かぞえて 3けたの ばんごうを 見つける なぞとき ===== */
+/* ===== ぼうけん：たんてい編（犯人さがし・まちがいさがし・暗号） ===== */
 var A=ART;
 function C(p){return '<g class="cnt">'+p+'</g>';}
 function rep(fn,n,x0,gap,y){var s="";for(var i=0;i<n;i++)s+=C(fn(x0+i*gap,y));return s;}
+var SPN=["スライム","ネコ","トリ","サカナ","ドラゴン","ロボ","ホシ","キノコ","オバケ","クモ"];
+var ACCN=["なにも つけていない","つのが ある","はねが ある","ぼうしを かぶっている","リボンを つけている","めがねを かけている"];
+function cAttr(id){return {col:Math.floor(id/10)%12,colN:CPAL[Math.floor(id/10)%12][3],sp:id%10,spN:SPN[id%10],acc:(id*3)%6,accN:ACCN[(id*3)%6]};}
+/* 犯人さがしの 事件を つくる：てがかりで 1人だけ 残るように 容疑者を えらぶ */
+function makeSuspectCase(tier){
+ var n=tier>=2?4:3,cl=tier>=2?3:2;
+ for(var t=0;t<200;t++){
+  var cid=ri(0,119),ca=cAttr(cid);
+  if(ca.acc===0)continue;
+  var pool=[];for(var i=0;i<120;i++)if(i!==cid)pool.push(i);
+  pool.sort(function(){return Math.random()-.5;});
+  var sus=[cid],need=[
+   function(a){return a.col===ca.col&&a.acc!==ca.acc&&a.sp!==ca.sp;},   /* 色は同じ・持ち物と種族が違う */
+   function(a){return a.col!==ca.col&&a.acc===ca.acc&&a.sp!==ca.sp;},   /* 持ち物は同じ・色が違う */
+   function(a){return a.col!==ca.col&&a.sp===ca.sp;}                    /* 種族は同じ・色が違う */
+  ];
+  for(var k=0;k<n-1;k++){var f=need[k];var found=null;for(var j=0;j<pool.length;j++){var a2=cAttr(pool[j]);if(f(a2)&&sus.indexOf(pool[j])<0){found=pool[j];break;}}if(found===null){sus=null;break;}sus.push(found);}
+  if(!sus)continue;
+  sus.sort(function(){return Math.random()-.5;});
+  var clues=["はんにんの からだの いろは "+ca.colN,"はんにんは "+ca.accN];
+  if(cl>=3)clues.push(tier>=3?("はんにんは "+SPN[(ca.sp+1)%10]+"でも "+SPN[(ca.sp+2)%10]+"でも ない"):("はんにんは "+ca.spN+"だ"));
+  if(tier>=3)clues=clues.slice().sort(function(){return Math.random()-.5;});
+  /* てがかりで 1人に 絞れるか 確認 */
+  var left=sus.filter(function(id){var a=cAttr(id);if(a.col!==ca.col)return false;if(a.acc!==ca.acc)return false;if(cl>=3&&a.sp!==ca.sp)return false;return true;});
+  if(left.length!==1)continue;
+  return {type:"suspect",culprit:cid,suspects:sus,clues:clues};
+ }
+ return {type:"suspect",culprit:1,suspects:[1,0,2],clues:["はんにんの からだの いろは あか","はんにんは つのが ある"]};
+}
+/* まちがいさがし：章の 絵を もとに、変えた ところを つくる */
+var DIFFS={
+ forest:[["tree",50,"#3f9a4a","#e2564a",50,80],["tree",250,"#3f9a4a","#5aa9e6",250,80],["flower",120,"#f4a7b9","#5aa9e6",120,122],["rock",200,null,null,200,112],["star",280,"#fff","#ffe27a",280,30]],
+ mountain:[["mtnsnow",60,null,null,60,68],["bird",90,null,null,90,44],["icicle",150,null,null,150,100],["rock",230,null,null,230,112],["star",40,"#fff","#ffe27a",40,26]],
+ beach:[["shell",80,"#fff","#f7c6d0",80,148],["gull",120,null,null,120,44],["boat",210,null,null,210,110],["lighthouse",260,null,null,260,90],["shell",160,"#fff","#333",160,150]],
+ sky:[["door",70,"hot","cool",70,98],["door",230,"none","cool",230,98],["cloud",60,null,null,60,40],["star",250,"#fff","#ffe27a",250,30],["cloud",200,null,null,200,50]],
+ desert:[["cactus",60,null,null,60,110],["camel",200,null,null,200,120],["star",120,"#fff","#ff8a7a",120,30],["hill",250,null,null,250,110],["star",260,"#fff","#ffe27a",260,40]],
+ castle:[["flag",100,null,null,110,40],["flag",200,null,null,210,40],["win",140,null,null,140,84],["star",250,"#fff","#ffe27a",250,30],["guard",90,null,null,90,130]]
+};
+function diffPart(d,alt){
+ var k=d[0],x=d[1];
+ switch(k){
+  case "tree":return A.tree(x,alt?d[3]:d[2]);
+  case "flower":return A.flower(x,d[5],alt?d[3]:d[2]);
+  case "rock":return alt?"":A.rock(x);
+  case "star":return A.star(x,d[5],8,alt?d[3]:d[2]);
+  case "mtnsnow":return alt?'<path d="M48,80 L60,60 L72,80 Z" fill="#9aa8b8"/>':"";
+  case "bird":return alt?"":A.bird(x,d[5]);
+  case "icicle":return alt?"":A.icicle(x,d[5]);
+  case "shell":return A.shell(x,d[5],alt?d[3]:d[2],9);
+  case "gull":return alt?"":A.gull(x,d[5]);
+  case "boat":return alt?"":A.boat(x);
+  case "lighthouse":return A.lighthouse(x,alt);
+  case "door":return A.door(x,alt?d[3]:d[2]);
+  case "cloud":return alt?"":A.cloud(x,d[5],18);
+  case "cactus":return alt?"":A.cactus(x,d[5]);
+  case "camel":return alt?"":A.camel(x,d[5]);
+  case "hill":return alt?"":A.hill(x,40);
+  case "flag":return alt?"":A.flag(x,34);
+  case "win":return alt?"":A.win(x,d[5]);
+  case "guard":return alt?"":A.guard(x,150);
+ }
+ return "";
+}
+function makeDiffCase(bg,tier){
+ var n=tier>=3?5:(tier>=2?4:3);
+ var list=DIFFS[bg].slice().sort(function(){return Math.random()-.5;}).slice(0,n);
+ return {type:"diff",bg:bg,diffs:list,found:[]};
+}
+function diffScene(c,alt){
+ var base=(c.bg==="castle")?A.castle(150):"";
+ var parts=c.diffs.map(function(d){return diffPart(d,alt);}).join("");
+ return scene(c.bg,[base,parts]);
+}
+/* 暗号：かぎの ひょうで もじに もどす */
+var CIPHER_WORDS=[["たからばこ","宝箱"],["かぎ","鍵"],["とびら","扉"],["ほし","星"],["くじら","クジラ"],["たんてい","探偵"],["ぼうけん","冒険"],["ひみつ","秘密"],["なぞ","謎"],["こだぬき","子だぬき"],["おしろ","お城"],["さばく","砂漠"],["とうだい","灯台"],["どうくつ","洞窟"],["あしあと","足あと"],["てがかり","手がかり"]];
+var VOICED=/[がぎぐげござじずぜぞだぢづでどばびぶべぼ]/;
+function kanaBase(ch){return VOICED.test(ch)?String.fromCharCode(ch.charCodeAt(0)-1):ch;}
+function kanaVoice(ch){ /* にごりを つけられる 字なら つける */
+ var i=KANA50.indexOf(ch);
+ if((i>=5&&i<=24)||(i>=25&&i<=29))return String.fromCharCode(ch.charCodeAt(0)+1);
+ return ch+"゛";
+}
+var KANA50="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん";
+function makeCipherCase(tier){
+ var w=CIPHER_WORDS[ri(0,CIPHER_WORDS.length-1)][0];
+ var mode=tier>=3?"shift":"num";
+ var code="",key="";
+ if(mode==="num"){
+  code=w.split("").map(function(ch){var v=VOICED.test(ch),i=KANA50.indexOf(kanaBase(ch));return (i<0?"?":String(i+1))+(v?"゛":"");}).join("・");
+  key="あ=1 い=2 う=3 え=4 お=5 か=6 … さ=11 た=16 な=21 は=26 ま=31 や=36 ら=39 わ=44（50音の じゅんばん。゛は にごり）";
+ }else{
+  code=w.split("").map(function(ch){var v=VOICED.test(ch),i=KANA50.indexOf(kanaBase(ch));if(i<0)return ch;var s2=KANA50[(i+1)%KANA50.length];return v?kanaVoice(s2):s2;}).join("");
+  key="ひとつ うしろの もじに ずらしてある（あ→い、い→う）。にごりは そのまま";
+ }
+ var ch=[w];var g=0;while(ch.length<4&&g<50){g++;var o=CIPHER_WORDS[ri(0,CIPHER_WORDS.length-1)][0];if(ch.indexOf(o)<0)ch.push(o);}
+ ch.sort(function(){return Math.random()-.5;});
+ return {type:"cipher",word:w,code:code,key:key,choices:ch};
+}
 var STORY=[
-{t:"ふしぎな もりの とびら",bg:"forest",
- lock:"もりの とびらの ばんごう",ans:"352",
- sc:[
-  {tx:"きみは たんけんか。もりの おくに、ばんごうの ついた とびらを 見つけた。",art:function(){return [A.tree(50),A.tree(250),A.door(150,"plain"),A.kid(90,150)].join("");},hint:null},
-  {tx:"とびらの よこの かんばん。「あかい きの かず が 1つめ」",art:function(){return [A.board(60),C(A.tree(150,"#e2564a")),C(A.tree(200,"#e2564a")),C(A.tree(250,"#e2564a")),A.kid(60,150)].join("");},hint:"1つめ ＝ あかい きの かず"},
-  {tx:"こだぬきが あらわれた。「いけの さかなを かぞえると いいよ」",art:function(){return [A.lake(160),rep(function(x,y){return A.fish(x,y);},5,112,24,128),A.kid(40,150),A.tanuki(260,150)].join("");},hint:"2つめ ＝ いけの さかなの かず"},
-  {tx:"きの うえで とりが ないている。「3つめは わたしたちの かず よ」",art:function(){return [A.tree(80),A.tree(220),rep(function(x,y){return A.bird(x,y);},2,110,80,50),A.kid(150,150)].join("");},hint:"3つめ ＝ とりの かず"},
-  {tx:"3つの かずが そろった。とびらの ばんごうを 入れよう。",art:function(){return [A.door(150,"plain"),A.kid(90,150),A.tanuki(210,150),A.glow(150,70)].join("");},hint:null}],
- end:"とびらが ひらいた！ おくには ひかる たまが あった。",
- endArt:function(){return [A.door(150,"cool"),A.glow(150,96),A.box(218,118),A.kid(82,150),A.tanuki(262,150)].join("");}},
-
-{t:"やまの こおりの どうくつ",bg:"mountain",
- lock:"どうくつの かぎの ばんごう",ans:"426",
- sc:[
-  {tx:"やまを のぼると、かぎの かかった どうくつが あった。",art:function(){return [A.cave(150,2),A.kid(80,150),A.tanuki(220,150)].join("");},hint:null},
-  {tx:"どうくつの つららを かぞえる。「1つめは この かず」",art:function(){return [A.cave(150,0),rep(function(x,y){return A.icicle(x,y);},4,118,22,92),A.kid(60,150)].join("");},hint:"1つめ ＝ つららの かず"},
-  {tx:"みちに おおきな いわが ころがっている。",art:function(){return [C(A.rock(100)),C(A.rock(200)),A.kid(150,150),A.tanuki(60,150)].join("");},hint:"2つめ ＝ いわの かず"},
-  {tx:"そらを 見あげると、とりの むれ。「3つめは あの かず」",art:function(){return [rep(function(x,y){return A.bird(x,y);},6,50,42,44),A.kid(150,150)].join("");},hint:"3つめ ＝ とりの かず"},
-  {tx:"かぎあなに ばんごうを 入れよう。",art:function(){return [A.cave(150,2),A.key(140,74),A.kid(90,150),A.tanuki(210,150)].join("");},hint:null}],
- end:"かぎが まわった！ どうくつの おくで こおりの けっしょうを てにいれた。",
- endArt:function(){return [A.cave(150,2),A.glow(150,105),A.key(150,70),A.kid(80,150),A.tanuki(220,150)].join("");}},
-
-{t:"うみべの とうだい",bg:"beach",
- lock:"とうだいの スイッチの ばんごう",ans:"531",
- sc:[
-  {tx:"とうだいの あかりが きえている。まちの ひとが こまっていた。",art:function(){return [A.lighthouse(230,false),A.kid(80,150),A.man(140,150)].join("");},hint:null},
-  {tx:"はまべの かいがらを かぞえる。「1つめは この かず だよ」",art:function(){return [rep(function(x,y){return A.shell(x,y,"#fff",8);},5,60,48,148),A.man(250,150),A.kid(30,150)].join("");},hint:"1つめ ＝ かいがらの かず"},
-  {tx:"かもめが とんでいる。「2つめは かもめの かず」",art:function(){return [rep(function(x,y){return A.gull(x,y);},3,90,60,44),A.kid(150,150)].join("");},hint:"2つめ ＝ かもめの かず"},
-  {tx:"みなとに ふねが とまっている。",art:function(){return [C(A.boat(150)),A.kid(60,150),A.man(240,150)].join("");},hint:"3つめ ＝ ふねの かず"},
-  {tx:"とうだいの スイッチに ばんごうを 入れよう。",art:function(){return [A.lighthouse(150,false),A.kid(80,150),A.man(220,150)].join("");},hint:null}],
- end:"とうだいが ぱっと ついた！ まちの ひとが おおよろこび。",
- endArt:function(){return [A.lighthouse(150,true),A.kid(70,150),A.man(230,150),A.gull(60,40),A.gull(240,36)].join("");}},
-
-{t:"そらの しまの かぜの とびら",bg:"sky",
- lock:"かぜの とびらの ばんごう",ans:"437",
- sc:[
-  {tx:"ふねで そらの しまへ。3つの とびらが ならんでいる。",art:function(){return [A.door(70,"plain"),A.door(150,"plain"),A.door(230,"plain"),A.kid(110,152)].join("");},hint:null},
-  {tx:"くもを かぞえる。「1つめは くもの かず」",art:function(){return [C(A.cloud(50,50,20)),C(A.cloud(115,40,18)),C(A.cloud(190,54,22)),C(A.cloud(255,42,17)),A.kid(150,152)].join("");},hint:"1つめ ＝ くもの かず"},
-  {tx:"とびらは ぜんぶで いくつ？",art:function(){return [C(A.door(70,"hot")),C(A.door(150,"cool")),C(A.door(230,"none")),A.tanuki(190,150)].join("");},hint:"2つめ ＝ とびらの かず"},
-  {tx:"よるに なった。ほしが 見える。「3つめは ほしの かず」",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},7,40,36,40),A.kid(150,152)].join("");},hint:"3つめ ＝ ほしの かず"},
-  {tx:"すずしい かぜの とびらに ばんごうを 入れよう。",art:function(){return [A.wind(),A.door(150,"cool"),A.kid(90,152)].join("");},hint:null}],
- end:"とびらが ひらき、むこうに ほしぞらが ひろがった。",
- endArt:function(){return [A.dark(),A.door(150,"cool"),A.star(60,40,9,"#fff"),A.star(240,34,10,"#fff"),A.star(200,74,6,"#fff"),A.kid(90,152)].join("");}},
-
-{t:"ほしの さばくの いせき",bg:"desert",
- lock:"いせきの とびらの ばんごう",ans:"681",
- sc:[
-  {tx:"よるの さばく。すなの なかに、ふるい いせきが あった。",art:function(){return [A.hill(150,70),A.door(150,"plain"),A.star(50,30,7,"#fff"),A.star(250,26,8,"#fff"),A.kid(80,150)].join("");},hint:null},
-  {tx:"サボテンを かぞえる。「1つめは この かず」",art:function(){return [rep(function(x,y){return A.cactus(x,y);},6,50,44,120),A.kid(150,150)].join("");},hint:"1つめ ＝ サボテンの かず"},
-  {tx:"そらを 見あげる。ほしが かがやいている。",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},8,30,34,38),A.kid(150,150)].join("");},hint:"2つめ ＝ ほしの かず"},
-  {tx:"らくだが ゆっくり あるいてきた。",art:function(){return [C(A.camel(160,130)),A.kid(60,150),A.star(240,30,7,"#fff")].join("");},hint:"3つめ ＝ らくだの かず"},
-  {tx:"いせきの とびらに ばんごうを 入れよう。",art:function(){return [A.hill(150,70),A.door(150,"plain"),A.kid(90,150),A.camel(230,140)].join("");},hint:null}],
- end:"とびらが ひらき、なかから ほしの ちずが 出てきた。",
- endArt:function(){return [A.hill(150,70),A.door(150,"cool"),A.scroll(218,104),A.glow(218,104),A.kid(82,150),A.tanuki(262,150)].join("");}},
-
-{t:"ゆめの おしろ",bg:"castle",
- lock:"おしろの もんの ばんごう",ans:"423",
- sc:[
-  {tx:"たびの さいご。おおきな おしろの もんの まえに ついた。",art:function(){return [A.castle(150),A.kid(110,150)].join("");},hint:null},
-  {tx:"おしろの まどを かぞえる。「1つめは まどの かず」",art:function(){return [A.castle(150),C(A.win(110,84)),C(A.win(140,84)),C(A.win(170,84)),C(A.win(200,84)),A.kid(110,150)].join("");},hint:"1つめ ＝ まどの かず"},
-  {tx:"とうの うえに はたが たっている。",art:function(){return [A.castle(150),C(A.flag(100,34)),C(A.flag(200,34)),A.kid(110,150)].join("");},hint:"2つめ ＝ はたの かず"},
-  {tx:"もんばんが 3にん ならんでいる。「3つめは わたしたちの かず だ」",art:function(){return [A.castle(150),C(A.guard(90,150)),C(A.guard(150,150)),C(A.guard(210,150)),A.kid(40,150)].join("");},hint:"3つめ ＝ もんばんの かず"},
-  {tx:"さあ、さいごの ばんごうを 入れよう。",art:function(){return [A.castle(150),A.guard(190,150),A.kid(110,150),A.tanuki(70,150)].join("");},hint:null}],
- end:"もんが ひらいた！ おうさまが きみの がんばりを たたえてくれた。",
- endArt:function(){return [A.castle(150),A.win(110,84),A.win(140,84),A.win(170,84),A.win(200,84),A.star(150,26,13,"#ffe27a"),A.kid(110,150),A.tanuki(70,150),A.guard(190,150)].join("");}}
+{t:"きえた たからばこ",bg:"forest",kind:"suspect",
+ sc:[{tx:"もりの ひろばで じけん だ。こだぬきの たからばこが、だれかに もちさられた！ たんていの きみが よばれた。",art:function(){return [A.tree(50),A.tree(250),A.tanuki(150,150),A.kid(80,150)].join("");},clue:false},
+  {tx:"じめんに あしあとが のこっている。こだぬき「はんにんは ここを とおったんだ！」",art:function(){return [A.tree(50),A.tree(250,"#2f8a3a"),A.kid(110,150),A.tanuki(200,150),A.glow(160,120)].join("");},clue:true},
+  {tx:"きの えだに、なにかが ひっかかっている。きみは それを そっと てにとった。",art:function(){return [A.tree(90),A.tree(220),A.kid(150,150),A.star(90,60,7,"#ffe27a")].join("");},clue:true},
+  {tx:"いけの そばで、とりが はなしかけてきた。「わたし、はんにんを 見たわ」",art:function(){return [A.lake(160),A.bird(150,50),A.kid(60,150),A.tanuki(250,150)].join("");},clue:true},
+  {tx:"てがかりが そろった。はんにんは、この なかに いる！",art:function(){return [A.tree(30),A.tree(270),A.kid(90,150),A.tanuki(210,150),A.glow(150,80)].join("");},clue:false}],
+ end:"「きみが はんにんだ！」 たからばこは ぶじに もどってきた。こだぬきは おおよろこび。"},
+{t:"かきかえられた かべの え",bg:"mountain",kind:"diff",
+ sc:[{tx:"やまの どうくつには、ふるい かべの えが ある。ところが だれかが えを かきかえた！",art:function(){return [A.cave(150,2),A.kid(80,150),A.tanuki(220,150)].join("");},clue:false},
+  {tx:"どうくつの ばんにんが いう。「もとの えは、この かみに うつしてある」",art:function(){return [A.board(80),A.kid(160,150),A.tanuki(210,150)].join("");},clue:true},
+  {tx:"こだぬき「どこが ちがうんだろう。じっくり くらべて みようよ」",art:function(){return [A.rock(100),A.rock(200),A.kid(150,150),A.tanuki(60,150)].join("");},clue:true},
+  {tx:"つららの おくで、ふでが みつかった。まだ えのぐが ぬれている。",art:function(){return [A.cave(150,0),A.icicle(140,92),A.icicle(162,92),A.kid(60,150)].join("");},clue:true},
+  {tx:"2まいの えを ならべた。ちがう ところを ぜんぶ みつけよう！",art:function(){return [A.cave(150,2),A.kid(90,150),A.tanuki(210,150)].join("");},clue:false}],
+ end:"ちがいを ぜんぶ みつけた！ ばんにんは「たんていの め は すごいな」と かんしんした。"},
+{t:"とうだいの あかりを けしたのは だれ？",bg:"beach",kind:"suspect",
+ sc:[{tx:"よる、とうだいの あかりが きゅうに きえた。ふねが みなとに もどれない！",art:function(){return [A.lighthouse(230,false),A.kid(80,150),A.man(140,150)].join("");},clue:false},
+  {tx:"とうだいの かいだんに、ぬれた あしあと。ふねの おじさん「さっき だれかが のぼっていったぞ」",art:function(){return [A.lighthouse(150,false),A.kid(70,150),A.man(230,150)].join("");},clue:true},
+  {tx:"かいだんの とちゅうに、おとしものが おちていた。",art:function(){return [A.shell(120,150,"#fff",9),A.kid(60,150),A.glow(120,150)].join("");},clue:true},
+  {tx:"かもめが おしえてくれた。「あかりを けした やつを、うえから 見ていたよ」",art:function(){return [A.gull(150,44),A.gull(190,52),A.kid(150,150)].join("");},clue:true},
+  {tx:"はまべに あつまった みんなの なかに、はんにんが いる。",art:function(){return [A.lighthouse(150,false),A.kid(80,150),A.man(220,150)].join("");},clue:false}],
+ end:"はんにんは「くらいのが こわくて…」と しろじょう。あかりは また ついて、ふねは ぶじに もどった。"},
+{t:"かぜの とびらの あんごう",bg:"sky",kind:"cipher",
+ sc:[{tx:"そらの しまの とびらには、ふしぎな もじが かいてある。あんごうだ！",art:function(){return [A.door(70,"plain"),A.door(150,"plain"),A.door(230,"plain"),A.kid(110,152)].join("");},clue:false},
+  {tx:"くもの うえで、ふるい てちょうを ひろった。あんごうの かぎが かいてあるようだ。",art:function(){return [A.cloud(60,50,20),A.cloud(230,54,22),A.scroll(150,110),A.kid(80,152)].join("");},clue:true},
+  {tx:"こだぬき「あんごうって、もじを べつの もじや かずに おきかえた ものなんだよ」",art:function(){return [A.door(150,"plain"),A.tanuki(200,150),A.kid(100,152)].join("");},clue:true},
+  {tx:"よるに なった。ほしが てちょうの もじを てらしている。",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},5,60,45,40),A.kid(150,152)].join("");},clue:true},
+  {tx:"かぎを つかって、とびらの あんごうを とこう！",art:function(){return [A.wind(),A.door(150,"cool"),A.kid(90,152)].join("");},clue:false}],
+ end:"あんごうが とけて、とびらが ひらいた。むこうには ほしぞらが ひろがっていた。"},
+{t:"すりかえられた ほしの ちず",bg:"desert",kind:"diff",
+ sc:[{tx:"さばくの いせきで ほしの ちずを 見つけた。でも らくだが いう。「これは にせものだ」",art:function(){return [A.hill(150,70),A.door(150,"plain"),A.star(50,30,7,"#fff"),A.kid(80,150),A.camel(230,140)].join("");},clue:false},
+  {tx:"ほんものの ちずは、いせきの かべに ほられている。にせものと どこが ちがう？",art:function(){return [A.hill(150,70),A.scroll(150,100),A.kid(80,150)].join("");},clue:true},
+  {tx:"こだぬき「にせものを つくった ひとは、いそいで かいたんだね。ところどころ ちがうよ」",art:function(){return [A.cactus(60,120),A.cactus(240,120),A.kid(150,150),A.tanuki(200,150)].join("");},clue:true},
+  {tx:"よぞらの ほしと ちずの ほしを、ひとつずつ くらべてみよう。",art:function(){return [A.dark(),rep(function(x,y){return A.star(x,y,7,"#fff");},6,40,44,38),A.kid(150,150)].join("");},clue:true},
+  {tx:"2まいの ちずを ならべた。ちがう ところを みつけて、ほんものを 見きわめよう！",art:function(){return [A.hill(150,70),A.scroll(110,100),A.scroll(190,100),A.kid(80,150),A.camel(230,140)].join("");},clue:false}],
+ end:"ちがいを ぜんぶ 見やぶった！ ほんものの ちずが しめす さきに、おしろが 見えてきた。"},
+{t:"おしろの おうかんを ぬすんだのは？",bg:"castle",kind:"suspect",
+ sc:[{tx:"おしろで おうかんが きえた！ おうさまは「たんていよ、はんにんを つかまえてくれ」",art:function(){return [A.castle(150),A.guard(190,150),A.kid(110,150)].join("");},clue:false},
+  {tx:"おうかんの おいてあった だいの うえに、はんにんの けが おちていた。",art:function(){return [A.castle(150),A.win(140,84),A.win(170,84),A.kid(110,150),A.glow(150,120)].join("");},clue:true},
+  {tx:"もんばんが いう。「よなか、へんな おとが した。でも すがたは 見ていない」",art:function(){return [A.castle(150),A.guard(200,150),A.kid(90,150)].join("");},clue:true},
+  {tx:"まどの そとの きに、ひっかかった ものが。はんにんは まどから にげたのか。",art:function(){return [A.castle(150),A.tree(40,"#1e3a54"),A.kid(110,150),A.tanuki(60,150)].join("");},clue:true},
+  {tx:"おしろの ひろまに ようぎしゃを あつめた。さあ、すいりを はじめよう。",art:function(){return [A.castle(150),A.guard(190,150),A.kid(110,150),A.tanuki(70,150)].join("");},clue:false}],
+ end:"「はんにんは あなたです！」 おうかんは もどり、おうさまは きみに「めいたんてい」の しょうごうを おくった。"}
 ];
 function storyArt(ch,sc){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[sc].art()]);}
-/* 学年に あわせた なぞときの むずかしさ：1=かぞえる 2=たす・ひく 3=かける・くみあわせ */
+function storyEndArt(ch){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[4].art(),A.star(150,26,12,"#ffe27a")]);}
+/* 章が はじまるときに 事件を つくる */
+function storyCase(st,chI,tier){
+ if(st.caseCh===chI&&st.caseTier===tier&&st.caseObj)return st.caseObj;
+ var ch=STORY[chI%STORY.length],c;
+ if(ch.kind==="suspect")c=makeSuspectCase(tier);
+ else if(ch.kind==="diff")c=makeDiffCase(ch.bg,tier);
+ else c=makeCipherCase(tier);
+ st.caseObj=c;st.caseCh=chI;st.caseTier=tier;
+ return c;
+}
+/* 場面ごとの てがかり文 */
+function storyClue(st,chI,scI,tier){
+ var ch=STORY[chI%STORY.length];
+ if(!ch.sc[scI].clue)return null;
+ var c=storyCase(st,chI,tier);
+ var idx=ch.sc.slice(0,scI+1).filter(function(x){return x.clue;}).length-1;
+ if(c.type==="suspect")return c.clues[idx]||"てがかりは あと すこし。ようぎしゃを よく 見よう";
+ if(c.type==="diff")return ["ちがう ところは "+c.diffs.length+"つ ある","いろが ちがう ものや、なくなった ものを さがそう","ちがう ところを タップで しるしを つけよう"][idx];
+ return ["かぎ："+c.key,"あんごう："+c.code,"かぎを 見ながら、1もじずつ もどしてみよう"][idx];
+}
+
+/* 学年に あわせた むずかしさ：1=かんたん 2=ふつう 3=むずかしい */
 function riddleTier(){
  var k=P();if(!k)return 1;
  var lv=STEPS[k.stepIdx]?STEPS[k.stepIdx].lv.replace("国",""):"6A";
@@ -3038,44 +3141,6 @@ function riddleTier(){
  if(t2.indexOf(lv)>=0)return 2;
  return 3;
 }
-function chObjs(ch){return ch.sc.filter(function(x){return x.hint;}).map(function(x){return x.hint.replace(/^\dつめ ＝ /,"").replace(/の かず$/,"");});}
-/* 3けたの ばんごうと、その 求め方を つくる（章ごとに 決まる） */
-function riddleCode(ch,tier){
- var o=chObjs(ch),c=String(ch.ans).split("").map(Number);
- var A=o[0],B=o[1],C=o[2],a=c[0],b=c[1],d=c[2];
- var rules=[],digits=[];
- if(tier===1){
-  rules=["1つめ ＝ "+A+"の かず","2つめ ＝ "+B+"の かず","3つめ ＝ "+C+"の かず"];digits=[a,b,d];
- }else if(tier===2){
-  var cand=[
-   [A+"の かず ＋ "+B+"の かず",a+b],[B+"の かず ＋ "+C+"の かず",b+d],[A+"の かず ＋ "+C+"の かず",a+d],
-   [A+"の かず − "+C+"の かず",a-d],[B+"の かず − "+A+"の かず",b-a],[B+"の かず − "+C+"の かず",b-d],[A+"の かず − "+B+"の かず",a-b],
-   [C+"の かず × 2",d*2],[A+"の かず × 2",a*2],[B+"の かず × 2",b*2]];
-  cand=cand.filter(function(x){return x[1]>=0&&x[1]<=9;});
-  for(var i=0;i<3;i++){var x=cand[i%cand.length];rules.push((i+1)+"つめ ＝ "+x[0]);digits.push(x[1]);}
- }else{
-  var cand3=[
-   [A+"の かず × "+B+"の かず の 一のくらい",(a*b)%10],
-   [A+"の かず ＋ "+B+"の かず ＋ "+C+"の かず の 一のくらい",(a+b+d)%10],
-   [B+"の かず × "+C+"の かず − "+A+"の かず",b*d-a],
-   ["（"+A+"の かず ＋ "+C+"の かず）× "+B+"の かず の 一のくらい",((a+d)*b)%10],
-   [A+"の かず × "+C+"の かず の 十のくらい",Math.floor((a*d)/10)],
-   [B+"の かず × 3 の 一のくらい",(b*3)%10]];
-  cand3=cand3.filter(function(x){return x[1]>=0&&x[1]<=9;});
-  for(var j=0;j<3;j++){var y=cand3[j%cand3.length];rules.push((j+1)+"つめ ＝ "+y[0]);digits.push(y[1]);}
- }
- return {rules:rules,code:digits.join(""),tier:tier};
-}
-function who(tx){
- if(tx.indexOf("こだぬき")>=0&&tx.indexOf("「")>=0)return "こだぬき";
- if(tx.indexOf("おじさん")>=0||tx.indexOf("まちの ひと")>=0)return "ふねの おじさん";
- if(tx.indexOf("もんばん")>=0&&tx.indexOf("「")>=0)return "もんばん";
- if(tx.indexOf("とり")>=0&&tx.indexOf("「")>=0)return "とり";
- if(tx.indexOf("「")>=0)return "こだぬき";
- return "";
-}
-function storyEndArt(ch){var c=STORY[ch%STORY.length];return scene(c.bg,[c.endArt()]);}
-
 /* ===== すごろく ===== */
 var BOARD_N=30;
 function tileType(i){
@@ -4796,8 +4861,8 @@ function renderMode(k){
   document.getElementById("mc-open").onclick=function(){renderBoard();show("s-board");};
  }else{
   var st=k.story,ch=STORY[st.ch%STORY.length];
-  c.innerHTML='<div class="mrow1"><span><b>だい '+(st.ch%STORY.length+1)+' しょう</b>　'+ch.t+'　<span style="color:var(--sumi)">'+(st.sc>=5?"なぞとき！":st.sc+" / 5")+'</span></span>'+
-   '<button class="mini" id="mc-open">'+(st.sc>=5?"とく":"よむ")+'</button></div>';
+  c.innerHTML='<div class="mrow1"><span><b>だい '+(st.ch%STORY.length+1)+' しょう</b>　'+ch.t+'　<span style="color:var(--sumi)">'+(st.sc>=5?"すいり！":st.sc+" / 5")+'</span></span>'+
+   '<button class="mini" id="mc-open">'+(st.sc>=5?"すいり":"よむ")+'</button></div>';
   document.getElementById("mc-open").onclick=function(){if(st.sc>=5)storyRiddle();else{renderStory();show("s-story");}};
  }
 }
@@ -4938,7 +5003,7 @@ function renderStory(){
  document.getElementById("st-h").textContent="ぼうけん";
  document.getElementById("st-ch").textContent="だい "+(chI+1)+" しょう　"+ch.t+(st.loop?"（"+(st.loop+1)+"しゅうめ）":"");
  var sc='<div class="sart">'+storyArt(chI,Math.max(0,Math.min(st.sc,5)-1))+'</div>';
- sc+='<div class="note" style="margin-top:8px">'+(st.sc>=5?"ヒントが そろった。なぞを とこう。":(st.sc?"おはなしは "+st.sc+" / 5 まで すすんだ。":"プリントを 1まい おえると おはなしが はじまる。"))+'</div>';
+ sc+='<div class="note" style="margin-top:8px">'+(st.sc>=5?"てがかりが そろった。すいりを はじめよう。":(st.sc?"おはなしは "+st.sc+" / 5 まで すすんだ。":"プリントを 1まい おえると じけんが はじまる。"))+'</div>';
  if(st.sc>0)sc+='<button class="btn l" id="st-reread" style="margin-top:10px">いままでの おはなしを よみかえす</button>';
  document.getElementById("st-scenes").innerHTML=sc;
  var rr=document.getElementById("st-reread");
@@ -5004,12 +5069,11 @@ function vnOpen(chI,scI,isEnd,cb){
  document.getElementById("vn-btns").classList.add("hide");
  document.getElementById("vn-nx").classList.remove("hide");
  vnType(text,function(){
-  var h=(!isEnd&&ch.sc[scI].hint)?ch.sc[scI].hint:null;
-  if(h&&riddleTier()>=2)h=h.replace(/^\dつめ ＝ /,"")+"を かぞえて おぼえておこう";
+  var h=isEnd?null:storyClue(P().story,chI%STORY.length,scI,riddleTier());
   if(h){var he=document.getElementById("vn-hint");he.textContent=h;he.classList.remove("hide");}
   document.getElementById("vn-nx").classList.add("hide");
   document.getElementById("vn-btns").classList.remove("hide");
-  document.getElementById("vn-go").textContent=isEnd?"つぎの しょうへ":((scI>=4)?"なぞを とく":"つぎへ");
+  document.getElementById("vn-go").textContent=isEnd?"つぎの しょうへ":((scI>=4)?"すいりを はじめる":"つぎへ");
  });
  show("s-vn");
 }
@@ -5126,8 +5190,10 @@ function modeAfterPrint(k){
  }else if(m==="story"){
   var st=k.story,ch=STORY[st.ch%STORY.length];
   if(st.sc>=5)return;
-  var scene=ch.sc[st.sc];st.sc++;
-  if(scene.hint&&st.hints.indexOf(scene.hint)<0)st.hints.push(scene.hint);
+  var scene=ch.sc[st.sc];
+  var clueTx=storyClue(st,st.ch%STORY.length,st.sc,riddleTier());
+  st.sc++;
+  if(clueTx&&st.hints.indexOf(clueTx)<0)st.hints.push(clueTx);
   save();
   var scIdx=st.sc-1,chIdx=st.ch%STORY.length;
   pendingEv=function(){
@@ -5140,75 +5206,83 @@ function modeAfterPrint(k){
   };
  }
 }
-var lockIn="",lockCh=0,lockCounts=[],lockRC=null;
-function lockDraw(){
- var d=document.getElementById("lk-d");
- if(!d)return;
- d.innerHTML=[0,1,2].map(function(i){
-  return '<span class="lkd'+(i===lockIn.length?" act":"")+'">'+(lockIn[i]||"")+'</span>';
- }).join("");
-}
+var lockCh=0,lockCase=null;
 function storyRiddle(){
- var k=P(),st=k.story,ch=STORY[st.ch%STORY.length];
- lockCh=st.ch%STORY.length;lockIn="";lockCounts=[];
- lockRC=riddleCode(ch,riddleTier());
- document.getElementById("lk-h").textContent=ch.lock;
- document.getElementById("lk-msg").innerHTML=(lockRC.tier===1
-  ?"絵の なかの ものを タップして かぞえよう。3つの かずを ならべると ばんごうに なる。"
-  :(lockRC.tier===2?"絵の ものを かぞえて、下の 計算で 3つの 数字を 出そう。":"絵の ものを かぞえて、下の 計算で 3つの 数字を 出そう。「一のくらい」は 答えの いちばん右の 数字。"))+
-  '<div class="rules">'+lockRC.rules.map(function(r){return "<div>"+r+"</div>";}).join("")+'</div>';
- var cards="",hi=0;
- ch.sc.forEach(function(sc,i){
-  if(!sc.hint)return;
-  var idx=hi++;
-  cards+='<div class="cardq" data-card="'+idx+'"><div class="hd2"><span>'+sc.hint.replace(/^\dつめ ＝ /,"")+'</span><b id="lk-c'+idx+'">0</b></div>'+
-   storyArt(lockCh,i).replace('style="width:100%;height:auto;display:block;border-radius:12px"','')+
-   '<div class="tip">ひとつずつ タップ。もういちど おすと とりけし</div></div>';
-  lockCounts.push(0);
- });
- document.getElementById("lk-cards").innerHTML=cards;
- lockDraw();
- var cs=document.querySelectorAll("#lk-cards .cnt");
- for(var i=0;i<cs.length;i++)(function(el){
-  el.addEventListener("click",function(ev){
-   ev.stopPropagation();
-   var hit=el.classList.toggle("hit");
-   var card=el.closest("[data-card]"),ci=Number(card.getAttribute("data-card"));
-   lockCounts[ci]+=hit?1:-1;
-   document.getElementById("lk-c"+ci).textContent=lockCounts[ci];
-   if(S.sound){try{tone({f:hit?880:440,dur:.06,vol:.08,wave:"sine"});}catch(e){}}
-  });
- })(cs[i]);
+ var k=P(),st=k.story;
+ lockCh=st.ch%STORY.length;
+ var ch=STORY[lockCh],tier=riddleTier();
+ lockCase=storyCase(st,lockCh,tier);save();
+ document.getElementById("lk-h").textContent=ch.t;
+ var pad=document.getElementById("lk-pad"),dd=document.getElementById("lk-d");
+ pad.classList.add("hide");dd.classList.add("hide");
+ var cards=document.getElementById("lk-cards"),html="";
+ if(lockCase.type==="suspect"){
+  document.getElementById("lk-msg").innerHTML="てがかりに ぜんぶ あてはまる ようぎしゃを タップ！"+
+   '<div class="rules">'+lockCase.clues.map(function(c){return "<div>🔎 "+c+"</div>";}).join("")+'</div>';
+  html='<div class="susgrid">'+lockCase.suspects.map(function(id){return '<button class="sus" data-s="'+id+'">'+charSVG(id,"",0)+'<span>'+cname(id)+'</span></button>';}).join("")+'</div>';
+  document.getElementById("lk-msg2").textContent="ようぎしゃは "+lockCase.suspects.length+"人";
+ }else if(lockCase.type==="diff"){
+  lockCase.found=[];
+  document.getElementById("lk-msg").innerHTML="上が もとの え、下が かきかえられた え。<b>下の え</b>で ちがう ところを "+lockCase.diffs.length+"つ タップ！";
+  html='<div class="cardq"><div class="hd2"><span>もとの え</span></div>'+diffScene(lockCase,false).replace('style="width:100%;height:auto;display:block;border-radius:12px"','')+'</div>'+
+   '<div class="cardq" id="lk-diff"><div class="hd2"><span>かきかえられた え</span><b id="lk-fc">0 / '+lockCase.diffs.length+'</b></div>'+
+   diffScene(lockCase,true).replace('style="width:100%;height:auto;display:block;border-radius:12px"','id="lk-dsvg"')+'</div>';
+  document.getElementById("lk-msg2").textContent="ちがう ところを ぜんぶ 見つけると クリア";
+ }else{
+  document.getElementById("lk-msg").innerHTML="かぎを つかって あんごうを とこう。"+
+   '<div class="rules"><div>🔑 '+lockCase.key+'</div><div style="font-size:22px;letter-spacing:.06em">'+lockCase.code+'</div></div>';
+  html='<div class="opts" style="margin:0 12px">'+lockCase.choices.map(function(c,i){return '<button data-c="'+i+'"><span style="font-size:18px;font-weight:700">'+c+'</span></button>';}).join("")+'</div>';
+  document.getElementById("lk-msg2").textContent="あんごうの こたえを えらぼう";
+ }
+ cards.innerHTML=html;
  show("s-lock");
+ if(lockCase.type==="diff"){
+  var svg=document.getElementById("lk-dsvg");
+  svg.addEventListener("click",function(ev){
+   var r=svg.getBoundingClientRect();
+   var x=(ev.clientX-r.left)*300/r.width,y=(ev.clientY-r.top)*160/r.height;
+   var hit=-1;
+   lockCase.diffs.forEach(function(d,i){if(lockCase.found.indexOf(i)>=0)return;var dx=x-d[4],dy=y-d[5];if(dx*dx+dy*dy<26*26)hit=i;});
+   if(hit<0){beep("ng");return;}
+   lockCase.found.push(hit);beep("ok");
+   var d2=lockCase.diffs[hit];
+   svg.insertAdjacentHTML("beforeend",'<circle cx="'+d2[4]+'" cy="'+d2[5]+'" r="20" fill="none" stroke="#ff4d4d" stroke-width="4"/>');
+   document.getElementById("lk-fc").textContent=lockCase.found.length+" / "+lockCase.diffs.length;
+   if(lockCase.found.length>=lockCase.diffs.length)setTimeout(riddleClear,500);
+  });
+ }
+}
+function riddleClear(){
+ var k=P(),st=k.story;
+ k.encNext=2;
+ st.ch++;st.sc=0;st.hints=[];st.caseObj=null;
+ if(st.ch%STORY.length===0)st.loop++;
+ save();beep("clear");
+ vnOpen(lockCh,4,true,function(){
+  var a=afterEv;afterEv=null;
+  renderHome();show("s-home");
+  evShow("じけん かいけつ！","<div class='note'>つぎの プリントで、レアな キャラが かならず あらわれる！</div>",null,null);
+ });
 }
 document.getElementById("lk-bk").addEventListener("click",function(){renderHome();show("s-home");});
-document.getElementById("lk-pad").addEventListener("click",function(e){
- var b=e.target.closest("[data-l]");if(!b)return;
- var v=b.getAttribute("data-l");
- var k=P(),st=k.story,ch=STORY[lockCh];
- if(v==="del"){lockIn=lockIn.slice(0,-1);lockDraw();return;}
- if(v==="ok"){
-  if(lockIn.length<3)return;
-  if(lockIn===(lockRC?lockRC.code:ch.ans)){
-   k.encNext=2;
-   st.ch++;st.sc=0;st.hints=[];
-   if(st.ch%STORY.length===0)st.loop++;
-   save();beep("clear");
-   vnOpen(lockCh,4,true,function(){
-    var a=afterEv;afterEv=null;
-    renderHome();show("s-home");
-    evShow("しょう クリア！","<div class='note'>つぎの プリントで、レアな キャラが かならず あらわれる！</div>",null,null);
-   });
-  }else{
-   beep("ng");
-   var dd=document.getElementById("lk-d");
-   dd.classList.add("ng");setTimeout(function(){dd.classList.remove("ng");},450);
-   lockIn="";lockDraw();
-   document.getElementById("lk-msg2").textContent="ちがうみたい。もういちど かぞえてみよう";
+document.getElementById("lk-cards").addEventListener("click",function(e){
+ if(!lockCase)return;
+ var b=e.target.closest("[data-s]");
+ if(b&&lockCase.type==="suspect"){
+  var id=Number(b.getAttribute("data-s"));
+  if(id===lockCase.culprit){riddleClear();}
+  else{
+   beep("ng");b.classList.add("ng");setTimeout(function(){b.classList.remove("ng");},500);
+   document.getElementById("lk-msg2").textContent=cname(id)+"には アリバイが ある。てがかりを もういちど 見よう";
   }
   return;
  }
- if(lockIn.length<3){lockIn+=v;lockDraw();}
+ var c=e.target.closest("[data-c]");
+ if(c&&lockCase.type==="cipher"){
+  var i=Number(c.getAttribute("data-c"));
+  if(lockCase.choices[i]===lockCase.word)riddleClear();
+  else{beep("ng");document.getElementById("lk-msg2").textContent="ちがうみたい。かぎを 見て 1もじずつ たしかめよう";}
+ }
 });
 /* ---- ミニゲーム（3たく バブル） ---- */
 var gm=null;
