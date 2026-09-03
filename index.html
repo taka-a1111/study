@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03n / kumon_math_ver8.7 -->
+<!-- BUILD_TAG: 2026-09-03p / kumon_math_ver8.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -632,7 +632,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver8.7 / 2026-09-03n</div>
+  <div class="tiny">まいにち計算 ver8.8 / 2026-09-03p</div>
 </section>
 
 <!-- こども追加 -->
@@ -693,7 +693,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03n</div>
+  <div class="tiny">BUILD 2026-09-03p</div>
 </section>
 
 <!-- れいだい -->
@@ -1087,7 +1087,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver8.7 / BUILD 2026-09-03n</div>
+  <div class="tiny">kumon_math ver8.8 / BUILD 2026-09-03p</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1197,7 +1197,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03n";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03p";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2147,6 +2147,27 @@ document.getElementById("gate-pad").addEventListener("click",function(e){
  }
  if(gateIn.length>=(gateMode==="pin"?8:5))return;
  gateIn+=k;gateDraw();
+ /* 計算の答えが そろったら OK を押さなくても ひらく */
+ if(gateMode==="calc"&&Number(gateIn)===gateAns){
+  setTimeout(function(){
+   closeGate();
+   if(gateCb)gateCb();
+   if(!waOn())waSupported().then(function(ok){
+    if(ok)document.getElementById("st-biocard").classList.remove("hide");
+   });
+  },160);
+  return;
+ }
+ /* パスコードは 決めた けた数に なったら 自動で しらべる */
+ if(gateMode==="pin"&&S.pin&&S.pin.len&&gateIn.length===S.pin.len){
+  var tryIn2=gateIn;
+  pinHash(tryIn2,S.pin.s).then(function(h){
+   if(h===S.pin.h){closeGate();if(gateCb)gateCb();return;}
+   gateTry++;gateIn="";gateDraw();
+   if(gateTry>=5){closeGate();renderHome();show("s-home");}
+   else alert("ちがいます。のこり "+(5-gateTry)+"かい");
+  });
+ }
 });
 document.getElementById("gate-ng").addEventListener("click",function(){
  closeGate();renderHome();show("s-home");
@@ -5064,7 +5085,7 @@ document.getElementById("pin-set").addEventListener("click",function(){
  var r=crypto.getRandomValues(new Uint8Array(8));
  for(var i=0;i<r.length;i++)salt+=("0"+r[i].toString(16)).slice(-2);
  pinHash(a,salt).then(function(h){
-  S.pin={h:h,s:salt};save();
+  S.pin={h:h,s:salt,len:a.length};save();
   document.getElementById("pin-a").value="";document.getElementById("pin-b").value="";
   renderPin();
   alert("パスコードを 決めました。つぎから これで ひらきます。");
