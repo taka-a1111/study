@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04k / kumon_math_ver10.9 -->
+<!-- BUILD_TAG: 2026-09-04m / kumon_math_ver11.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -361,6 +361,14 @@ body.pen .pp{background-image:
 .pad .go{grid-column:span 2;background:var(--ai);color:#fff;border-color:var(--ai);font-family:var(--jp);font-size:19px;font-weight:700;white-space:nowrap;padding:0}
 .pad .go.rd{background:var(--mid);border-color:var(--mid)}
 .pad .vd{visibility:hidden}
+
+.rfs{padding:7px 12px;border:1px solid var(--ai);border-radius:999px;color:var(--ai);background:var(--ai-s);font-size:12.5px;font-weight:700;white-space:nowrap}
+.rfs:active{background:var(--ai);color:#fff}
+.rfs.busy{opacity:.5}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav) + 18px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:rgba(20,26,38,.94);color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;z-index:60;
+  animation:tin .25s ease-out;max-width:90vw;text-align:center}
+@keyframes tin{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 
 /* きろく：きょう（たたんだ状態が既定。タップで開く） */
 .today{display:block;width:100%;text-align:left;background:var(--ai);color:#fff;border-radius:14px;padding:10px 14px;margin-bottom:10px}
@@ -725,7 +733,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.9 / 2026-09-04k</div>
+  <div class="tiny">まいがく ver11.0 / 2026-09-04m</div>
 </section>
 
 <!-- こども追加 -->
@@ -787,7 +795,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04k</div>
+  <div class="tiny">BUILD 2026-09-04m</div>
 </section>
 
 <!-- れいだい -->
@@ -1033,7 +1041,8 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- きろく -->
 <section class="sc" id="s-rec">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいがく</span></button></div>
-  <div class="hd"><h2>きろく</h2><div class="sp"></div><span class="note" id="rc-who"></span></div>
+  <div class="hd"><h2>きろく</h2><div class="sp"></div><button class="rfs hide" id="rc-refresh">↻ さいしんに する</button></div>
+  <div class="note" id="rc-who" style="margin:-6px 0 8px"></div>
   <button class="today" id="rc-today">
     <div class="trow">
       <span class="tl1"><em>きょう</em><b id="rc-tn">0</b>まい</span>
@@ -1169,7 +1178,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
         <button class="btn l" id="sy-pull">クラウドの 記録を 取りこむ</button>
         <button class="btn q" id="sy-out2">ログアウト</button>
       </div>
-      <div class="note" style="padding-top:8px">自動で 同期しています。プリントを おえたとき、設定を かえたとき、アプリに もどってきたときに 保存・取りこみを おこないます（学習中は 取りこみません）。下の ボタンは うまくいかないときの ための ものです。</div>
+      <div class="note" style="padding-top:8px">自動で 同期しています。プリントを おえたとき・設定を かえたときに 保存し、アプリに もどってきたとき・1分ごと・きろく／マップ／ずかんを ひらいたときに 取りこみます（学習中は 取りこみません）。すぐに 見たいときは きろく画面の「↻ さいしんに する」を おしてください。</div>
     </div>
   </div>
   <div class="card">
@@ -1204,7 +1213,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.9 / BUILD 2026-09-04k</div>
+  <div class="tiny">kumon_math ver11.0 / BUILD 2026-09-04m</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1314,7 +1323,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04k";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04m";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2434,6 +2443,7 @@ document.getElementById("nav").addEventListener("click",function(e){
  if(id==="s-zukan")renderZukan();
  if(id==="s-rec")renderRec();
  show(id);
+ if(id==="s-rec"||id==="s-map"||id==="s-zukan")setTimeout(function(){autoPull(true);},50);
 });
 document.addEventListener("click",function(e){
  var lg=e.target.closest("[data-home]");
@@ -4679,13 +4689,36 @@ function scheduleSync(){
  },2500);
 }
 /* 学習していないときだけ、クラウドの変更を取りこむ */
-function autoPull(){
+function refreshCurrent(){
+ var on=document.querySelector(".sc.on");
+ if(!on)return;
+ var id=on.id;
+ if(id==="s-home")renderHome();
+ else if(id==="s-rec")renderRec();
+ else if(id==="s-map")renderMap();
+ else if(id==="s-zukan")renderZukan();
+ else if(id==="s-board")renderBoard();
+ else if(id==="s-story")renderStory();
+}
+function stamp(){ /* 記録の 新しさを 表す 印（変化の 検知に つかう） */
+ var t=0,n=0;
+ (S.kids||[]).forEach(function(k){n+=(k.history||[]).length;var h=k.history&&k.history.length?k.history[k.history.length-1].ts:0;if(h>t)t=h;});
+ return n+"_"+t;
+}
+function autoPull(silent){
  if(!auth||syncBusy()||document.hidden||!navigator.onLine)return;
- syncPull(function(ok){if(ok){markSynced();renderSyncUI();if(document.getElementById("s-home").classList.contains("on"))renderHome();}});
+ var before=stamp();
+ syncPull(function(ok){
+  if(!ok)return;
+  markSynced();renderSyncUI();
+  var changed=(stamp()!==before);
+  refreshCurrent();
+  if(changed&&!silent)toast("さいしんの きろくを とりこみました");
+ });
 }
 document.addEventListener("visibilitychange",function(){if(!document.hidden)setTimeout(autoPull,400);});
 window.addEventListener("online",function(){setTimeout(function(){autoPull();scheduleSync();},800);});
-setInterval(autoPull,5*60*1000);
+setInterval(function(){autoPull(true);},60*1000);
 function syncNow(cb){
  syncPull(function(){syncPush(function(ok){renderSyncUI();cb&&cb(ok);});});
 }
@@ -5579,8 +5612,18 @@ document.getElementById("lv-go").addEventListener("click",function(){
    10. きろく
    ============================================================ */
 var recShow=30,recFilter=null;
+function toast(msg){
+ var old=document.querySelector(".toast");if(old)old.remove();
+ var el=document.createElement("div");el.className="toast";el.textContent=msg;
+ document.body.appendChild(el);
+ setTimeout(function(){if(el.parentNode)el.remove();},2600);
+}
 function renderRec(){
  var k=P();
+ var rf=document.getElementById("rc-refresh");
+ rf.classList.toggle("hide",!auth);
+ var syncAt=Number(localStorage.getItem("kumon_synced")||0);
+ document.getElementById("rc-who").textContent=(k.name?k.name+"　":"")+(auth?("さいご とりこみ "+(syncAt?new Date(syncAt).toLocaleString("ja-JP",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"まだ")):"この たんまつだけの きろく");
  /* きょう */
  var tdKey=dk(),tl=k.history.filter(function(h){return h.d===tdKey;});
  var tn=tl.length,tp=tl.filter(function(h){return h.judge.indexOf("pass")===0;}).length;
@@ -5705,6 +5748,18 @@ document.getElementById("rc-certs").addEventListener("click",function(e){
  var k=P();certOpen(k.certs[Number(b.getAttribute("data-c"))]);
 });
 document.getElementById("rc-more").addEventListener("click",function(){recShow+=50;renderRec();});
+document.getElementById("rc-refresh").addEventListener("click",function(e){
+ e.stopPropagation();
+ var b=this;if(b.classList.contains("busy"))return;
+ b.classList.add("busy");b.textContent="とりこみ中…";
+ var before=stamp();
+ syncPull(function(ok){
+  b.classList.remove("busy");b.textContent="↻ さいしんに する";
+  if(!ok){toast("とりこめませんでした。つうしんを かくにん してください");return;}
+  markSynced();renderSyncUI();renderRec();
+  toast(stamp()!==before?"さいしんの きろくに なりました":"あたらしい きろくは ありません");
+ });
+});
 document.getElementById("rc-today").addEventListener("click",function(){
  var open=this.classList.toggle("open");
  document.getElementById("rc-tdet").classList.toggle("hide",!open);
