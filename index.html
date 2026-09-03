@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04j / kumon_math_ver10.8 -->
+<!-- BUILD_TAG: 2026-09-04k / kumon_math_ver10.9 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -725,7 +725,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.8 / 2026-09-04j</div>
+  <div class="tiny">まいがく ver10.9 / 2026-09-04k</div>
 </section>
 
 <!-- こども追加 -->
@@ -787,7 +787,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04j</div>
+  <div class="tiny">BUILD 2026-09-04k</div>
 </section>
 
 <!-- れいだい -->
@@ -1204,7 +1204,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.8 / BUILD 2026-09-04j</div>
+  <div class="tiny">kumon_math ver10.9 / BUILD 2026-09-04k</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1314,7 +1314,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04j";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04k";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -3152,6 +3152,18 @@ var STORY=[
  end:"「はんにんは あなたです！」 おうかんは もどり、おうさまは きみに「めいたんてい」の しょうごうを おくった。"}
 ];
 function storyArt(ch,sc){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[sc].art()]);}
+function who(tx){
+ if(tx.indexOf("こだぬき")>=0&&tx.indexOf("「")>=0)return "こだぬき";
+ if(tx.indexOf("おじさん")>=0||tx.indexOf("まちの ひと")>=0||tx.indexOf("ふねの")>=0)return "ふねの おじさん";
+ if(tx.indexOf("もんばん")>=0&&tx.indexOf("「")>=0)return "もんばん";
+ if(tx.indexOf("ばんにん")>=0&&tx.indexOf("「")>=0)return "どうくつの ばんにん";
+ if(tx.indexOf("おうさま")>=0&&tx.indexOf("「")>=0)return "おうさま";
+ if(tx.indexOf("とり")>=0&&tx.indexOf("「")>=0)return "とり";
+ if(tx.indexOf("らくだ")>=0&&tx.indexOf("「")>=0)return "らくだ";
+ if(tx.indexOf("かもめ")>=0&&tx.indexOf("「")>=0)return "かもめ";
+ if(tx.indexOf("「")>=0)return "こだぬき";
+ return "";
+}
 function storyEndArt(ch){var c=STORY[ch%STORY.length];return scene(c.bg,[c.sc[4].art(),A.star(150,26,12,"#ffe27a")]);}
 /* 章が はじまるときに 事件を つくる */
 function storyCase(st,chI,tier){
