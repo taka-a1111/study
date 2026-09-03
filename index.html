@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04p / kumon_math_ver11.2 -->
+<!-- BUILD_TAG: 2026-09-04q / kumon_math_ver11.3 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -747,7 +747,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver11.2 / 2026-09-04p</div>
+  <div class="tiny">まいがく ver11.3 / 2026-09-04q</div>
 </section>
 
 <!-- こども追加 -->
@@ -811,7 +811,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04p</div>
+  <div class="tiny">BUILD 2026-09-04q</div>
 </section>
 
 <!-- れいだい -->
@@ -1229,7 +1229,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver11.2 / BUILD 2026-09-04p</div>
+  <div class="tiny">kumon_math ver11.3 / BUILD 2026-09-04q</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1349,7 +1349,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04p";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04q";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2300,9 +2300,10 @@ function load(){
   return s;
  }catch(e){return JSON.parse(JSON.stringify(DEF));}
 }
+var noSync=false;
 function save(){
  try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
- if(typeof scheduleSync==="function")scheduleSync();
+ if(!noSync&&typeof scheduleSync==="function")scheduleSync();
 }
 function P(){
  var k=S.kids[S.cur];
@@ -4709,14 +4710,12 @@ function syncPull(cb){
    if(rows&&rows.length&&rows[0].payload&&rows[0].payload.kids){
     S=mergeState(S,rows[0].payload);
     if(S.cur>=S.kids.length)S.cur=0;
-    save();
+    noSync=true;save();noSync=false;
    }
    cb&&cb(true);
   }).catch(function(){cb&&cb(false);});
 }
-function syncPush(cb){
- if(!auth||syncing){cb&&cb(false);return;}
- syncing=true;
+function doPush(cb){
  var body=JSON.stringify({user_id:auth.uid,payload:S,device:(navigator.userAgent||"").slice(0,60)});
  var opt={method:"POST",body:body,headers:{Prefer:"resolution=merge-duplicates"}};
  sbFetch("/rest/v1/kumon_state?on_conflict=user_id",opt)
@@ -4726,6 +4725,29 @@ function syncPush(cb){
   })
   .then(function(r){syncing=false;cb&&cb(r.ok);})
   .catch(function(){syncing=false;cb&&cb(false);});
+}
+/* クラウドへ保存する前に、かならず クラウドの内容を 取りこんで 合わせる。
+   これをしないと、古い状態の端末が あとから 保存して 相手の記録を 消してしまう。 */
+function syncPush(cb){
+ if(!auth||syncing){cb&&cb(false);return;}
+ syncing=true;
+ sbFetch("/rest/v1/kumon_state?select=payload&user_id=eq."+auth.uid)
+  .then(function(r){
+   if(r.status===401)return sbRefresh().then(function(){return sbFetch("/rest/v1/kumon_state?select=payload&user_id=eq."+auth.uid);});
+   return r;
+  })
+  .then(function(r){return r.json();})
+  .then(function(rows){
+   if(rows&&rows.length&&rows[0].payload&&rows[0].payload.kids){
+    var before=stamp();
+    S=mergeState(S,rows[0].payload);
+    if(S.cur>=S.kids.length)S.cur=0;
+    noSync=true;save();noSync=false;
+    if(stamp()!==before)refreshCurrent();
+   }
+   doPush(cb);
+  })
+  .catch(function(){doPush(cb);});
 }
 var pushTimer=null,pullTimer=null;
 function syncBusy(){
@@ -4770,6 +4792,7 @@ function autoPull(silent){
 }
 document.addEventListener("visibilitychange",function(){if(!document.hidden)setTimeout(autoPull,400);});
 window.addEventListener("online",function(){setTimeout(function(){autoPull();scheduleSync();},800);});
+if(auth)setTimeout(function(){autoPull(true);},600);
 setInterval(function(){autoPull(true);},60*1000);
 function syncNow(cb){
  syncPull(function(){syncPush(function(ok){renderSyncUI();cb&&cb(ok);});});
