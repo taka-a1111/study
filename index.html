@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-03v / kumon_math_ver9.4 -->
+<!-- BUILD_TAG: 2026-09-03w / kumon_math_ver9.5 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -668,7 +668,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいにち計算 ver9.4 / 2026-09-03v</div>
+  <div class="tiny">まいにち計算 ver9.5 / 2026-09-03w</div>
 </section>
 
 <!-- こども追加 -->
@@ -729,7 +729,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-03v</div>
+  <div class="tiny">BUILD 2026-09-03w</div>
 </section>
 
 <!-- れいだい -->
@@ -1127,7 +1127,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.4 / BUILD 2026-09-03v</div>
+  <div class="tiny">kumon_math ver9.5 / BUILD 2026-09-03w</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1237,7 +1237,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-03v";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-03w";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4757,6 +4757,48 @@ function vnReplay(chI,from,to){
   vnOpen(chI,i,false,function(){i++;next();});
  })();
 }
+/* ---- ぼうけん：ビジュアルノベル ---- */
+var vn={ch:0,sc:0,timer:null,full:"",done:null,typing:false,onEnd:null};
+function vnOpen(chI,scI,isEnd,cb){
+ var ch=STORY[chI%STORY.length];
+ vn.ch=chI;vn.sc=scI;vn.done=cb;
+ document.getElementById("vn-ch").innerHTML="だい "+(chI%STORY.length+1)+" しょう<b>"+ch.t+"</b>";
+ document.getElementById("vn-art").innerHTML=isEnd?storyEndArt(chI):storyArt(chI,scI);
+ var pg="";for(var i=0;i<5;i++)pg+='<i class="'+(i<=scI||isEnd?"o":"")+'"></i>';
+ document.getElementById("vn-pg").innerHTML=pg;
+ var text=isEnd?ch.end:ch.sc[scI].tx;
+ var w=isEnd?"":who(text);
+ var nm=document.getElementById("vn-nm");
+ nm.classList.toggle("hide",!w);nm.textContent=w;
+ document.getElementById("vn-hint").classList.add("hide");
+ document.getElementById("vn-btns").classList.add("hide");
+ document.getElementById("vn-nx").classList.remove("hide");
+ vnType(text,function(){
+  var h=(!isEnd&&ch.sc[scI].hint)?ch.sc[scI].hint:null;
+  if(h){var he=document.getElementById("vn-hint");he.textContent=h;he.classList.remove("hide");}
+  document.getElementById("vn-nx").classList.add("hide");
+  document.getElementById("vn-btns").classList.remove("hide");
+  document.getElementById("vn-go").textContent=isEnd?"つぎの しょうへ":((scI>=4)?"なぞを とく":"つぎへ");
+ });
+ show("s-vn");
+}
+function vnType(text,cb){
+ clearInterval(vn.timer);
+ var el=document.getElementById("vn-tx");
+ vn.full=text;vn.typing=true;vn.onEnd=cb;el.textContent="";
+ var i=0;
+ vn.timer=setInterval(function(){
+  i++;el.textContent=text.slice(0,i);
+  if(i>=text.length){clearInterval(vn.timer);vn.typing=false;if(cb)cb();}
+ },38);
+}
+document.getElementById("vn-box").addEventListener("click",function(){
+ if(vn.typing){clearInterval(vn.timer);vn.typing=false;document.getElementById("vn-tx").textContent=vn.full;if(vn.onEnd)vn.onEnd();}
+ else if(!document.getElementById("vn-btns").classList.contains("hide"))document.getElementById("vn-go").click();
+});
+document.getElementById("vn-go").addEventListener("click",function(){var d=vn.done;vn.done=null;if(d)d();});
+document.getElementById("vn-bk").addEventListener("click",function(){clearInterval(vn.timer);renderHome();show("s-home");});
+
 /* ---- イベントモーダル ---- */
 var evCb=null;
 function evShow(t,body,opts,onPick,okLabel){
