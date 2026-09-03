@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04n / kumon_math_ver11.1 -->
+<!-- BUILD_TAG: 2026-09-04p / kumon_math_ver11.2 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -345,8 +345,15 @@ body.pen .pp{background-image:
 .pad.choice .ch{text-align:center}
 .subj{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-left:auto;vertical-align:middle;flex:0 0 auto}
 .subj button{width:72px;padding:6px 0;text-align:center;font-size:12.5px;font-weight:700;color:var(--sumi);background:var(--surf)}
-.subj.top{margin-left:auto;margin-right:0;flex:0 0 auto}
-.subj.top button{width:58px;padding:7px 0;font-size:12px}
+.ham{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--surf);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px 5px 7px;flex:0 0 auto}
+.ham .av{width:26px;height:26px;border-radius:50%;background:var(--ai-s);display:flex;align-items:center;justify-content:center;font-size:15px}
+.ham i{font-style:normal;font-size:15px;color:var(--sumi)}
+.ham:active{background:var(--ai-s)}
+.subj.wide{display:flex;width:100%;margin:6px 0 0}
+.subj.wide button{flex:1;width:auto;padding:11px 0;font-size:14px}
+.hmlab{font-size:12px;color:var(--usu);margin-top:14px}
+#hmenu .btn.l{margin-top:6px}
 .brand .bh span{white-space:nowrap}
 .brand .who2{margin-left:6px}
 .brand .who2 b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
@@ -433,9 +440,10 @@ body.pen .pp{background-image:
 
 .rings{display:flex;gap:10px;flex:0 0 auto}
 .ring.sm{position:relative;width:62px;text-align:center}
-.ring.sm .m{position:absolute;left:0;right:0;top:12px}
-.ring.sm .m b{font-family:var(--num);font-size:24px;font-weight:700;line-height:1}
-.ring.sm em{display:block;font-style:normal;font-size:10.5px;color:var(--sumi);margin-top:1px}
+.ring.sm svg{display:block}
+.ring.sm .m{position:absolute;left:0;top:0;width:62px;height:62px;display:flex;align-items:center;justify-content:center}
+.ring.sm .m b{font-family:var(--num);font-size:23px;font-weight:700;line-height:1}
+.ring.sm em{display:block;font-style:normal;font-size:10.5px;color:var(--sumi);margin-top:2px}
 
 /* 結果（ひと画面に おさめる） */
 .res .bg{padding:14px 16px;border-radius:14px}
@@ -739,7 +747,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver11.1 / 2026-09-04n</div>
+  <div class="tiny">まいがく ver11.2 / 2026-09-04p</div>
 </section>
 
 <!-- こども追加 -->
@@ -765,8 +773,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 <!-- ホーム -->
 <section class="sc" id="s-home">
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいがく</span></button>
-    <span class="subj top" id="subj"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span>
-    <button class="who2" id="h-switch"><b id="h-name"></b><span class="av" id="h-av">🐰</span><i>▾</i></button>
+    <button class="ham" id="h-ham"><span class="av" id="h-av">🐰</span><i>☰</i></button>
   </div>
   <div class="hero">
     <div class="top">
@@ -804,7 +811,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04n</div>
+  <div class="tiny">BUILD 2026-09-04p</div>
 </section>
 
 <!-- れいだい -->
@@ -1222,7 +1229,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver11.1 / BUILD 2026-09-04n</div>
+  <div class="tiny">kumon_math ver11.2 / BUILD 2026-09-04p</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1238,6 +1245,16 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button data-nv="s-rec"><span class="i">▲</span>きろく</button>
   <button data-nv="s-set"><span class="i">⚙</span>保護者</button>
 </div></nav>
+
+<div class="mask hide" id="hmenu"><div class="dlg">
+  <h3 id="hm-name"></h3>
+  <div class="note">きょうは <b id="hm-today">0</b> まい</div>
+  <div class="hmlab">きょうか</div>
+  <span class="subj wide" id="subj"><button data-s="math">さんすう</button><button data-s="jp">こくご</button></span>
+  <div class="hmlab">がくしゅうしゃ</div>
+  <button class="btn l" id="h-switch"><b id="h-name"></b>　▾ きりかえる</button>
+  <button class="btn q" id="hm-close" style="margin-top:10px">とじる</button>
+</div></div>
 
 <div class="mask hide" id="th"><div class="dlg">
   <h3>スタンプを かえる</h3>
@@ -1332,7 +1349,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04n";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04p";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2346,6 +2363,8 @@ function prep(id){
 function goHomeHard(){STACK=["s-home"];renderHome();applyScreen("s-home");}
 /* Android の戻るジェスチャー・戻るボタンで前の画面へ */
 window.addEventListener("popstate",function(){
+ var hm=document.getElementById("hmenu");
+ if(hm&&!hm.classList.contains("hide")){hm.classList.add("hide");try{history.pushState({sc:"hm"},"");}catch(e){}return;}
  var thm=document.getElementById("th");
  if(thm&&!thm.classList.contains("hide")){thm.classList.add("hide");try{history.pushState({sc:"th"},"");}catch(e){}return;}
  var evm=document.getElementById("ev");
@@ -2695,7 +2714,8 @@ document.getElementById("ad-del").addEventListener("click",function(){
  S.cur=0;save();
  if(!S.kids.length){renderKids();show("s-kids");}else{renderHome();show("s-home");}
 });
-document.getElementById("h-switch").addEventListener("click",function(){renderKids();show("s-kids");});
+document.getElementById("h-switch").addEventListener("click",function(){
+ document.getElementById("hmenu").classList.add("hide");renderKids();show("s-kids");});
 
 /* ============================================================
    6. ホーム
@@ -4989,7 +5009,18 @@ function renderMode(k){
 document.getElementById("subj").addEventListener("click",function(e){
  var b=e.target.closest("[data-s]");if(!b)return;
  setSubject(b.getAttribute("data-s"));renderHome();
+ document.getElementById("hmenu").classList.add("hide");
 });
+document.getElementById("h-ham").addEventListener("click",function(){
+ var k=P();
+ document.getElementById("hm-name").textContent=k.name;
+ document.getElementById("hm-today").textContent=todayN();
+ var sb=document.getElementById("subj").querySelectorAll("[data-s]");
+ for(var i=0;i<sb.length;i++)sb[i].classList.toggle("on",sb[i].getAttribute("data-s")===(k.subj||"math"));
+ document.getElementById("hmenu").classList.remove("hide");
+});
+document.getElementById("hm-close").addEventListener("click",function(){document.getElementById("hmenu").classList.add("hide");});
+document.getElementById("hmenu").addEventListener("click",function(e){if(e.target===this)this.classList.add("hide");});
 document.getElementById("modes").addEventListener("click",function(e){
  var b=e.target.closest("[data-m]");if(!b)return;
  var k=P();k.mode=b.getAttribute("data-m");save();renderHome();
