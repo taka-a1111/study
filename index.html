@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04a / kumon_math_ver9.9 -->
+<!-- BUILD_TAG: 2026-09-04b / kumon_math_ver10.0 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -684,7 +684,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver9.9 / 2026-09-04a</div>
+  <div class="tiny">まいがく ver10.0 / 2026-09-04b</div>
 </section>
 
 <!-- こども追加 -->
@@ -746,7 +746,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04a</div>
+  <div class="tiny">BUILD 2026-09-04b</div>
 </section>
 
 <!-- れいだい -->
@@ -1146,7 +1146,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver9.9 / BUILD 2026-09-04a</div>
+  <div class="tiny">kumon_math ver10.0 / BUILD 2026-09-04b</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1256,7 +1256,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04a";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04b";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -4811,23 +4811,30 @@ function vnReplay(chI,from,to){
 /* ---- ぼうけん：ビジュアルノベル ---- */
 var vn={ch:0,sc:0,timer:null,full:"",done:null,typing:false,onEnd:null};
 /* ---- 読み上げ ---- */
-function ttsSpeak(text){
- if(!("speechSynthesis" in window)||S.tts===false)return;
+var ttsCur=null;
+function ttsAvail(){return ("speechSynthesis" in window)&&S.tts!==false;}
+function ttsSpeak(text,hooks){
+ if(!ttsAvail())return null;
  try{
   window.speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(text.replace(/\s+/g,""));
-  u.lang="ja-JP";u.rate=0.95;u.pitch=1.05;
+  var spoken=text.replace(/\s+/g,"");
+  var u=new SpeechSynthesisUtterance(spoken);
+  u.lang="ja-JP";u.rate=1.0;u.pitch=1.05;
   var vs=window.speechSynthesis.getVoices().filter(function(v){return /ja/i.test(v.lang);});
   if(vs.length)u.voice=vs[0];
+  if(hooks){u.onstart=hooks.start;u.onend=hooks.end;u.onerror=hooks.end;u.onboundary=hooks.boundary;}
+  ttsCur=u;
   window.speechSynthesis.speak(u);
- }catch(e){}
+  return u;
+ }catch(e){return null;}
 }
 function ttsStop(){try{if("speechSynthesis" in window)window.speechSynthesis.cancel();}catch(e){}}
 document.getElementById("vn-spk").addEventListener("click",function(e){
  e.stopPropagation();
  S.tts=(S.tts===false)?true:false;save();
  this.classList.toggle("off",S.tts===false);
- if(S.tts===false)ttsStop();else ttsSpeak(vn.full||"");
+ if(S.tts===false){ttsStop();if(vn.typing&&vn.finish)vn.finish();}
+ else if(!vn.typing)ttsSpeak(vn.full||"");
 });
 function vnOpen(chI,scI,isEnd,cb){
  var ch=STORY[chI%STORY.length];
@@ -4839,7 +4846,6 @@ function vnOpen(chI,scI,isEnd,cb){
  var text=isEnd?ch.end:ch.sc[scI].tx;
  var w=isEnd?"":who(text);
  document.getElementById("vn-spk").classList.toggle("off",S.tts===false);
- ttsSpeak(text);
  var nm=document.getElementById("vn-nm");
  nm.classList.toggle("hide",!w);nm.textContent=w;
  document.getElementById("vn-hint").classList.add("hide");
@@ -4855,18 +4861,46 @@ function vnOpen(chI,scI,isEnd,cb){
  });
  show("s-vn");
 }
+/* 文字の表示を 読み上げに 合わせる。読み上げが ない ときは 一定の 速さで 流す */
 function vnType(text,cb){
  clearInterval(vn.timer);
  var el=document.getElementById("vn-tx");
- vn.full=text;vn.typing=true;vn.onEnd=cb;el.textContent="";
- var i=0;
- vn.timer=setInterval(function(){
-  i++;el.textContent=text.slice(0,i);
-  if(i>=text.length){clearInterval(vn.timer);vn.typing=false;if(cb)cb();}
- },38);
+ vn.full=text;vn.typing=true;el.textContent="";vn.onEnd=cb;
+ var shown=0,finished=false;
+ function reveal(n){if(n>shown){shown=Math.min(n,text.length);el.textContent=text.slice(0,shown);}}
+ function finish(){if(finished)return;finished=true;clearInterval(vn.timer);vn.typing=false;el.textContent=text;shown=text.length;if(cb)cb();}
+ vn.finish=finish;
+ /* 空白を 抜いた 文字位置 → もとの 文字位置 */
+ var map=[];for(var i=0;i<text.length;i++)if(!/\s/.test(text[i]))map.push(i);
+ var spokenLen=map.length;
+ if(!ttsAvail()||!spokenLen){
+  vn.timer=setInterval(function(){reveal(shown+1);if(shown>=text.length)finish();},38);
+  return;
+ }
+ var started=false,gotBoundary=false,t0=0,msPerChar=125;
+ function tick(){
+  if(!started||finished)return;
+  var est=Math.floor((Date.now()-t0)/msPerChar);
+  if(!gotBoundary)reveal(est<spokenLen?map[est]+1:text.length);
+ }
+ var u=ttsSpeak(text,{
+  start:function(){started=true;t0=Date.now();vn.timer=setInterval(tick,40);},
+  boundary:function(e){
+   if(typeof e.charIndex!=="number")return;
+   gotBoundary=true;
+   var idx=Math.min(spokenLen-1,e.charIndex+(e.charLength||1)-1);
+   reveal(map[idx]+1);
+  },
+  end:function(){finish();}
+ });
+ if(!u){vn.timer=setInterval(function(){reveal(shown+1);if(shown>=text.length)finish();},38);return;}
+ /* 読み上げが 始まらない 端末への 保険 */
+ setTimeout(function(){if(!started&&!finished){started=true;t0=Date.now();msPerChar=60;vn.timer=setInterval(tick,40);}},1500);
+ /* 読み上げが 長すぎる／終了イベントが 来ない ときの 保険 */
+ setTimeout(function(){if(!finished)finish();},spokenLen*260+3000);
 }
 document.getElementById("vn-box").addEventListener("click",function(){
- if(vn.typing){clearInterval(vn.timer);vn.typing=false;document.getElementById("vn-tx").textContent=vn.full;if(vn.onEnd)vn.onEnd();}
+ if(vn.typing){ttsStop();if(vn.finish)vn.finish();}
  else if(!document.getElementById("vn-btns").classList.contains("hide"))document.getElementById("vn-go").click();
 });
 document.getElementById("vn-go").addEventListener("click",function(){var d=vn.done;vn.done=null;if(d)d();});
