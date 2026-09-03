@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04i / kumon_math_ver10.7 -->
+<!-- BUILD_TAG: 2026-09-04j / kumon_math_ver10.8 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -641,6 +641,12 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 .sus span{display:block;font-size:14px;font-weight:700;margin-top:4px}
 .sus.ng{animation:lkng .45s;border-color:#ff6b6b}
 .lock .cardq svg{cursor:pointer}
+.lock .opts button{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.28)}
+.lock .opts button:active{background:rgba(255,226,122,.25)}
+.kana50{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-top:8px;font-size:11px;line-height:1.2}
+.kana50 span{background:rgba(255,255,255,.08);border-radius:5px;padding:3px 0;text-align:center;color:#fff}
+.kana50 span b{display:block;font-family:var(--num);color:#ffe27a;font-size:12px}
+.kana50 span.e{background:none}
 .lock .rules{margin:10px auto 0;max-width:420px;text-align:left;background:rgba(255,226,122,.12);border:1px solid rgba(255,226,122,.4);border-radius:12px;padding:8px 12px}
 .lock .rules div{padding:4px 0;color:#ffe9a8;font-weight:700;font-size:14px}
 
@@ -719,7 +725,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver10.7 / 2026-09-04i</div>
+  <div class="tiny">まいがく ver10.8 / 2026-09-04j</div>
 </section>
 
 <!-- こども追加 -->
@@ -781,7 +787,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04i</div>
+  <div class="tiny">BUILD 2026-09-04j</div>
 </section>
 
 <!-- れいだい -->
@@ -1198,7 +1204,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver10.7 / BUILD 2026-09-04i</div>
+  <div class="tiny">kumon_math ver10.8 / BUILD 2026-09-04j</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1308,7 +1314,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04i";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-04j";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -5266,8 +5272,17 @@ function storyRiddle(){
    diffScene(lockCase,true).replace('style="width:100%;height:auto;display:block;border-radius:12px"','id="lk-dsvg"')+'</div>';
   document.getElementById("lk-msg2").textContent="ちがう ところを ぜんぶ 見つけると クリア";
  }else{
+  var keyHtml='🔑 '+lockCase.key;
+  if(lockCase.code.indexOf("・")>=0){
+   /* 番号方式：50音の表を 出す（あ か さ た な は ま や ら わ の 列） */
+   var cols=[[0,5],[5,10],[10,15],[15,20],[20,25],[25,30],[30,35],[35,38],[38,43],[43,46]];
+   var grid="";
+   for(var row=0;row<5;row++){for(var c2=0;c2<10;c2++){var st2=cols[c2][0],en=cols[c2][1],idx=st2+row;
+    if(idx<en){grid+='<span>'+KANA50[idx]+'<b>'+(idx+1)+'</b></span>';}else grid+='<span class="e"></span>';}}
+   keyHtml='🔑 ばんごうを もじに もどそう（゛は にごり）<div class="kana50">'+grid+'</div>';
+  }
   document.getElementById("lk-msg").innerHTML="かぎを つかって あんごうを とこう。"+
-   '<div class="rules"><div>🔑 '+lockCase.key+'</div><div style="font-size:22px;letter-spacing:.06em">'+lockCase.code+'</div></div>';
+   '<div class="rules"><div>'+keyHtml+'</div><div style="font-size:26px;letter-spacing:.08em;text-align:center;margin-top:6px">'+lockCase.code+'</div></div>';
   html='<div class="opts" style="margin:0 12px">'+lockCase.choices.map(function(c,i){return '<button data-c="'+i+'"><span style="font-size:18px;font-weight:700">'+c+'</span></button>';}).join("")+'</div>';
   document.getElementById("lk-msg2").textContent="あんごうの こたえを えらぼう";
  }
