@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD_TAG: 2026-09-04s / kumon_math_ver11.5 -->
+<!-- BUILD_TAG: 2026-09-05a / kumon_math_ver11.6 -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -687,6 +687,24 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:32px;font-weight:700}
 .lkd.act{border-color:var(--ai);background:var(--ai-s)}
 
+.zbar{height:8px;background:#e4e8e2;border-radius:4px;overflow:hidden;margin:6px 0}
+.zbar i{display:block;height:100%;background:var(--mid);border-radius:4px;transition:width .4s}
+.zstats{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.zstats span{flex:0 0 auto;background:var(--surf);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:11.5px;white-space:nowrap}
+.zstats span.done{background:var(--mid-s);border-color:var(--mid);font-weight:700}
+.zsort{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px}
+.zsort button{flex:0 0 auto;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surf);font-size:12px}
+.zsort button.on{background:var(--ai);color:#fff;border-color:var(--ai)}
+.zcell .el{position:absolute;left:4px;top:4px;font-size:11px;line-height:1;padding:2px 5px;border-radius:999px;color:#fff}
+.zcell{position:relative}
+.zcell.locked .sil svg{filter:brightness(0) opacity(.16)}
+.zdchain{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 4px}
+.zdchain figure{margin:0;width:52px;text-align:center;opacity:.4}
+.zdchain figure.on{opacity:1}
+.zdchain figure svg{width:44px;height:44px}
+.zdchain figure figcaption{font-size:10px;color:var(--sumi)}
+.zdchain b{color:var(--usu)}
+
 /* ずかん・ガチャ */
 .zhead{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 10px}
 .zhead b{font-family:var(--num);font-size:22px}
@@ -750,7 +768,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <button class="btn l" id="kid-add">＋ あたらしく ついかする</button>
   <button class="btn q" id="kid-sync" style="margin-top:8px">べつの スマホと 同じにする（保護者）</button>
   <div class="sp"></div>
-  <div class="tiny">まいがく ver11.5 / 2026-09-04s</div>
+  <div class="tiny">まいがく ver11.6 / 2026-09-05a</div>
 </section>
 
 <!-- こども追加 -->
@@ -814,7 +832,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
     <button class="cl" id="inst-cl">×</button>
   </div>
   <div class="sp"></div>
-  <div class="tiny">BUILD 2026-09-04s</div>
+  <div class="tiny">BUILD 2026-09-05a</div>
 </section>
 
 <!-- れいだい -->
@@ -988,6 +1006,14 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div class="brand"><button class="bh" data-home="1"><img src="icon-192.png" alt=""><span>まいがく</span></button></div>
   <div class="hd"><h2>ずかん</h2></div>
   <div class="zhead"><span class="note">あつめた キャラ</span><b><span id="z-n">0</span> / 120</b></div>
+  <div class="zbar"><i id="z-bar"></i></div>
+  <div class="zstats" id="z-stats"></div>
+  <div class="zsort" id="z-sort">
+    <button data-o="no" class="on">ばんごう順</button>
+    <button data-o="rar">レア順</button>
+    <button data-o="sp">しゅぞく順</button>
+    <button data-o="el">ぞくせい順</button>
+  </div>
   <div class="zfilter" id="z-filter">
     <button data-f="all" class="on">ぜんぶ</button>
     <button data-f="0">ふつう</button>
@@ -1234,7 +1260,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
       <button class="btn q dgr" id="st-rs">ぜんぶ消す</button>
     </div>
   </div>
-  <div class="tiny">kumon_math ver11.5 / BUILD 2026-09-04s</div>
+  <div class="tiny">kumon_math ver11.6 / BUILD 2026-09-05a</div>
 </section>
 
 <div class="upd hide" id="upd">
@@ -1280,8 +1306,12 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
   <div id="zd-no" class="num" style="font-size:12px;color:var(--usu)"></div>
   <h3 id="zd-name" style="font-size:22px;margin-top:2px"></h3>
   <div id="zd-rar" style="margin:6px 0 10px"></div>
+  <div class="zdchain" id="zd-chain"></div>
   <div class="scene" id="zd-desc" style="text-align:left;font-size:14.5px"></div>
+  <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">ぞくせい</span><span id="zd-el" style="font-weight:700"></span></div>
   <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">しゅぞく</span><span id="zd-sp" style="font-weight:700"></span></div>
+  <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">おおきさ</span><span id="zd-size" style="font-weight:700"></span></div>
+  <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">すみか</span><span id="zd-habi" style="font-weight:700"></span></div>
   <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">とくぎ</span><span id="zd-wz" style="font-weight:700;color:var(--ai)"></span></div>
   <div class="row" style="text-align:left"><span style="color:var(--sumi);font-size:13px">すきなもの</span><span id="zd-sk" style="font-weight:700"></span></div>
   <div class="note" id="zd-got" style="margin-top:8px"></div>
@@ -1354,7 +1384,7 @@ label.f span{font-size:12.5px;color:var(--sumi);display:block;margin-bottom:6px}
 
 <script>
 "use strict";
-var BUILD="2026-09-04s";console.log("BUILD_TAG: "+BUILD);
+var BUILD="2026-09-05a";console.log("BUILD_TAG: "+BUILD);
 var KEY="kumonmath_v3",PPS=5;
 
 /* ============================================================
@@ -2965,6 +2995,17 @@ function cacc0(t,c,d,l){
  return "";
 }
 /* しんか：おなじ キャラを 2ひき あつめると しんか、5ひきで さいしゅう しんか */
+/* ぞくせい（7種）：種族と 色の 組み合わせで 決まる */
+var ELEM=[["ほのお","#e2564a","🔥"],["みず","#2f79d6","💧"],["くさ","#3fae5f","🌿"],["でんき","#e8bf2a","⚡"],["こおり","#5fbcf5","❄"],["やみ","#7d55c0","🌙"],["ひかり","#f0a62a","☀"]];
+function celem(id){return ELEM[(id%10+Math.floor(id/10)*3)%7];}
+var SPN_Z=["スライム","ネコ","トリ","サカナ","ドラゴン","ロボ","ホシ","キノコ","オバケ","クモ"];
+var HABI=["みどりの まきば","あおい うみべ","しろい ゆきやま","よるの ほしぞら","きんの さばく","もえる かざん","おかしの くに","はるかな うちゅう","おばけの もり","にじの まち"];
+function cmeta(id){
+ var r=crar(id);
+ var h=(2+((id*37)%14)+r*2)/10;        /* しんちょう m（0.2〜1.6くらい） */
+ var w=(15+((id*53)%120)+r*25)/10;      /* たいじゅう kg */
+ return {h:h.toFixed(1),w:w.toFixed(1),habi:HABI[(id*7)%10]};
+}
 function evoStage(n){n=n||0;return n>=5?2:(n>=2?1:0);}
 var EVOP=["","つよ","キング"];
 function evoName(id,st){return (EVOP[st]||"")+cname(id);}
@@ -5623,37 +5664,76 @@ document.getElementById("z-filter").addEventListener("click",function(e){
  for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-f")===zFilter);
  renderZukan();
 });
+var zSort="no";
 function renderZukan(){
  var k=P();if(!k)return;
- document.getElementById("z-n").textContent=ownedCount(k);
+ var got=ownedCount(k);
+ document.getElementById("z-n").textContent=got;
+ document.getElementById("z-bar").style.width=Math.round(100*got/CHAR_N)+"%";
+ /* 種族・ぞくせい ごとの あつめ具合 */
+ var sp=[],el={};
+ for(var a=0;a<10;a++)sp[a]={n:0,t:0};
+ ELEM.forEach(function(e){el[e[0]]={n:0,t:0,c:e[1]};});
+ for(var b=0;b<CHAR_N;b++){
+  var o=!!(k.chars&&k.chars[b]),e2=celem(b);
+  sp[b%10].t++;if(o)sp[b%10].n++;
+  el[e2[0]].t++;if(o)el[e2[0]].n++;
+ }
+ var st="";
+ SPN_Z.forEach(function(nm,i){st+='<span class="'+(sp[i].n>=sp[i].t?"done":"")+'">'+nm+' '+sp[i].n+'/'+sp[i].t+'</span>';});
+ ELEM.forEach(function(e){var v=el[e[0]];st+='<span class="'+(v.n>=v.t?"done":"")+'">'+e[2]+' '+e[0]+' '+v.n+'/'+v.t+'</span>';});
+ document.getElementById("z-stats").innerHTML=st;
+ /* ならべかえ */
+ var ids=[];for(var i2=0;i2<CHAR_N;i2++)ids.push(i2);
+ if(zSort==="rar")ids.sort(function(x,y){return crar(y)-crar(x)||x-y;});
+ else if(zSort==="sp")ids.sort(function(x,y){return (x%10)-(y%10)||x-y;});
+ else if(zSort==="el")ids.sort(function(x,y){return ELEM.indexOf(celem(x))-ELEM.indexOf(celem(y))||x-y;});
  var h="";
- for(var i=0;i<CHAR_N;i++){
+ ids.forEach(function(i){
   var r=crar(i);
-  if(zFilter!=="all"&&String(r)!==zFilter)continue;
-  var own=k.chars&&k.chars[i];
+  if(zFilter!=="all"&&String(r)!==zFilter)return;
+  var own=k.chars&&k.chars[i],e=celem(i);
+  var tag='<span class="el" style="background:'+e[1]+'">'+e[2]+'</span>';
   if(own){
    var stg=evoStage(own.n);
-   h+='<button class="zcell'+(stg?" evo":"")+'" data-c="'+i+'">'+charSVG(i,"",stg)+
+   h+='<button class="zcell'+(stg?" evo":"")+'" data-c="'+i+'">'+tag+charSVG(i,"",stg)+
      '<div class="nm">'+evoName(i,stg)+'</div>'+
      '<div class="cnt" style="color:'+RARC[r]+'">'+RARN[r]+(own.n>1?" ×"+own.n:"")+'</div></button>';
   }else{
-   h+='<div class="zcell locked"><div class="q">？</div><div class="nm">No.'+("00"+(i+1)).slice(-3)+'</div>'+
+   h+='<div class="zcell locked"><span class="sil">'+charSVG(i,"",0)+'</span><div class="nm">No.'+("00"+(i+1)).slice(-3)+'</div>'+
      '<div class="cnt">'+RARN[r]+'</div></div>';
   }
- }
+ });
  document.getElementById("z-grid").innerHTML=h;
 }
+document.getElementById("z-sort").addEventListener("click",function(e){
+ var b=e.target.closest("[data-o]");if(!b)return;
+ zSort=b.getAttribute("data-o");
+ var bs=this.querySelectorAll("button");
+ for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i]===b);
+ renderZukan();
+});
 document.getElementById("z-grid").addEventListener("click",function(e){
  var b=e.target.closest("[data-c]");if(!b)return;
  var id=Number(b.getAttribute("data-c")),k=P(),r=crar(id);
- var ci=cinfo(id),SPN=["スライム","ネコ","トリ","サカナ","ドラゴン","ロボ","ホシ","キノコ","オバケ","クモ"];
+ var ci=cinfo(id);
  var stg=evoStage(k.chars[id].n);
  document.getElementById("zd-art").innerHTML=charSVG(id,"",stg);
  document.getElementById("zd-no").textContent="No."+("00"+(id+1)).slice(-3);
  document.getElementById("zd-name").textContent=evoName(id,stg);
  document.getElementById("zd-rar").innerHTML='<span class="rtag" style="background:'+RARC[r]+'">'+RARN[r]+'</span>';
  document.getElementById("zd-desc").textContent=ci[1];
- document.getElementById("zd-sp").textContent=SPN[id%10];
+ document.getElementById("zd-sp").textContent=SPN_Z[id%10];
+ var em=celem(id),mt=cmeta(id);
+ document.getElementById("zd-el").innerHTML='<span style="background:'+em[1]+';color:#fff;border-radius:999px;padding:2px 10px;font-size:12.5px">'+em[2]+" "+em[0]+'</span>';
+ document.getElementById("zd-size").textContent=mt.h+" m　"+mt.w+" kg";
+ document.getElementById("zd-habi").textContent=mt.habi;
+ var chain="";
+ [0,1,2].forEach(function(t){
+  chain+='<figure class="'+(t<=stg?"on":"")+'">'+(t<=stg?charSVG(id,"",t):'<span class="sil">'+charSVG(id,"",t)+'</span>')+
+   '<figcaption>'+(t<=stg?evoName(id,t):"？？？")+'</figcaption></figure>'+(t<2?'<b>▶</b>':"");
+ });
+ document.getElementById("zd-chain").innerHTML=chain;
  document.getElementById("zd-wz").textContent=ci[2];
  document.getElementById("zd-sk").textContent=ci[3];
  var o=k.chars[id];
